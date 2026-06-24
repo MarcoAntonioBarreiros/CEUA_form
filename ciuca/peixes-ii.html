@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CIUCA — Peixes II</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700;800;900&display=swap">
+<link rel="stylesheet" href="assets/form.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+const CFG = {
+  group: 'Peixes II',
+  slug: 'peixes-ii',
+  rn: 'RN 61/2023 (Anexo II) · RN 51/2021',
+  footer: 'Fontes: RN CONCEA/MCTI nº 61/2023 (Anexo II) e nº 51/2021. O texto oficial vigente prevalece.',
+  animalLabel: 'Espécie / grupo',
+  animalDetailLabel: 'Detalhamento / espécie / observações',
+  animalPlaceholder: 'Ex: pacu, tambaqui, jundiá, carpa, surubim',
+  animalOptions: ['Peixes de produção / cultivo', 'Peixes nativos', 'Peixes ornamentais', 'Peixes II diversos'],
+  purposeHint: 'A finalidade é registrada para caracterização. O Anexo II da RN 61/2023 não diferencia os critérios por criação, manutenção ou experimentação.',
+  criteria: [
+    {
+      cat: 'Ambientes Físicos — Áreas de Apoio',
+      items: [
+        { t: 'Área administrativa.', c: 'Recomendado' },
+        { t: 'Área de recepção de pessoal (usuários e visitantes).', c: 'Recomendado' },
+        { t: 'Área de recepção de animais.', c: 'Recomendado' },
+        { t: 'Vestiário.', c: 'Recomendado' },
+        { t: 'Local para estocagem de alimentos que atendam às recomendações dos fabricantes.', c: 'Obrigatório' },
+        { t: 'Local para armazenamento de produtos químicos e medicamentos.', c: 'Recomendado' },
+        { t: 'Freezer para acondicionamento de carcaças.', c: 'Obrigatório' }
+      ]
+    },
+    {
+      cat: 'Alojamento e qualidade da água',
+      items: [
+        { t: 'Captura dos animais de acordo com a legislação.', c: 'Obrigatório' },
+        { t: 'Alojamento em tanques escavados, tanques de lona, aquários ou caixas ou tanques rede, de acordo com as características das espécies.', c: 'Obrigatório' },
+        { t: 'Controle de efluentes do alojamento.', c: 'Obrigatório' },
+        { t: 'Condições de alojamento conforme as especificações do Guia Brasileiro do CONCEA.', c: 'Obrigatório' },
+        { t: 'Tanque para quarentena.', c: 'Obrigatório' },
+        { t: 'Controle de filtragem, temperatura, pH, oxigênio dissolvido, salinidade e níveis de amônia e nitrito da água dos tanques de manutenção.', c: 'Obrigatório' },
+        { t: 'Controle de nitrato na água dos tanques de manutenção.', c: 'Recomendado' },
+        { t: 'Controle de densidade de estocagem.', c: 'Obrigatório' }
+      ]
+    },
+    {
+      cat: 'Manejo e procedimentos',
+      items: [
+        { t: 'Alimentação de acordo com a fase de desenvolvimento dos animais e hábito alimentar da espécie.', c: 'Obrigatório' },
+        { t: 'Controle de iluminação.', c: 'Obrigatório' },
+        { t: 'Enriquecimento ambiental.', c: 'Obrigatório' },
+        { t: 'Procedimentos Operacionais Padrão (POPs).', c: 'Recomendado' },
+        { t: 'Gerenciamento de resíduos sólidos de acordo com a legislação vigente.', c: 'Obrigatório' }
+      ]
+    }
+  ]
+};
+</script>
+<script src="assets/shell.js"></script>
+<script src="assets/form-engine.js"></script>
+</head>
+<body></body>
+</html>
