@@ -10,13 +10,14 @@ body{font-family:Arial,sans-serif;background:#E8F4F6;color:#164549;display:flex;
 <body>
 <div class="box">
   <h1>Carregando formulário CEUA...</h1>
-  <p>Esta página usa a versão preservada do formulário e conecta o envio ao Apps Script/planilha da CEUA.</p>
+  <p>Esta página usa a versão preservada do formulário e conecta o registro ao Apps Script/planilha da CEUA.</p>
   <div id="erro" class="err"></div>
 </div>
 <script>
 (function(){
   const SOURCE_URL = 'https://raw.githubusercontent.com/MarcoAntonioBarreiros/CEUA_form/backup-index-before-appscript-20260623/index.html';
   const APPS_URL = 'https://script.google.com/macros/s/AKfycbzGJglVArqVnjlo58VWp1uU6bIMf_0KpDVGtKXETxe0S3saPgflbHGXLBMbH2krpRUPpA/exec';
+  const EMAIL_CEUA = 'ceua.palotina@gmail.com';
 
   const helper = `
 // ── Normalização/validação institucional CEUA/CIUCA ──
@@ -86,7 +87,7 @@ function normalizarPayloadCEUA(dados){
     relatorio_final_recebido: 'Não',
     data_recebimento_relatorio_final: '',
     origem: 'Formulario CEUA GitHub Pages',
-    versao_formulario: 'CEUA 2025 v2.1',
+    versao_formulario: 'CEUA 2025 v2.2',
     animais_aprovados: animais,
     formulario_completo: dados
   };
@@ -105,6 +106,11 @@ function normalizarPayloadCEUA(dados){
   const relatorioHtml = `
       <label class="cbc mt-3 p-3 bg-amber-50 border border-amber-200 rounded-lg"><input type="checkbox" id="relatorio_final_ciente"> <span><strong>Relatório final:</strong> declaro estar ciente de que, ao encerramento da atividade/projeto, o coordenador da proposta deverá encaminhar à CEUA o relatório final de uso dos animais, informando as espécies utilizadas, o número efetivamente utilizado, eventuais alterações em relação ao aprovado e as respectivas justificativas. Estou ciente de que relatório final pendente poderá impedir a submissão ou tramitação de nova solicitação junto à CEUA até a regularização da pendência.</span></label>`;
 
+  const avisoSubmissaoHtml = `
+  <div class="mb-4 p-4 bg-amber-50 border border-amber-200 rounded-xl text-[.78rem] text-amber-900 leading-relaxed">
+    <strong>Importante:</strong> ao clicar no botão abaixo, os dados serão registrados na planilha interna da CEUA e será gerado um PDF no seu dispositivo. A solicitação somente será formalmente submetida após o coordenador assinar o PDF e encaminhá-lo para <strong>${EMAIL_CEUA}</strong>.
+  </div>`;
+
   fetch(SOURCE_URL, {cache:'no-store'})
     .then(r => {
       if(!r.ok) throw new Error('Não foi possível carregar o formulário original: HTTP ' + r.status);
@@ -116,20 +122,30 @@ function normalizarPayloadCEUA(dados){
       // Inserções visuais, sem alterar a estrutura principal do formulário original.
       html = html.replace('\n\n  <!-- CIUCA -->', '\n\n' + instalacaoHtml + '\n\n  <!-- CIUCA -->');
       html = html.replace('<p class="ml-3" id="termoItemD" style="display:none"><strong>d)</strong> esta atividade de ensino foi avaliada conforme os critérios da Resolução Normativa CONCEA nº 53, de 19 de maio de 2021, e atende aos requisitos para utilização de animais em atividades didáticas, conforme árvore de decisão do Anexo da referida Resolução.</p>\n    </div>', '<p class="ml-3" id="termoItemD" style="display:none"><strong>d)</strong> esta atividade de ensino foi avaliada conforme os critérios da Resolução Normativa CONCEA nº 53, de 19 de maio de 2021, e atende aos requisitos para utilização de animais em atividades didáticas, conforme árvore de decisão do Anexo da referida Resolução.</p>' + relatorioHtml + '\n    </div>');
+      html = html.replace('<!-- ── Painel de Envio ── -->', avisoSubmissaoHtml + '\n\n    <!-- ── Painel de Envio ── -->');
+
+      // Simplifica o painel: um único botão registra na planilha e gera o PDF para assinatura.
+      html = html.replace('grid grid-cols-1 md:grid-cols-2 gap-3 mb-4', 'grid grid-cols-1 gap-3 mb-4');
+      html = html.replace(/\s*<!-- 2\. Apenas PDF local -->[\s\S]*?<\/button>/, '');
+      html = html.replace('Enviar ao CEUA + Gerar PDF', 'Registrar dados e gerar PDF para assinatura');
+      html = html.replace('Enviando dados ao Google Sheets do CEUA...', 'Registrando dados na planilha interna da CEUA...');
+      html = html.replace('Ao clicar "Enviar ao CEUA", os dados do formulário são gravados automaticamente na planilha da coordenação. O PDF é gerado no seu dispositivo.', 'Ao clicar no botão, os dados são registrados na planilha interna da CEUA e o PDF é gerado no seu dispositivo. Assine o PDF e envie para ' + EMAIL_CEUA + '.');
+      html = html.replace("showStatus('sending', 'Enviando formulário ao CEUA...');", "showStatus('sending', 'Registrando dados na planilha interna da CEUA...');");
+      html = html.replace('Formulário enviado com sucesso!', 'Dados registrados na planilha interna da CEUA!');
+      html = html.replace("showToast('✓ Dados enviados ao CEUA + PDF gerado!');", "showToast('✓ Dados registrados e PDF gerado. Assine e envie para " + EMAIL_CEUA + ".');");
 
       // Dados adicionais no objeto coletado.
       html = html.replace("ciuca:Cs('ci').join(', '), ciuca_outros:V('ci_outros'),", "ciuca:Cs('ci').join(', '), ciuca_outros:V('ci_outros'),\n     instalacao_ciuca_nome:V('inst_ciuca_nome'), instalacao_ciuca_confirmada:(document.getElementById('inst_ciuca_confirm')?.checked?'Sim':'Não'),\n     relatorio_final_ciente:(document.getElementById('relatorio_final_ciente')?.checked?'Sim':'Não'),");
 
       // Campos também aparecem no PDF gerado.
       html = html.replace("np(); sec('FINALIDADE DO PROJETO — Dados CIUCA');", "np(); sec('INSTALAÇÃO ANIMAL CADASTRADA NO CIUCA');\n  lv('Nome da instalação:',V('inst_ciuca_nome'),42);\n  cbx('Instalação indicada declarada como cadastrada e regular no CIUCA',document.getElementById('inst_ciuca_confirm')?.checked);\n  y+=2;\n  sec('FINALIDADE DO PROJETO — Dados CIUCA');");
-      html = html.replace("termoItens.forEach(t=>{ ck(12); const ls=doc.splitTextToSize(t,CW-5); doc.text(ls,ML+3,y); y+=ls.length*3.5+2; });", "termoItens.forEach(t=>{ ck(12); const ls=doc.splitTextToSize(t,CW-5); doc.text(ls,ML+3,y); y+=ls.length*3.5+2; });\n  y+=2; sub('Relatório final de uso dos animais');\n  const relFinal=(document.getElementById('relatorio_final_ciente')?.checked?'[X] ':'[ ] ')+'Declaro estar ciente de que, ao encerramento da atividade/projeto, o coordenador da proposta deverá encaminhar à CEUA o relatório final de uso dos animais, informando espécies utilizadas, número efetivamente utilizado, eventuais alterações em relação ao aprovado e justificativas. Estou ciente de que relatório final pendente poderá impedir nova solicitação até a regularização.';\n  tb(relFinal,5);");
+      html = html.replace("termoItens.forEach(t=>{ ck(12); const ls=doc.splitTextToSize(t,CW-5); doc.text(ls,ML+3,y); y+=ls.length*3.5+2; });", "termoItens.forEach(t=>{ ck(12); const ls=doc.splitTextToSize(t,CW-5); doc.text(ls,ML+3,y); y+=ls.length*3.5+2; });\n  y+=2; sub('Relatório final de uso dos animais');\n  const relFinal=(document.getElementById('relatorio_final_ciente')?.checked?'[X] ':'[ ] ')+'Declaro estar ciente de que, ao encerramento da atividade/projeto, o coordenador da proposta deverá encaminhar à CEUA o relatório final de uso dos animais, informando espécies utilizadas, número efetivamente utilizado, eventuais alterações em relação ao aprovado e justificativas. Estou ciente de que relatório final pendente poderá impedir nova solicitação até a regularização.';\n  tb(relFinal,5);\n  y+=2; sub('Submissão formal à CEUA');\n  tb('Após assinatura pelo coordenador, encaminhar este PDF assinado para: " + EMAIL_CEUA + ".',2);");
 
       // Envio ao Apps Script e validações obrigatórias.
       html = html.replace('// ── Enviar ao Google Sheets ──', helper + '\n// ── Enviar ao Google Sheets ──');
       html = html.replace("headers: { 'Content-Type': 'application/json' },", "headers: { 'Content-Type': 'text/plain;charset=utf-8' },");
       html = html.replace('body: JSON.stringify(dados)', 'body: JSON.stringify(normalizarPayloadCEUA(dados))');
       html = html.replace('async function enviarEGerarPDF(){\n  const dados = coletarDados();', 'async function enviarEGerarPDF(){\n  if(!validarCamposInstitucionais()) return;\n  const dados = coletarDados();');
-      html = html.replace('onclick="gerarPDF()" class="nb flex items-center justify-center gap-2 py-4 border-2 border-tl-200 text-tl-700 hover:bg-tl-50 text-base"', 'onclick="validarCamposInstitucionais()&&gerarPDF()" class="nb flex items-center justify-center gap-2 py-4 border-2 border-tl-200 text-tl-700 hover:bg-tl-50 text-base"');
 
       document.open();
       document.write(html);
