@@ -19,7 +19,32 @@ body{font-family:Arial,sans-serif;background:#E8F4F6;color:#164549;display:flex;
   const APPS_URL = 'https://script.google.com/macros/s/AKfycbzGJglVArqVnjlo58VWp1uU6bIMf_0KpDVGtKXETxe0S3saPgflbHGXLBMbH2krpRUPpA/exec';
 
   const helper = `
-// ── Normalização para o Apps Script CEUA/CIUCA ──
+// ── Normalização/validação institucional CEUA/CIUCA ──
+function validarCamposInstitucionais(){
+  const inst = V('inst_ciuca_nome');
+  const instOk = document.getElementById('inst_ciuca_confirm')?.checked;
+  const relOk = document.getElementById('relatorio_final_ciente')?.checked;
+  if(!inst){
+    go(3);
+    showStatus('warn','Informe o nome da instalação animal cadastrada no CIUCA onde a atividade será realizada.');
+    setTimeout(()=>document.getElementById('inst_ciuca_nome')?.focus(),350);
+    return false;
+  }
+  if(!instOk){
+    go(3);
+    showStatus('warn','Marque a declaração de que a instalação indicada está cadastrada e regular no CIUCA.');
+    setTimeout(()=>document.getElementById('inst_ciuca_confirm')?.focus(),350);
+    return false;
+  }
+  if(!relOk){
+    go(6);
+    showStatus('warn','Marque a ciência sobre a obrigação de entregar relatório final ao encerramento da atividade/projeto.');
+    setTimeout(()=>document.getElementById('relatorio_final_ciente')?.focus(),350);
+    return false;
+  }
+  return true;
+}
+
 function normalizarPayloadCEUA(dados){
   const limpo = v => String(v || '').trim();
   const slug = v => limpo(v).normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').replace(/[^A-Za-z0-9_.-]+/g,'_').replace(/^_+|_+$/g,'').slice(0,60);
@@ -54,16 +79,31 @@ function normalizarPayloadCEUA(dados){
     unidade: limpo(dados.resp_unid) || 'Setor Palotina',
     data_inicio: limpo(dados.dt_ini),
     data_final_vigente: limpo(dados.dt_fim),
+    instalacao_ciuca_nome: limpo(dados.instalacao_ciuca_nome || V('inst_ciuca_nome')),
+    instalacao_ciuca_confirmada: document.getElementById('inst_ciuca_confirm')?.checked ? 'Sim' : 'Não',
+    relatorio_final_ciente: document.getElementById('relatorio_final_ciente')?.checked ? 'Sim' : 'Não',
     status_projeto: 'Ativo',
     relatorio_final_recebido: 'Não',
     data_recebimento_relatorio_final: '',
     origem: 'Formulario CEUA GitHub Pages',
-    versao_formulario: 'CEUA 2025 v2.0',
+    versao_formulario: 'CEUA 2025 v2.1',
     animais_aprovados: animais,
     formulario_completo: dados
   };
 }
 `;
+
+  const instalacaoHtml = `
+  <!-- Instalação animal cadastrada no CIUCA -->
+  <div class="mb-6 p-4 bg-amber-50/70 rounded-xl border border-amber-200">
+    <h3 class="font-bold text-amber-800 mb-2 text-sm uppercase tracking-wide">Instalação animal cadastrada no CIUCA</h3>
+    <p class="text-[.72rem] text-amber-800 mb-3">Informe a(s) instalação(ões) cadastrada(s) no CIUCA onde ocorrerá a manutenção, alojamento, manejo, procedimento ou uso dos animais nesta solicitação.</p>
+    <div><label class="lbl">Nome da(s) instalação(ões) cadastrada(s) no CIUCA <span class="text-red-500">*</span></label><textarea id="inst_ciuca_nome" class="fi" rows="2" placeholder="Ex.: Laboratório de Saúde Suína; Biotério de Roedores; Hospital Veterinário..."></textarea></div>
+    <label class="cbc mt-3"><input type="checkbox" id="inst_ciuca_confirm"> <span>Declaro que a(s) instalação(ões) indicada(s) está(ão) cadastrada(s) e regular(es) no CIUCA para a finalidade, espécie/grupo animal e atividades previstas nesta solicitação.</span></label>
+  </div>`;
+
+  const relatorioHtml = `
+      <label class="cbc mt-3 p-3 bg-amber-50 border border-amber-200 rounded-lg"><input type="checkbox" id="relatorio_final_ciente"> <span><strong>Relatório final:</strong> declaro estar ciente de que, ao encerramento da atividade/projeto, o coordenador da proposta deverá encaminhar à CEUA o relatório final de uso dos animais, informando as espécies utilizadas, o número efetivamente utilizado, eventuais alterações em relação ao aprovado e as respectivas justificativas. Estou ciente de que relatório final pendente poderá impedir a submissão ou tramitação de nova solicitação junto à CEUA até a regularização da pendência.</span></label>`;
 
   fetch(SOURCE_URL, {cache:'no-store'})
     .then(r => {
@@ -72,9 +112,25 @@ function normalizarPayloadCEUA(dados){
     })
     .then(html => {
       html = html.replace("const APPS_SCRIPT_URL = 'COLE_SUA_URL_AQUI';", "const APPS_SCRIPT_URL = '" + APPS_URL + "';");
+
+      // Inserções visuais, sem alterar a estrutura principal do formulário original.
+      html = html.replace('\n\n  <!-- CIUCA -->', '\n\n' + instalacaoHtml + '\n\n  <!-- CIUCA -->');
+      html = html.replace('<p class="ml-3" id="termoItemD" style="display:none"><strong>d)</strong> esta atividade de ensino foi avaliada conforme os critérios da Resolução Normativa CONCEA nº 53, de 19 de maio de 2021, e atende aos requisitos para utilização de animais em atividades didáticas, conforme árvore de decisão do Anexo da referida Resolução.</p>\n    </div>', '<p class="ml-3" id="termoItemD" style="display:none"><strong>d)</strong> esta atividade de ensino foi avaliada conforme os critérios da Resolução Normativa CONCEA nº 53, de 19 de maio de 2021, e atende aos requisitos para utilização de animais em atividades didáticas, conforme árvore de decisão do Anexo da referida Resolução.</p>' + relatorioHtml + '\n    </div>');
+
+      // Dados adicionais no objeto coletado.
+      html = html.replace("ciuca:Cs('ci').join(', '), ciuca_outros:V('ci_outros'),", "ciuca:Cs('ci').join(', '), ciuca_outros:V('ci_outros'),\n     instalacao_ciuca_nome:V('inst_ciuca_nome'), instalacao_ciuca_confirmada:(document.getElementById('inst_ciuca_confirm')?.checked?'Sim':'Não'),\n     relatorio_final_ciente:(document.getElementById('relatorio_final_ciente')?.checked?'Sim':'Não'),");
+
+      // Campos também aparecem no PDF gerado.
+      html = html.replace("np(); sec('FINALIDADE DO PROJETO — Dados CIUCA');", "np(); sec('INSTALAÇÃO ANIMAL CADASTRADA NO CIUCA');\n  lv('Nome da instalação:',V('inst_ciuca_nome'),42);\n  cbx('Instalação indicada declarada como cadastrada e regular no CIUCA',document.getElementById('inst_ciuca_confirm')?.checked);\n  y+=2;\n  sec('FINALIDADE DO PROJETO — Dados CIUCA');");
+      html = html.replace("termoItens.forEach(t=>{ ck(12); const ls=doc.splitTextToSize(t,CW-5); doc.text(ls,ML+3,y); y+=ls.length*3.5+2; });", "termoItens.forEach(t=>{ ck(12); const ls=doc.splitTextToSize(t,CW-5); doc.text(ls,ML+3,y); y+=ls.length*3.5+2; });\n  y+=2; sub('Relatório final de uso dos animais');\n  const relFinal=(document.getElementById('relatorio_final_ciente')?.checked?'[X] ':'[ ] ')+'Declaro estar ciente de que, ao encerramento da atividade/projeto, o coordenador da proposta deverá encaminhar à CEUA o relatório final de uso dos animais, informando espécies utilizadas, número efetivamente utilizado, eventuais alterações em relação ao aprovado e justificativas. Estou ciente de que relatório final pendente poderá impedir nova solicitação até a regularização.';\n  tb(relFinal,5);");
+
+      // Envio ao Apps Script e validações obrigatórias.
       html = html.replace('// ── Enviar ao Google Sheets ──', helper + '\n// ── Enviar ao Google Sheets ──');
       html = html.replace("headers: { 'Content-Type': 'application/json' },", "headers: { 'Content-Type': 'text/plain;charset=utf-8' },");
       html = html.replace('body: JSON.stringify(dados)', 'body: JSON.stringify(normalizarPayloadCEUA(dados))');
+      html = html.replace('async function enviarEGerarPDF(){\n  const dados = coletarDados();', 'async function enviarEGerarPDF(){\n  if(!validarCamposInstitucionais()) return;\n  const dados = coletarDados();');
+      html = html.replace('onclick="gerarPDF()" class="nb flex items-center justify-center gap-2 py-4 border-2 border-tl-200 text-tl-700 hover:bg-tl-50 text-base"', 'onclick="validarCamposInstitucionais()&&gerarPDF()" class="nb flex items-center justify-center gap-2 py-4 border-2 border-tl-200 text-tl-700 hover:bg-tl-50 text-base"');
+
       document.open();
       document.write(html);
       document.close();
