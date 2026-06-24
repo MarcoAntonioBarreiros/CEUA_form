@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CIUCA — Primatas não humanos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700;800;900&display=swap">
+<link rel="stylesheet" href="assets/form.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+const CFG = {
+  group: 'Primatas não humanos',
+  slug: 'primatas',
+  rn: 'RN 60/2023 · RN 51/2021',
+  footer: 'Fontes: RN CONCEA/MCTI nº 60/2023 e nº 51/2021. O texto oficial vigente prevalece.',
+  animalLabel: 'Espécie / grupo',
+  animalDetailLabel: 'Espécie(s) / detalhamento / observações',
+  animalPlaceholder: 'Ex: sagui (Callithrix), macaco-prego (Sapajus)',
+  animalOptions: ['Sagui / Mico (Callithrix)', 'Macaco-prego (Sapajus)', 'Outros primatas neotropicais', 'Primatas diversos'],
+  purposeHint: 'A finalidade é registrada apenas para caracterização. O Anexo da RN 60/2023 não diferencia os critérios por criação, manutenção ou experimentação.',
+  criteria: [
+    {
+      cat: 'Ambientes Físicos — Áreas de Apoio',
+      items: [
+        { t: 'Área administrativa.', c: 'Obrigatório' },
+        { t: 'Sala de arquivos e sala de reuniões.', c: 'Recomendado' },
+        { t: 'Sanitários fora de áreas controladas e das instalações animais.', c: 'Obrigatório' },
+        { t: 'Cozinha em área limpa, que permita a limpeza e higienização, conforme especificações do Guia Brasileiro do CONCEA.', c: 'Obrigatório' },
+        { t: 'Área externa da instalação com barreiras que previnam a entrada de contaminantes ou pragas.', c: 'Obrigatório' },
+        { t: 'Quarentena conforme especificações do Guia Brasileiro do CONCEA.', c: 'Obrigatório' },
+        { t: 'Calçadas circundantes dos recintos, conforme especificações do Guia Brasileiro do CONCEA.', c: 'Recomendado' },
+        { t: 'Área de eutanásia separada das demais áreas.', c: 'Obrigatório' },
+        { t: 'Área de higienização.', c: 'Obrigatório' }
+      ]
+    },
+    {
+      cat: 'Depósitos',
+      items: [
+        { t: 'Depósito para armazenagem de alimentos não perecíveis e perecíveis.', c: 'Obrigatório' },
+        { t: 'Depósito de equipamentos e materiais.', c: 'Recomendado' },
+        { t: 'Depósito para resíduos biológicos.', c: 'Obrigatório' }
+      ]
+    },
+    {
+      cat: 'Detalhes Construtivos / Ambiente',
+      items: [
+        { t: 'Instalações animais de alvenaria e concreto com ambientes seguros, que evitem fugas.', c: 'Obrigatório' },
+        { t: 'Alojamentos externos distantes de centros urbanos, em área arborizada.', c: 'Recomendado' },
+        { t: 'Paredes, pisos e tetos lisos, livres de rejuntes e reentrâncias, em materiais que possibilitem higienização e desinfecção.', c: 'Obrigatório' },
+        { t: 'Recintos com telas que contenham a espécie alojada e que possuam grades metálicas, conforme especificações do Guia Brasileiro do CONCEA.', c: 'Obrigatório' },
+        { t: 'Gaiolas que forneçam abrigo (refúgio), dispostas de maneira que não haja agressões entre os animais.', c: 'Obrigatório' }
+      ]
+    },
+    {
+      cat: 'Alojamentos internos — Áreas fechadas',
+      items: [
+        { t: 'Recintos de animais com ventilação, exaustão, temperatura e umidade controladas, conforme as características das espécies.', c: 'Obrigatório' },
+        { t: 'Sistema de iluminação com fotoperíodo regulável nas áreas controladas e recintos de animais.', c: 'Obrigatório' },
+        { t: 'Controle de ruídos.', c: 'Obrigatório' },
+        { t: 'Portas das salas de materiais laváveis e resistentes e dotadas de visores.', c: 'Recomendado' },
+        { t: 'Paredes, pisos e tetos lisos, livres de rejuntes e reentrâncias, em materiais que possibilitem higienização e desinfecção.', c: 'Obrigatório' },
+        { t: 'Pisos que permitam a drenagem, com ralos sifonados mantidos fechados.', c: 'Obrigatório' }
+      ]
+    },
+    {
+      cat: 'Alojamentos externos — Áreas ao ar livre',
+      items: [
+        { t: 'Recintos mantidos secos e limpos.', c: 'Obrigatório' },
+        { t: 'Recintos ventilados e isolados.', c: 'Obrigatório' },
+        { t: 'Recinto com poleiros, barreiras visuais, refúgios, provisão de alimentos, água e abrigo, que evitem a monopolização de recursos por animais dominantes.', c: 'Obrigatório' },
+        { t: 'Abrigos construídos com uma abertura suficiente para que os animais possam entrar com filhotes nas costas.', c: 'Obrigatório' },
+        { t: 'Recintos com espaço suficiente para que os animais possam realizar suas necessidades fisiológicas e comportamentais.', c: 'Obrigatório' },
+        { t: 'Dimensões dos alojamentos das espécies conforme especificações do Guia Brasileiro do CONCEA.', c: 'Obrigatório' },
+        { t: 'Alojamentos dos ambientes de produção ou de manutenção compostos por recintos complexos e estimulantes.', c: 'Obrigatório' }
+      ]
+    },
+    {
+      cat: 'Biossegurança',
+      items: [
+        { t: 'Uso de equipamentos de proteção individual preconizados pelo nível de biossegurança da instalação.', c: 'Obrigatório' },
+        { t: 'Barreiras sanitárias de bioexclusão e biocontenção preconizadas pelo nível de biossegurança da instalação.', c: 'Obrigatório' }
+      ]
+    },
+    {
+      cat: 'Procedimentos',
+      items: [
+        { t: 'Alojamento em pares ou grupos, exceto em casos autorizados pela CEUA ou devido a condições clínicas.', c: 'Obrigatório' },
+        { t: 'Enriquecimento ambiental, exceto se justificado.', c: 'Obrigatório' },
+        { t: 'Registro das vacinas e medicações utilizadas nos animais.', c: 'Obrigatório' },
+        { t: 'Gerenciamento de resíduos sólidos de acordo com a legislação vigente.', c: 'Obrigatório' },
+        { t: 'Manual de Procedimentos Operacionais Padrão (POPs).', c: 'Obrigatório' }
+      ]
+    }
+  ]
+};
+</script>
+<script src="assets/shell.js"></script>
+<script src="assets/form-engine.js"></script>
+</head>
+<body></body>
+</html>
