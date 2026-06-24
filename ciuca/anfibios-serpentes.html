@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CIUCA — Anfíbios e Serpentes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700;800;900&display=swap">
+<link rel="stylesheet" href="assets/form.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+const CFG = {
+  group: 'Anfíbios e Serpentes',
+  slug: 'anfibios-serpentes',
+  rn: 'RN 62/2023 · RN 51/2021',
+  footer: 'Fontes: RN CONCEA/MCTI nº 62/2023 e nº 51/2021. O texto oficial vigente prevalece.',
+  animalLabel: 'Grupo (anexo aplicável)',
+  animalDetailLabel: 'Espécie(s) / detalhamento / observações',
+  animalPlaceholder: 'Ex: Rhinella, Boana (anfíbios); Bothrops, Crotalus (serpentes)',
+  animalOptions: ['Anfíbios', 'Serpentes', 'Anfíbios e serpentes'],
+  animalMap: { 'Anfíbios': 'Anfíbios', 'Serpentes': 'Serpentes', 'Anfíbios e serpentes': 'ambos' },
+  filterAnimal: true,
+  purposeHint: 'Selecione o grupo para ver os critérios do anexo correspondente. A finalidade é registrada apenas para caracterização — o Anexo da RN 62/2023 não diferencia os critérios por criação, manutenção ou experimentação.',
+  criteria: [
+    {
+      cat: 'Anfíbios — Instalações',
+      items: [
+        { t: 'Alojamentos com dimensões e características que atendam aos hábitos e necessidades de cada espécie, respeitando as especificações do Guia Brasileiro do CONCEA.', c: 'Obrigatório', spec: 'Anfíbios' },
+        { t: 'Controle de iluminação, umidade e temperatura.', c: 'Obrigatório', spec: 'Anfíbios' }
+      ]
+    },
+    {
+      cat: 'Anfíbios — Procedimentos',
+      items: [
+        { t: 'Enriquecimento ambiental.', c: 'Obrigatório', spec: 'Anfíbios' },
+        { t: 'Registro da frequência da alimentação dos animais.', c: 'Obrigatório', spec: 'Anfíbios' },
+        { t: 'Registro de higienização dos recintos dos animais.', c: 'Recomendado', spec: 'Anfíbios' },
+        { t: 'Manual de Procedimentos Operacionais Padrão (POPs).', c: 'Recomendado', spec: 'Anfíbios' }
+      ]
+    },
+    {
+      cat: 'Serpentes — Instalações e ambiente',
+      items: [
+        { t: 'Alojamentos com dimensões e características que atendam aos hábitos e necessidades de cada espécie e que promovam a segurança dos animais e dos técnicos, respeitando as especificações do Guia Brasileiro do CONCEA.', c: 'Obrigatório', spec: 'Serpentes' },
+        { t: 'Alojamentos que promovam o bem-estar dos animais, de acordo com as especificações do Guia Brasileiro do CONCEA.', c: 'Obrigatório', spec: 'Serpentes' },
+        { t: 'Fonte de água no interior da gaiola.', c: 'Obrigatório', spec: 'Serpentes' },
+        { t: 'Controle de temperatura, umidade, ciclos de luz e trocas de ar de acordo com as necessidades das espécies.', c: 'Obrigatório', spec: 'Serpentes' },
+        { t: 'Fonte de água corrente ou frequência diária de troca de água para os animais do recinto.', c: 'Obrigatório', spec: 'Serpentes' },
+        { t: 'Fontes de calor artificiais em serpentários abertos.', c: 'Obrigatório', spec: 'Serpentes' },
+        { t: 'Ambientes abrigados da luz solar nos recintos dos animais.', c: 'Obrigatório', spec: 'Serpentes' },
+        { t: 'Espécies mantidas típicas da região de instalação do serpentário ou provenientes de locais com características climáticas semelhantes ou de ambientes que reproduzam o habitat natural da espécie.', c: 'Obrigatório', spec: 'Serpentes' },
+        { t: 'Área de quarentena.', c: 'Recomendado', spec: 'Serpentes' },
+        { t: 'Ambulatório e centro cirúrgico.', c: 'Recomendado', spec: 'Serpentes' },
+        { t: 'Espaço reservado para os materiais de reposição utilizados na criação.', c: 'Recomendado', spec: 'Serpentes' },
+        { t: 'Área de higienização externa às salas de manutenção de animais.', c: 'Recomendado', spec: 'Serpentes' },
+        { t: 'Níveis de biossegurança das áreas da instalação de acordo com o risco biológico das atividades realizadas.', c: 'Obrigatório', spec: 'Serpentes' }
+      ]
+    },
+    {
+      cat: 'Serpentes — Manejo e registros',
+      items: [
+        { t: 'Inspeção e registro diários das condições físicas e de bem-estar dos animais.', c: 'Obrigatório', spec: 'Serpentes' },
+        { t: 'Identificação dos animais.', c: 'Obrigatório', spec: 'Serpentes' },
+        { t: 'Registro de Inspeção.', c: 'Obrigatório', spec: 'Serpentes' },
+        { t: 'Registro da frequência da alimentação dos animais.', c: 'Obrigatório', spec: 'Serpentes' },
+        { t: 'Registro de higienização dos recintos dos animais.', c: 'Recomendado', spec: 'Serpentes' },
+        { t: 'Enriquecimento ambiental.', c: 'Recomendado', spec: 'Serpentes' },
+        { t: 'Procedimentos Operacionais Padrão (POPs).', c: 'Recomendado', spec: 'Serpentes' },
+        { t: 'Manual de Procedimentos Operacionais Padrão (POPs).', c: 'Recomendado', spec: 'Serpentes' },
+        { t: 'Gerenciamento de resíduos sólidos de acordo com a legislação vigente.', c: 'Obrigatório', spec: 'Serpentes' }
+      ]
+    }
+  ]
+};
+</script>
+<script src="assets/shell.js"></script>
+<script src="assets/form-engine.js"></script>
+</head>
+<body></body>
+</html>
