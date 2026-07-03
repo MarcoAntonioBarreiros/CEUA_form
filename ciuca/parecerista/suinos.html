@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ficha técnica CEUA — Suínos</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    :root{--bg:#f6f8fb;--card:#fff;--ink:#0f172a;--muted:#64748b;--line:#d9e2ec;--brand:#164e63;--brand2:#0f766e;--warn:#92400e;--bad:#991b1b;--ok:#166534}
+    *{box-sizing:border-box} body{margin:0;background:var(--bg);font-family:Arial,Helvetica,sans-serif;color:var(--ink)}
+    .wrap{max-width:1180px;margin:0 auto;padding:24px}.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;margin:14px 0;box-shadow:0 10px 24px rgba(15,23,42,.05)}
+    .top{display:flex;justify-content:space-between;gap:20px;align-items:center;background:linear-gradient(135deg,#164e63,#0f766e);color:#fff}.eyebrow{font-size:12px;opacity:.86;text-transform:uppercase;letter-spacing:.08em}.title{font-size:25px;font-weight:800;margin-top:4px}.sub{font-size:14px;opacity:.92;margin-top:4px}.badge{font-size:12px;border:1px solid rgba(255,255,255,.55);border-radius:999px;padding:8px 12px;white-space:nowrap}
+    .steps{display:flex;gap:8px;flex-wrap:wrap}.dot{border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 12px;font-weight:700;cursor:pointer}.dot.active{background:#164e63;color:#fff}.dot.done{background:#dcfce7;border-color:#86efac;color:#166534}.meta{margin-top:10px;color:var(--muted);font-size:13px}
+    h2{margin:0 0 6px;font-size:19px}.hint{color:var(--muted);font-size:13px;line-height:1.45}.info{background:#ecfeff;border:1px solid #a5f3fc;border-radius:12px;padding:12px;line-height:1.45;color:#164e63}.warn{background:#fffbeb;border-color:#fde68a;color:#92400e}.bad{background:#fee2e2;border-color:#fecaca;color:#991b1b}.ok{background:#dcfce7;border-color:#bbf7d0;color:#166534}
+    .grid{display:grid;gap:12px}.g2{grid-template-columns:repeat(2,minmax(0,1fr))}.g3{grid-template-columns:repeat(3,minmax(0,1fr))}.g4{grid-template-columns:repeat(4,minmax(0,1fr))}.span2{grid-column:span 2}.span3{grid-column:span 3}.span4{grid-column:span 4}
+    label.lbl{display:block;font-weight:700;font-size:13px;margin-bottom:5px;color:#334155}.fi,textarea,select{width:100%;border:1px solid var(--line);border-radius:10px;padding:10px;background:#fff;font-size:14px}textarea{min-height:82px;resize:vertical}.short{min-height:52px}.step{display:none}.step.active{display:block}.nav{display:flex;justify-content:space-between;gap:10px;margin-top:18px}.btn{border:1px solid var(--line);border-radius:12px;padding:10px 14px;background:#fff;cursor:pointer;font-weight:700}.btn.primary{background:#164e63;color:#fff;border-color:#164e63}.btn.green{background:#166534;color:#fff;border-color:#166534}.btn.warn{background:#92400e;color:#fff;border-color:#92400e}
+    .section-title{margin:18px 0 8px;padding:8px 10px;border-left:5px solid #0f766e;background:#f0fdfa;border-radius:8px;font-weight:800;color:#115e59}.chkgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.chk{border:1px solid var(--line);border-radius:12px;padding:10px;background:#fff;display:flex;gap:8px;align-items:flex-start}.chk input{margin-top:2px}.rowline{border-top:1px solid var(--line);padding-top:12px;margin-top:12px}.pill{display:inline-flex;align-items:center;border-radius:999px;border:1px solid var(--line);padding:6px 10px;margin:4px 4px 0 0;background:#fff;font-size:12px;color:#475569}.foot{color:#64748b;text-align:center;margin:22px 0;font-size:12px}
+    @media(max-width:850px){.g2,.g3,.g4,.chkgrid{grid-template-columns:1fr}.span2,.span3,.span4{grid-column:auto}.top{display:block}.badge{display:inline-block;margin-top:10px}.nav{display:block}.nav .btn{margin-top:8px;width:100%}}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <header class="card top">
+    <div>
+      <div class="eyebrow">UFPR · CEUA Palotina · uso interno do parecerista</div>
+      <div class="title">Ficha técnica complementar — Instalação de Suínos</div>
+      <div class="sub">Ambiência, manejo, bem-estar, biossegurança e suficiência documental para parecer CEUA</div>
+    </div>
+    <div class="badge">Base: RN Suínos + Guia Brasileiro CONCEA</div>
+  </header>
+
+  <div class="card">
+    <div class="steps">
+      <button class="dot active" data-step="1" onclick="go(1)">1. Identificação</button>
+      <button class="dot" data-step="2" onclick="go(2)">2. Alojamento</button>
+      <button class="dot" data-step="3" onclick="go(3)">3. Ambiência</button>
+      <button class="dot" data-step="4" onclick="go(4)">4. Manejo</button>
+      <button class="dot" data-step="5" onclick="go(5)">5. Parecer</button>
+    </div>
+    <div class="meta">Etapa <span id="curNum">1</span> de 5 · <span id="curTitle">Identificação do processo e da instalação</span></div>
+  </div>
+
+  <section class="step card active" data-step="1">
+    <h2>1. Identificação do processo e da instalação</h2>
+    <p class="hint">Ficha complementar para subsidiar o parecer. Não substitui o formulário de cadastro/regularização da instalação no CIUCA.</p>
+    <div class="grid g3">
+      <div><label class="lbl">Processo SEI</label><input class="fi" id="sei"></div>
+      <div><label class="lbl">Data da avaliação</label><input class="fi" id="data" type="date"></div>
+      <div><label class="lbl">Parecerista</label><input class="fi" id="parecerista"></div>
+      <div class="span2"><label class="lbl">Instalação avaliada</label><input class="fi" id="instalacao" placeholder="Ex.: Setor de Suinocultura / creche / galpão experimental"></div>
+      <div><label class="lbl">Campus / local</label><input class="fi" id="local"></div>
+      <div><label class="lbl">Coordenador da instalação</label><input class="fi" id="coordenador"></div>
+      <div><label class="lbl">Responsável Técnico veterinário</label><input class="fi" id="rt"></div>
+      <div><label class="lbl">CRMV / UF</label><input class="fi" id="crmv"></div>
+      <div class="span3"><label class="lbl">Projeto, atividade ou solicitação relacionada</label><input class="fi" id="projeto"></div>
+    </div>
+
+    <div class="section-title">Categorias de animais envolvidas</div>
+    <div class="chkgrid">
+      <label class="chk"><input type="checkbox" id="cat_leitoes">Leitões / creche</label>
+      <label class="chk"><input type="checkbox" id="cat_terminacao">Crescimento / terminação</label>
+      <label class="chk"><input type="checkbox" id="cat_matrizes">Matrizes / gestação / maternidade</label>
+      <label class="chk"><input type="checkbox" id="cat_reprodutores">Reprodutores</label>
+    </div>
+    <div class="grid g3 rowline">
+      <div><label class="lbl">Número máximo de animais previsto</label><input class="fi" id="num_animais" type="number"></div>
+      <div><label class="lbl">Finalidade</label><select class="fi" id="finalidade"><option></option><option>Ensino</option><option>Pesquisa</option><option>Treinamento</option><option>Misto</option></select></div>
+      <div><label class="lbl">A documentação apresentada é suficiente para iniciar a avaliação?</label><select class="fi" id="doc_suf"><option></option><option>Sim</option><option>Parcialmente</option><option>Não</option></select></div>
+    </div>
+    <div class="nav"><span></span><button class="btn primary" onclick="next()">Próximo →</button></div>
+  </section>
+
+  <section class="step card" data-step="2">
+    <h2>2. Sistema de alojamento, espaço e densidade</h2>
+    <div class="grid g3">
+      <div><label class="lbl">Tipo principal de instalação</label><select class="fi" id="tipo"><option></option><option>Gaiolas suspensas</option><option>Baias coletivas</option><option>Piso ripado</option><option>Piso compacto</option><option>Cama sobreposta</option><option>Maternidade</option><option>Creche</option><option>Outro</option></select></div>
+      <div><label class="lbl">Piso</label><select class="fi" id="piso"><option></option><option>Ripado</option><option>Compacto lavável</option><option>Cama</option><option>Misto</option><option>Outro</option></select></div>
+      <div><label class="lbl">Há área de isolamento/enfermaria?</label><select class="fi" id="isolamento"><option></option><option>Sim</option><option>Não</option><option>N/A justificado</option></select></div>
+      <div><label class="lbl">Área disponível por baia/gaiola</label><input class="fi" id="area_baia" placeholder="m² ou descrição"></div>
+      <div><label class="lbl">Número de animais por baia/gaiola</label><input class="fi" id="animais_baia"></div>
+      <div><label class="lbl">Critério usado para definir a lotação</label><input class="fi" id="criterio_lotacao" placeholder="norma, guia, categoria, peso vivo etc."></div>
+      <div class="span3"><label class="lbl">Análise do parecerista sobre espaço, densidade, piso e separação por categoria</label><textarea id="analise_densidade"></textarea></div>
+    </div>
+
+    <div class="section-title">Itens mínimos a verificar</div>
+    <div class="chkgrid">
+      <label class="chk"><input type="checkbox" id="v_densidade">Densidade compatível com categoria, peso e comportamento</label>
+      <label class="chk"><input type="checkbox" id="v_piso">Piso seguro, antiderrapante e higienizável</label>
+      <label class="chk"><input type="checkbox" id="v_cochos">Acesso suficiente a cochos/bebedouros</label>
+      <label class="chk"><input type="checkbox" id="v_separacao">Separação adequada por idade, lote, fase ou condição clínica</label>
+    </div>
+    <div class="nav"><button class="btn" onclick="prev()">← Anterior</button><button class="btn primary" onclick="next()">Próximo →</button></div>
+  </section>
+
+  <section class="step card" data-step="3">
+    <h2>3. Ambiência, qualidade do ar e conforto ambiental</h2>
+    <div class="info warn"><b>Objetivo:</b> registrar se o parecerista tem informação suficiente sobre ventilação/exaustão, temperatura, umidade, poeira, amônia, gases, odores, ruído e iluminação. Quando a informação não estiver documentada, marcar como pendência/diligência.</div>
+    <div class="grid g3 rowline">
+      <div><label class="lbl">Ventilação / renovação de ar</label><select class="fi" id="ventilacao"><option></option><option>Adequada</option><option>Parcial / dúvida</option><option>Inadequada</option><option>Sem informação</option><option>N/A justificado</option></select></div>
+      <div><label class="lbl">Exaustores / cortinas / ventilação mecânica</label><select class="fi" id="exaustao"><option></option><option>Existente e operacional</option><option>Ventilação natural suficiente</option><option>Parcial / dúvida</option><option>Inadequado</option><option>Sem informação</option><option>N/A justificado</option></select></div>
+      <div><label class="lbl">Controle térmico</label><select class="fi" id="termico"><option></option><option>Adequado</option><option>Parcial / dúvida</option><option>Inadequado</option><option>Sem informação</option></select></div>
+      <div><label class="lbl">Temperatura monitorada?</label><select class="fi" id="temp_mon"><option></option><option>Sim, com registro</option><option>Sim, sem registro</option><option>Não</option><option>Sem informação</option></select></div>
+      <div><label class="lbl">Umidade monitorada?</label><select class="fi" id="umidade_mon"><option></option><option>Sim, com registro</option><option>Sim, sem registro</option><option>Não</option><option>Sem informação</option></select></div>
+      <div><label class="lbl">Iluminação / fotoperíodo</label><select class="fi" id="iluminacao"><option></option><option>Adequado</option><option>Parcial / dúvida</option><option>Inadequado</option><option>Sem informação</option></select></div>
+      <div><label class="lbl">Poeira</label><select class="fi" id="poeira"><option></option><option>Controlada</option><option>Parcial / dúvida</option><option>Excessiva</option><option>Sem informação</option></select></div>
+      <div><label class="lbl">Amônia / gases / odores</label><select class="fi" id="amonia"><option></option><option>Controlados</option><option>Parcial / dúvida</option><option>Possível acúmulo</option><option>Sem informação</option></select></div>
+      <div><label class="lbl">Ruído / qualidade acústica</label><select class="fi" id="ruido"><option></option><option>Adequado</option><option>Parcial / dúvida</option><option>Inadequado</option><option>Sem informação</option></select></div>
+      <div class="span3"><label class="lbl">Análise do parecerista sobre ambiência</label><textarea id="analise_ambiencia" placeholder="Descrever evidências: documentação, fotos, visita, dados de monitoramento, dúvidas ou necessidade de diligência."></textarea></div>
+    </div>
+    <div class="nav"><button class="btn" onclick="prev()">← Anterior</button><button class="btn primary" onclick="next()">Próximo →</button></div>
+  </section>
+
+  <section class="step card" data-step="4">
+    <h2>4. Manejo, bem-estar, higiene, resíduos e biossegurança</h2>
+    <div class="grid g3">
+      <div><label class="lbl">Enriquecimento ambiental</label><select class="fi" id="enriquecimento"><option></option><option>Adequado</option><option>Parcial / dúvida</option><option>Inexistente/inadequado</option><option>Sem informação</option><option>N/A justificado</option></select></div>
+      <div><label class="lbl">Contato social/visual compatível</label><select class="fi" id="social"><option></option><option>Adequado</option><option>Parcial / dúvida</option><option>Inadequado</option><option>Sem informação</option></select></div>
+      <div><label class="lbl">Manejo de animais doentes/lesionados</label><select class="fi" id="doentes"><option></option><option>Adequado</option><option>Parcial / dúvida</option><option>Inadequado</option><option>Sem informação</option></select></div>
+      <div><label class="lbl">Limpeza e desinfecção</label><select class="fi" id="limpeza"><option></option><option>Adequada, com POP/rotina</option><option>Adequada, sem POP formal</option><option>Parcial / dúvida</option><option>Inadequada</option><option>Sem informação</option></select></div>
+      <div><label class="lbl">Manejo de dejetos</label><select class="fi" id="dejetos"><option></option><option>Adequado</option><option>Parcial / dúvida</option><option>Inadequado</option><option>Sem informação</option></select></div>
+      <div><label class="lbl">Carcaças / eutanásia / destinação</label><select class="fi" id="carcacas"><option></option><option>Adequado</option><option>Parcial / dúvida</option><option>Inadequado</option><option>Sem informação</option></select></div>
+      <div><label class="lbl">Perfurocortantes, medicamentos e resíduos químicos</label><select class="fi" id="residuos"><option></option><option>Adequado</option><option>Parcial / dúvida</option><option>Inadequado</option><option>Sem informação</option></select></div>
+      <div><label class="lbl">Controle de acesso / biossegurança</label><select class="fi" id="biosseg"><option></option><option>Adequado</option><option>Parcial / dúvida</option><option>Inadequado</option><option>Sem informação</option></select></div>
+      <div><label class="lbl">POPs e registros</label><select class="fi" id="pops"><option></option><option>Adequados</option><option>Parcial / dúvida</option><option>Inadequados</option><option>Sem informação</option></select></div>
+      <div class="span3"><label class="lbl">Análise do parecerista sobre manejo, bem-estar, resíduos e biossegurança</label><textarea id="analise_manejo"></textarea></div>
+    </div>
+    <div class="section-title">Pendências frequentes a checar</div>
+    <div class="chkgrid">
+      <label class="chk"><input type="checkbox" id="p_amonia">Falta informação sobre amônia/gases/poeira</label>
+      <label class="chk"><input type="checkbox" id="p_ruido">Falta informação sobre ruído</label>
+      <label class="chk"><input type="checkbox" id="p_densidade">Falta cálculo/justificativa de densidade</label>
+      <label class="chk"><input type="checkbox" id="p_isolamento">Falta área/protocolo para isolamento</label>
+      <label class="chk"><input type="checkbox" id="p_residuos">Falta detalhamento de resíduos/carcaças/perfurocortantes</label>
+      <label class="chk"><input type="checkbox" id="p_pop">Faltam POPs ou registros de monitoramento</label>
+    </div>
+    <div class="nav"><button class="btn" onclick="prev()">← Anterior</button><button class="btn primary" onclick="next()">Próximo →</button></div>
+  </section>
+
+  <section class="step card" data-step="5">
+    <h2>5. Conclusão técnica do parecerista</h2>
+    <div id="vereditoBox" class="info">Selecione uma conclusão para gerar o resumo.</div>
+    <div class="grid g2 rowline">
+      <div><label class="lbl">Conclusão técnica</label><select class="fi" id="conclusao" onchange="atualizaResumo()"><option></option><option>Informações suficientes — favorável ao encaminhamento</option><option>Favorável com recomendações</option><option>Diligência — solicitar complementação</option><option>Não favorável no momento</option></select></div>
+      <div><label class="lbl">Necessita visita técnica?</label><select class="fi" id="visita"><option></option><option>Não</option><option>Sim, antes da aprovação</option><option>Sim, como recomendação posterior</option><option>A critério da plenária</option></select></div>
+      <div class="span2"><label class="lbl">Pendências/documentos a solicitar</label><textarea id="pendencias"></textarea></div>
+      <div class="span2"><label class="lbl">Recomendações ao responsável pela instalação</label><textarea id="recomendacoes"></textarea></div>
+      <div class="span2"><label class="lbl">Texto do parecer técnico complementar</label><textarea id="parecer" style="min-height:140px" placeholder="Síntese técnica para copiar no parecer ou gerar PDF."></textarea></div>
+    </div>
+    <div class="nav"><button class="btn" onclick="prev()">← Anterior</button><div><button class="btn warn" onclick="sugerirTexto()">Gerar texto-base</button> <button class="btn green" onclick="gerarPDF()">📄 Gerar PDF</button> <button class="btn" onclick="limpar()">↺ Limpar</button></div></div>
+  </section>
+
+  <footer class="foot">CEUA Palotina · UFPR · Ficha complementar interna para parecer técnico de instalação animal — Suínos</footer>
+</div>
+
+<script>
+const titles={1:'Identificação do processo e da instalação',2:'Sistema de alojamento, espaço e densidade',3:'Ambiência, qualidade do ar e conforto ambiental',4:'Manejo, bem-estar, higiene, resíduos e biossegurança',5:'Conclusão técnica do parecerista'};
+function $(id){return document.getElementById(id)}
+function val(id){return ($(id)?.value||'').trim()}
+function checked(id){return $(id)?.checked?'Sim':'Não'}
+function go(n){document.querySelectorAll('.step').forEach(s=>s.classList.toggle('active',+s.dataset.step===n));document.querySelectorAll('.dot').forEach(d=>{let k=+d.dataset.step;d.classList.toggle('active',k===n);d.classList.toggle('done',k<n)});$('curNum').textContent=n;$('curTitle').textContent=titles[n];scrollTo({top:0,behavior:'smooth'})}
+function next(){let n=+document.querySelector('.step.active').dataset.step;go(Math.min(5,n+1))}
+function prev(){let n=+document.querySelector('.step.active').dataset.step;go(Math.max(1,n-1))}
+(function init(){const hoje=new Date().toISOString().slice(0,10);$('data').value=hoje})();
+function coleta(){return{
+  identificacao:{'Processo SEI':val('sei'),'Data':val('data'),'Parecerista':val('parecerista'),'Instalação':val('instalacao'),'Local':val('local'),'Coordenador':val('coordenador'),'RT veterinário':val('rt'),'CRMV/UF':val('crmv'),'Projeto/atividade':val('projeto'),'Finalidade':val('finalidade'),'Número máximo de animais':val('num_animais'),'Documentação suficiente':val('doc_suf')},
+  categorias:{'Leitões/creche':checked('cat_leitoes'),'Crescimento/terminação':checked('cat_terminacao'),'Matrizes':checked('cat_matrizes'),'Reprodutores':checked('cat_reprodutores')},
+  alojamento:{'Tipo de instalação':val('tipo'),'Piso':val('piso'),'Isolamento/enfermaria':val('isolamento'),'Área por baia/gaiola':val('area_baia'),'Animais por baia/gaiola':val('animais_baia'),'Critério de lotação':val('criterio_lotacao'),'Densidade compatível':checked('v_densidade'),'Piso seguro':checked('v_piso'),'Cocho/bebedouro suficiente':checked('v_cochos'),'Separação adequada':checked('v_separacao'),'Análise':val('analise_densidade')},
+  ambiencia:{'Ventilação':val('ventilacao'),'Exaustão/cortinas':val('exaustao'),'Controle térmico':val('termico'),'Temperatura monitorada':val('temp_mon'),'Umidade monitorada':val('umidade_mon'),'Iluminação/fotoperíodo':val('iluminacao'),'Poeira':val('poeira'),'Amônia/gases/odores':val('amonia'),'Ruído':val('ruido'),'Análise':val('analise_ambiencia')},
+  manejo:{'Enriquecimento':val('enriquecimento'),'Contato social/visual':val('social'),'Animais doentes/lesionados':val('doentes'),'Limpeza/desinfecção':val('limpeza'),'Dejetos':val('dejetos'),'Carcaças/eutanásia':val('carcacas'),'Perfurocortantes/medicamentos/resíduos químicos':val('residuos'),'Biossegurança/acesso':val('biosseg'),'POPs/registros':val('pops'),'Pendência amônia':checked('p_amonia'),'Pendência ruído':checked('p_ruido'),'Pendência densidade':checked('p_densidade'),'Pendência isolamento':checked('p_isolamento'),'Pendência resíduos':checked('p_residuos'),'Pendência POP':checked('p_pop'),'Análise':val('analise_manejo')},
+  conclusao:{'Conclusão técnica':val('conclusao'),'Visita técnica':val('visita'),'Pendências':val('pendencias'),'Recomendações':val('recomendacoes'),'Parecer':val('parecer')}
+}}
+function atualizaResumo(){const c=val('conclusao');const box=$('vereditoBox');box.className='info';if(c.includes('suficientes')||c.includes('recomendações'))box.classList.add('ok');if(c.includes('Diligência'))box.classList.add('warn');if(c.includes('Não favorável'))box.classList.add('bad');box.innerHTML=c?'<b>Conclusão selecionada:</b> '+c:'Selecione uma conclusão para gerar o resumo.'}
+function pendenciasMarcadas(){const p=[];[['p_amonia','ambiência: amônia/gases/poeira'],['p_ruido','qualidade acústica/ruído'],['p_densidade','densidade/espaço por animal'],['p_isolamento','isolamento/enfermaria'],['p_residuos','resíduos/carcaças/perfurocortantes'],['p_pop','POPs/registros de monitoramento']].forEach(([id,t])=>{if($(id).checked)p.push(t)});return p}
+function sugerirTexto(){const p=pendenciasMarcadas();let txt=`Em avaliação técnica complementar da instalação de suínos ${val('instalacao')||'[identificar instalação]'}, vinculada ao processo SEI ${val('sei')||'[informar]'}, foram analisados os aspectos de alojamento, densidade, ambiência, qualidade do ar, manejo, bem-estar, higiene, resíduos e biossegurança.\n\n`;
+if(p.length){txt+=`A documentação apresentada não permite concluir integralmente a adequação da instalação quanto aos seguintes pontos: ${p.join('; ')}. Recomenda-se diligência ao responsável para complementação dessas informações antes da conclusão do parecer.\n\n`;}
+else{txt+=`As informações apresentadas são suficientes para análise dos principais pontos técnicos de ambiência, manejo e bem-estar, sem pendências documentais críticas identificadas nesta ficha complementar.\n\n`;}
+txt+=`Conclusão técnica: ${val('conclusao')||'[selecionar conclusão]'}. ${val('visita')?'Visita técnica: '+val('visita')+'.':''}`;$('parecer').value=txt;atualizaResumo()}
+function limpar(){if(confirm('Limpar todos os campos?'))location.reload()}
+function gerarPDF(){const d=coleta();const doc=new jspdf.jsPDF('p','mm','a4');let y=14;const ML=14,MR=196,CW=182;const ck=h=>{if(y+h>282){doc.addPage();y=14}};const sec=t=>{ck(9);doc.setFillColor(22,78,99);doc.rect(ML,y-4,CW,6,'F');doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(8);doc.text(t,ML+2,y);y+=7};const kv=(k,v)=>{ck(7);doc.setTextColor(71,85,105);doc.setFont('helvetica','bold');doc.setFontSize(7.4);let kl=doc.splitTextToSize(k+':',54);doc.text(kl,ML,y);doc.setTextColor(15,23,42);doc.setFont('helvetica','normal');let vl=doc.splitTextToSize(String(v||'—'),124);doc.text(vl,ML+58,y);y+=Math.max(5,Math.max(kl.length,vl.length)*4)};doc.setFillColor(22,78,99);doc.rect(0,0,210,12,'F');doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(10);doc.text('UFPR · CEUA Palotina — Ficha técnica complementar: Suínos',ML,7);doc.setFont('helvetica','normal');doc.setFontSize(7);doc.text('Uso interno do parecerista · Ambiência, manejo, bem-estar e biossegurança',ML,10.5);y=18;sec('1. IDENTIFICAÇÃO');Object.entries(d.identificacao).forEach(([k,v])=>kv(k,v));sec('CATEGORIAS');Object.entries(d.categorias).forEach(([k,v])=>kv(k,v));sec('2. ALOJAMENTO, ESPAÇO E DENSIDADE');Object.entries(d.alojamento).forEach(([k,v])=>kv(k,v));sec('3. AMBIÊNCIA E QUALIDADE DO AR');Object.entries(d.ambiencia).forEach(([k,v])=>kv(k,v));sec('4. MANEJO, BEM-ESTAR, RESÍDUOS E BIOSSEGURANÇA');Object.entries(d.manejo).forEach(([k,v])=>kv(k,v));sec('5. CONCLUSÃO DO PARECERISTA');Object.entries(d.conclusao).forEach(([k,v])=>kv(k,v));y+=8;ck(22);doc.setTextColor(15,23,42);doc.setFont('helvetica','bold');doc.setFontSize(8);doc.text('ASSINATURA DO(A) PARECERISTA:',ML,y);doc.line(ML+48,y+1,MR,y+1);doc.save('Ficha_CEUA_Parecerista_Suinos.pdf')}
+</script>
+</body>
+</html>
