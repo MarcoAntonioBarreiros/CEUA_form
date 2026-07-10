@@ -37,6 +37,7 @@ function esc(value) {
 
 function v(id) { return ($(id)?.value || '').trim(); }
 function ck(id) { return $(id)?.checked ? 'Sim' : 'Não'; }
+function maskCpf(el){ var d=el.value.replace(/\D/g,'').slice(0,11), o=d; if(d.length>9)o=d.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/,'$1.$2.$3-$4'); else if(d.length>6)o=d.replace(/(\d{3})(\d{3})(\d{1,3})/,'$1.$2.$3'); else if(d.length>3)o=d.replace(/(\d{3})(\d{1,3})/,'$1.$2'); el.value=o; }
 
 function applyDefaults() {
   Object.entries(DEFAULTS).forEach(([id, value]) => {
@@ -134,7 +135,7 @@ function ensureShell() {
 
       <div class="grid g3">
         <div><label class="lbl">Coordenador da instalação</label><input id="coord" class="fi"></div>
-        <div><label class="lbl">CPF do coordenador</label><input id="coordCpf" class="fi" placeholder="000.000.000-00"></div>
+        <div><label class="lbl">CPF do coordenador</label><input id="coordCpf" class="fi" placeholder="000.000.000-00" inputmode="numeric" maxlength="14" oninput="maskCpf(this)"></div>
         <div><label class="lbl">E-mail institucional do coordenador</label><input id="coordMail" class="fi" placeholder="nome@ufpr.br"></div>
       </div>
 
