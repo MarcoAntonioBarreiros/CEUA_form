@@ -78,7 +78,6 @@ function ensureShell() {
       <div class="grid g3">
         <div class="span2"><label class="lbl">Instituição</label><input id="inst" class="fi" value="${DEFAULTS.inst}"></div>
         <div><label class="lbl">CNPJ</label><input id="cnpj" class="fi" value="${DEFAULTS.cnpj}"></div>
-        <div><label class="lbl">Credenciamento institucional — CIAEP</label><input id="ciaep" class="fi" placeholder="Preenchimento UNIBIO/CEUA"></div>
         <div class="span2"><label class="lbl">Endereço institucional</label><input id="addr" class="fi" value="${DEFAULTS.addr}"></div>
         <div><label class="lbl">Município / UF</label><input id="city" class="fi" value="${DEFAULTS.city}"></div>
         <div><label class="lbl">CEUA vinculada</label><input id="ceua" class="fi" value="${DEFAULTS.ceua}"></div>
@@ -135,8 +134,8 @@ function ensureShell() {
 
       <div class="grid g3">
         <div><label class="lbl">Coordenador da instalação</label><input id="coord" class="fi"></div>
-        <div><label class="lbl">Formação / experiência</label><input id="coordForm" class="fi"></div>
-        <div><label class="lbl">E-mail do coordenador</label><input id="coordMail" class="fi"></div>
+        <div><label class="lbl">CPF do coordenador</label><input id="coordCpf" class="fi" placeholder="000.000.000-00"></div>
+        <div><label class="lbl">E-mail institucional do coordenador</label><input id="coordMail" class="fi" placeholder="nome@ufpr.br"></div>
       </div>
 
       <div class="grid g4" style="margin-top:12px">
@@ -345,11 +344,11 @@ function validateJustificativas() {
 }
 
 function collect() {
-  const d = {g1:{'Instituição':v('inst'),'CNPJ':v('cnpj'),'Credenciamento (CIAEP)':v('ciaep'),'Endereço institucional':v('addr'),'Município / UF':v('city'),'CEUA vinculada':v('ceua'),'E-mail institucional da instalação':v('mail')}, g2:{'Nome / Identificação':v('unit'),'Finalidade':v('purpose'),'Situação':v('situation'),'Localização / tipo':v('local'),'Nível de biossegurança':v('nb'),'Campus':v('campus'),'Prédio':v('building'),'Sala':v('room'),'Área (m²)':v('area'),'Capacidade':v('cap'),[CFG.animalLabel || 'Grupo']:v('animalSelect'),[CFG.animalDetailLabel || 'Detalhamento']:v('animalDetail')}, g3:{'Coordenador da instalação':v('coord'),'Formação/experiência (Coord.)':v('coordForm'),'E-mail (Coord.)':v('coordMail'),'Responsável Técnico (Méd. Vet.)':v('rt'),'CRMV':v('crmv'),'UF do CRMV':v('crmvUf'),'E-mail (RT)':v('rtMail'),'RT é Médico Veterinário com CRMV ativo/regular':ck('rtVet'),'Coordenador e RT designados/registrados no CIUCA':ck('desig'),'ART homologada no CRMV [CRMV — não exigida pelo CONCEA/CIUCA]':ck('art')}, it:items(), s:stats(items())};
+  const d = {g1:{'Instituição':v('inst'),'CNPJ':v('cnpj'),'Endereço institucional':v('addr'),'Município / UF':v('city'),'CEUA vinculada':v('ceua'),'E-mail institucional da instalação':v('mail')}, g2:{'Nome / Identificação':v('unit'),'Finalidade':v('purpose'),'Situação':v('situation'),'Localização / tipo':v('local'),'Nível de biossegurança':v('nb'),'Campus':v('campus'),'Prédio':v('building'),'Sala':v('room'),'Área (m²)':v('area'),'Capacidade':v('cap'),[CFG.animalLabel || 'Grupo']:v('animalSelect'),[CFG.animalDetailLabel || 'Detalhamento']:v('animalDetail')}, g3:{'Coordenador da instalação':v('coord'),'CPF do coordenador':v('coordCpf'),'E-mail institucional (Coord.)':v('coordMail'),'Responsável Técnico (Méd. Vet.)':v('rt'),'CRMV':v('crmv'),'UF do CRMV':v('crmvUf'),'E-mail (RT)':v('rtMail'),'RT é Médico Veterinário com CRMV ativo/regular':ck('rtVet'),'Coordenador e RT designados/registrados no CIUCA':ck('desig'),'ART homologada no CRMV [CRMV — não exigida pelo CONCEA/CIUCA]':ck('art')}, it:items(), s:stats(items())};
   d.meta = {timestamp:new Date().toLocaleString('pt-BR'), grupo_animal:CFG.group, slug:CFG.slug || '', rn:CFG.rn || '', sei_destino:SEI_DESTINO, versao_formulario:'CIUCA Instalações v1.2', origem:'Formulários CIUCA GitHub Pages'};
   return d;
 }
-function flatPayload(d) { return {meta:d.meta,g1:d.g1,g2:d.g2,g3:d.g3,itens:d.it,resumo:d.s,grupo_animal:d.meta.grupo_animal,slug:d.meta.slug,rn:d.meta.rn,instituicao:d.g1['Instituição'],cnpj:d.g1['CNPJ'],ciaep:d.g1['Credenciamento (CIAEP)'],endereco:d.g1['Endereço institucional'],municipio_uf:d.g1['Município / UF'],ceua_vinculada:d.g1['CEUA vinculada'],email_instalacao:d.g1['E-mail institucional da instalação'],nome_instalacao:d.g2['Nome / Identificação'],finalidade:d.g2['Finalidade'],situacao:d.g2['Situação'],localizacao_tipo:d.g2['Localização / tipo'],nivel_biosseguranca:d.g2['Nível de biossegurança'],campus:d.g2['Campus'],predio:d.g2['Prédio'],sala_setor:d.g2['Sala'],area_m2:d.g2['Área (m²)'],capacidade:d.g2['Capacidade'],animal_grupo:v('animalSelect'),animal_detalhamento:v('animalDetail'),coordenador:d.g3['Coordenador da instalação'],email_coord:d.g3['E-mail (Coord.)'],rt:d.g3['Responsável Técnico (Méd. Vet.)'],crmv:d.g3['CRMV'],crmv_uf:d.g3['UF do CRMV'],email_rt:d.g3['E-mail (RT)'],situacao_geral:d.s.v[1]}; }
+function flatPayload(d) { return {meta:d.meta,g1:d.g1,g2:d.g2,g3:d.g3,itens:d.it,resumo:d.s,grupo_animal:d.meta.grupo_animal,slug:d.meta.slug,rn:d.meta.rn,instituicao:d.g1['Instituição'],cnpj:d.g1['CNPJ'],endereco:d.g1['Endereço institucional'],municipio_uf:d.g1['Município / UF'],ceua_vinculada:d.g1['CEUA vinculada'],email_instalacao:d.g1['E-mail institucional da instalação'],nome_instalacao:d.g2['Nome / Identificação'],finalidade:d.g2['Finalidade'],situacao:d.g2['Situação'],localizacao_tipo:d.g2['Localização / tipo'],nivel_biosseguranca:d.g2['Nível de biossegurança'],campus:d.g2['Campus'],predio:d.g2['Prédio'],sala_setor:d.g2['Sala'],area_m2:d.g2['Área (m²)'],capacidade:d.g2['Capacidade'],animal_grupo:v('animalSelect'),animal_detalhamento:v('animalDetail'),coordenador:d.g3['Coordenador da instalação'],cpf_coord:v('coordCpf'),email_coord:d.g3['E-mail institucional (Coord.)'],rt:d.g3['Responsável Técnico (Méd. Vet.)'],crmv:d.g3['CRMV'],crmv_uf:d.g3['UF do CRMV'],email_rt:d.g3['E-mail (RT)'],situacao_geral:d.s.v[1]}; }
 function go(n) { step=n; document.querySelectorAll('.step').forEach(x => x.classList.toggle('active', +x.dataset.step === n)); document.querySelectorAll('.dot').forEach(d => { const k=+d.dataset.step; d.classList.toggle('active', k===n); d.classList.toggle('done', k<n); }); $('curNum').textContent=n; $('curTitle').textContent=TITLES[n]; if (n===5) summary(); scrollTo({top:0, behavior:'smooth'}); }
 function next() { go(Math.min(5, step+1)); }
 function prev() { go(Math.max(1, step-1)); }
