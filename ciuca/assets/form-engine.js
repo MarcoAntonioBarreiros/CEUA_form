@@ -1,6 +1,7 @@
 const $ = id => document.getElementById(id);
 let state = {};
 let step = 1;
+let checklistSection = 0;
 
 const CIUCA_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw9PB2XNSFrX42tQfgnnfXzlW3J8VFweVydGTJzdMSeL3fTwe472lu9qpughGQsu4UQ4A/exec';
 const SEI_DESTINO = 'UFPR / R / PL / CEUA';
@@ -167,8 +168,10 @@ function ensureShell() {
       <div id="filterInfo" class="info"></div>
       <div class="hint"><span class="tag ob">Obrigatório / RN</span> <span class="tag guia">Recomendado / Guia</span> <span class="tag ceua">Recomendado / CEUA</span></div>
       <div class="info" style="margin-top:10px;line-height:1.45"><b>Justificativa obrigatória:</b> todo item marcado como <b>N/A</b> ou <b>Não atende</b> deve ter justificativa no campo Observação. Item obrigatório marcado como N/A sem justificativa impedirá a aprovação/encaminhamento até saneamento documental.</div>
+      <div id="secTabs" class="sectabs"></div>
+      <div id="secLabel" class="seclabel"></div>
       <div id="criteriaList"></div>
-      <div class="nav"><button class="btn" onclick="prev()">← Anterior</button><button class="btn primary" onclick="next()">Próximo →</button></div>
+      <div class="nav"><button class="btn" onclick="checkPrev()">← Anterior</button><span id="secProgress" class="hint" style="align-self:center;font-weight:800"></span><button class="btn primary" onclick="checkNext()">Próximo →</button></div>
     </section>
 
     <section class="step card" data-step="5">
@@ -241,17 +244,28 @@ function snap() {
   });
 }
 
-function render() {
+function visibleRows() {
   const rows = [];
   (CFG.criteria || []).forEach((cat, ci) => cat.items.forEach((item, ii) => rows.push({...item, cat:cat.cat, id:'i'+ci+'_'+ii})));
-  const visible = rows.filter(applicable);
+  return rows.filter(applicable);
+}
+function checklistCats() {
+  const cats = [];
+  visibleRows().forEach(r => { if (!cats.includes(r.cat)) cats.push(r.cat); });
+  return cats;
+}
+
+function render() {
+  const rows = visibleRows();
+  const cats = checklistCats();
+  if (checklistSection >= cats.length) checklistSection = Math.max(0, cats.length - 1);
+  if (checklistSection < 0) checklistSection = 0;
+  const curCat = cats[checklistSection] || '';
+  $('secTabs').innerHTML = cats.map((c, i) => `<button class="sectab ${i === checklistSection ? 'active' : ''}" onclick="gotoSection(${i})">${i + 1}. ${esc(c)}</button>`).join('');
+  $('secLabel').innerHTML = cats.length ? `Seção <b>${checklistSection + 1}</b> de <b>${cats.length}</b> — ${esc(curCat)}` : 'Nenhum critério aplicável para os filtros atuais.';
+  $('secProgress').textContent = cats.length ? `Seção ${checklistSection + 1} de ${cats.length}` : '';
   let html = '';
-  let currentCat = '';
-  visible.forEach(item => {
-    if (item.cat !== currentCat) {
-      currentCat = item.cat;
-      html += `<div class="cat">${esc(currentCat)}</div>`;
-    }
+  rows.filter(item => item.cat === curCat).forEach(item => {
     const saved = state[item.id] || {};
     const st = saved.status || '—';
     const obs = saved.obs || '';
@@ -271,11 +285,21 @@ function render() {
   });
   $('criteriaList').innerHTML = html;
   const msg = (CFG.filterPurpose || CFG.filterAnimal)
-    ? `Finalidade: <b>${esc(v('purpose') || 'não informada')}</b> · ${esc(CFG.animalLabel || 'Grupo')}: <b>${esc(v('animalSelect') || 'não informado')}</b> — exibindo <b>${visible.length}</b> critérios aplicáveis.`
-    : `Finalidade: <b>${esc(v('purpose') || 'não informada')}</b> — exibindo <b>todos os ${visible.length}</b> critérios.`;
+    ? `Finalidade: <b>${esc(v('purpose') || 'não informada')}</b> · ${esc(CFG.animalLabel || 'Grupo')}: <b>${esc(v('animalSelect') || 'não informado')}</b> — <b>${rows.length}</b> critérios em <b>${cats.length}</b> seções.`
+    : `Finalidade: <b>${esc(v('purpose') || 'não informada')}</b> — <b>${rows.length}</b> critérios em <b>${cats.length}</b> seções.`;
   $('filterInfo').innerHTML = msg;
   summary();
 }
+function checkNext() {
+  const n = checklistCats().length;
+  if (checklistSection < n - 1) { checklistSection++; render(); scrollTo({top:0, behavior:'smooth'}); }
+  else go(5);
+}
+function checkPrev() {
+  if (checklistSection > 0) { checklistSection--; render(); scrollTo({top:0, behavior:'smooth'}); }
+  else go(3);
+}
+function gotoSection(i) { checklistSection = i; render(); scrollTo({top:0, behavior:'smooth'}); }
 
 function setStatus(id, value) {
   state[id] = state[id] || {};
@@ -295,7 +319,7 @@ function setStatus(id, value) {
 function setObs(id, value) { state[id] = state[id] || {}; state[id].obs = value; }
 
 function previousCat(el) { let p = el.previousElementSibling; while (p) { if (p.classList.contains('cat')) return p.childNodes[0].textContent; p = p.previousElementSibling; } return ''; }
-function items() { const arr = []; document.querySelectorAll('.crit').forEach(block => arr.push({cat:previousCat(block), t:block.querySelector('.ctxt').textContent, c:block.dataset.c, status:block.querySelector('.status').value, obs:block.querySelector('.obs').value})); return arr; }
+function items() { return visibleRows().map(r => ({cat:r.cat, t:r.t, c:r.c, status:(state[r.id] && state[r.id].status) || '—', obs:(state[r.id] && state[r.id].obs) || ''})); }
 
 function stats(arr) {
   let oT=0,oOk=0,oNo=0,oNA=0,oPend=0,rT=0,rOk=0,av=0,no=0,na=0,naSemJust=0,naoSemJust=0;
@@ -326,21 +350,15 @@ function stats(arr) {
 function summary() { const s = stats(items()); $('cAval').textContent = s.av + '/' + s.total; $('cObrig').textContent = s.oOk + '/' + s.app; $('cRec').textContent = s.rOk + '/' + s.rT; $('cNao').textContent = s.no; $('cNa').textContent = s.na; const e = $('verdict'); e.textContent = s.v[1]; e.style.background = s.v[2]; e.style.color = s.v[3]; e.style.borderColor = s.v[4]; }
 
 function validateJustificativas() {
-  const faltantes = [];
-  document.querySelectorAll('.crit').forEach(block => {
-    const status = block.querySelector('.status').value;
-    const obs = block.querySelector('.obs').value.trim();
-    if (REQUER_JUSTIFICATIVA.includes(status) && !obs) faltantes.push(block);
-  });
-  if (!faltantes.length) return true;
+  const missing = visibleRows().filter(r => { const s = state[r.id] || {}; return REQUER_JUSTIFICATIVA.includes(s.status) && !((s.obs || '').trim()); });
+  if (!missing.length) return true;
+  const first = missing[0];
+  const idx = checklistCats().indexOf(first.cat);
+  if (idx >= 0) checklistSection = idx;
   go(4);
-  const first = faltantes[0];
   setTimeout(() => {
-    first.scrollIntoView({behavior:'smooth', block:'center'});
-    const obs = first.querySelector('.obs');
-    obs.style.borderColor = '#dc2626';
-    obs.style.background = '#fef2f2';
-    obs.focus();
+    const el = document.querySelector(`.crit[data-id='${first.id}']`);
+    if (el) { el.scrollIntoView({behavior:'smooth', block:'center'}); const obs = el.querySelector('.obs'); obs.style.borderColor = '#dc2626'; obs.style.background = '#fef2f2'; obs.focus(); }
   }, 350);
   alert('Itens marcados como N/A ou Não atende precisam de justificativa no campo Observação. O processo não será aprovado/encaminhado sem essa justificativa.');
   return false;
@@ -352,7 +370,7 @@ function collect() {
   return d;
 }
 function flatPayload(d) { return {meta:d.meta,g1:d.g1,g2:d.g2,g3:d.g3,itens:d.it,resumo:d.s,grupo_animal:d.meta.grupo_animal,slug:d.meta.slug,rn:d.meta.rn,instituicao:d.g1['Instituição'],cnpj:d.g1['CNPJ'],endereco:d.g1['Endereço institucional'],municipio_uf:d.g1['Município / UF'],ceua_vinculada:d.g1['CEUA vinculada'],email_instalacao:d.g1['E-mail institucional da instalação'],nome_instalacao:d.g2['Nome / Identificação'],finalidade:d.g2['Finalidade'],situacao:d.g2['Situação'],localizacao_tipo:d.g2['Localização / tipo'],nivel_biosseguranca:d.g2['Nível de biossegurança'],campus:d.g2['Campus'],predio:d.g2['Prédio'],sala_setor:d.g2['Sala'],area_m2:d.g2['Área (m²)'],capacidade:d.g2['Capacidade'],animal_grupo:v('animalSelect'),animal_detalhamento:v('animalDetail'),coordenador:d.g3['Coordenador da instalação'],cpf_coord:v('coordCpf'),email_coord:d.g3['E-mail institucional (Coord.)'],rt:d.g3['Responsável Técnico (Méd. Vet.)'],cpf_rt:v('rtCpf'),crmv:d.g3['CRMV'],crmv_uf:d.g3['UF do CRMV'],email_rt:d.g3['E-mail (RT)'],situacao_geral:d.s.v[1]}; }
-function go(n) { step=n; document.querySelectorAll('.step').forEach(x => x.classList.toggle('active', +x.dataset.step === n)); document.querySelectorAll('.dot').forEach(d => { const k=+d.dataset.step; d.classList.toggle('active', k===n); d.classList.toggle('done', k<n); }); $('curNum').textContent=n; $('curTitle').textContent=TITLES[n]; if (n===5) summary(); scrollTo({top:0, behavior:'smooth'}); }
+function go(n) { step=n; document.querySelectorAll('.step').forEach(x => x.classList.toggle('active', +x.dataset.step === n)); document.querySelectorAll('.dot').forEach(d => { const k=+d.dataset.step; d.classList.toggle('active', k===n); d.classList.toggle('done', k<n); }); $('curNum').textContent=n; $('curTitle').textContent=TITLES[n]; if (n===4) render(); if (n===5) summary(); scrollTo({top:0, behavior:'smooth'}); }
 function next() { go(Math.min(5, step+1)); }
 function prev() { go(Math.max(1, step-1)); }
 function clearAll() { if (!confirm('Limpar todos os campos?')) return; document.querySelectorAll('input,select').forEach(el => { if (el.type === 'checkbox') el.checked=false; else el.value=''; }); state={}; applyDefaults(); render(); go(1); }
