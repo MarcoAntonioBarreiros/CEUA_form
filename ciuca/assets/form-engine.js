@@ -165,7 +165,7 @@ function ensureShell() {
     <section class="step card" data-step="4">
       <div class="head"><span class="stag">Etapa 4</span><div class="h2">Checklist Normativo</div></div>
       <div id="filterInfo" class="info"></div>
-      <div class="hint"><span class="tag ob">Obrigatório</span> <span class="tag re">Recomendado</span></div>
+      <div class="hint"><span class="tag ob">Obrigatório / RN</span> <span class="tag guia">Recomendado / Guia</span> <span class="tag ceua">Recomendado / CEUA</span></div>
       <div class="info" style="margin-top:10px;line-height:1.45"><b>Justificativa obrigatória:</b> todo item marcado como <b>N/A</b> ou <b>Não atende</b> deve ter justificativa no campo Observação. Item obrigatório marcado como N/A sem justificativa impedirá a aprovação/encaminhamento até saneamento documental.</div>
       <div id="criteriaList"></div>
       <div class="nav"><button class="btn" onclick="prev()">← Anterior</button><button class="btn primary" onclick="next()">Próximo →</button></div>
@@ -250,16 +250,17 @@ function render() {
   visible.forEach(item => {
     if (item.cat !== currentCat) {
       currentCat = item.cat;
-      html += `<div class="cat">${esc(currentCat)}${item.src === 'Guia' ? '<small>orientação complementar · fora do anexo normativo</small>' : ''}</div>`;
+      html += `<div class="cat">${esc(currentCat)}</div>`;
     }
     const saved = state[item.id] || {};
     const st = saved.status || '—';
     const obs = saved.obs || '';
     const req = REQUER_JUSTIFICATIVA.includes(st);
-    let tags = `<span class="tag ${item.c === 'Obrigatório' ? 'ob' : 're'}">${esc(item.c)}</span>`;
+    const srcLabel = item.c === 'Obrigatório' ? 'RN' : (item.src === 'CEUA' ? 'CEUA' : 'Guia');
+    const srcClass = item.c === 'Obrigatório' ? 'ob' : (item.src === 'CEUA' ? 'ceua' : 'guia');
+    let tags = `<span class="tag ${srcClass}">${esc(item.c)} / ${srcLabel}</span>`;
     if (item.aplic && item.aplic !== 'todos') tags += `<span class="tag tp">${esc(item.aplic.join('/'))}</span>`;
     if (item.spec && item.spec !== 'todos') tags += `<span class="tag tp">${esc(item.spec)}</span>`;
-    if (item.src === 'Guia') tags += `<span class="tag guia">Guia</span>`;
     html += `<div class="crit" data-id="${item.id}" data-c="${esc(item.c)}" data-status="${esc(st)}">
       <div class="ctop"><div class="ctxt">${esc(item.t)}</div><div class="tags">${tags}</div></div>
       <div class="ctrl">
