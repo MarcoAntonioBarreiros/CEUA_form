@@ -76,9 +76,8 @@ function validarCamposEssenciaisPDF(){
   campo('rn53_habilidades','Habilidades psicomotoras e competências DCN',1,ensino && rn53p3==='Sim');
   campo('rn53_excecao_just','Justificativa da exceção da RN 53',1,ensino && document.getElementById('rn53_excecao')?.checked);
   radio('subst_busca','Busca por métodos substitutivos',1,ensino);
-  const subst = selecionado('subst_busca');
-  campo('subst_metodos','Métodos substitutivos avaliados',1,ensino && subst==='Sim');
-  campo('subst_justificativa','Justificativa para não substituição',1,ensino && subst==='Não');
+  campo('subst_metodos','Métodos substitutivos avaliados',1,ensino);
+  campo('subst_justificativa','Justificativa para não substituição integral',1,ensino);
 
   campo('r_nome','Nome do responsável',2);
   campo('r_cpf','CPF do responsável',2);
