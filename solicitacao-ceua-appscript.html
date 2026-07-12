@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
@@ -41,6 +41,127 @@ function validarCamposInstitucionais(){
     go(6);
     showStatus('warn','Marque a ciência sobre a obrigação de entregar relatório final ao encerramento da atividade/projeto.');
     setTimeout(()=>document.getElementById('relatorio_final_ciente')?.focus(),350);
+    return false;
+  }
+  return true;
+}
+
+function validarCamposEssenciaisPDF(){
+  const pendentes = [];
+  const valor = id => String((document.getElementById(id)||{}).value || '').trim();
+  const campo = (id,label,step,cond=true) => { if(cond && !valor(id)) pendentes.push({id,label,step}); };
+  const checks = (name,label,step) => { if(!Cs(name).length) pendentes.push({name,label,step}); };
+  const radio = (name,label,step,cond=true) => { if(cond && !document.querySelector('[name="' + name + '"]:checked')) pendentes.push({name,label,step}); };
+  const selecionado = name => (document.querySelector('[name="' + name + '"]:checked')||{}).value || '';
+  const fins = Cs('fin');
+  const ensino = fins.includes('Ensino') || fins.includes('Treinamento');
+
+  checks('fin','Finalidade',1);
+  campo('dt_ini','Início da atividade',1);
+  campo('dt_fim','Final da atividade',1);
+  campo('area_capes','Área CAPES',1);
+  campo('titulo_pt','Título da atividade',1);
+  campo('titulo_en','Título em inglês',1);
+
+  campo('nivel_ensino','Nível da atividade didática',1,ensino);
+  campo('curso_nome','Nome do curso',1,ensino);
+  campo('disciplina_nome','Disciplina',1,ensino);
+  campo('disciplina_sem','Semestre/período',1,ensino);
+  radio('rn53_p1','RN 53 - pergunta 1',1,ensino);
+  const rn53p1 = selecionado('rn53_p1');
+  radio('rn53_p2','RN 53 - pergunta 2',1,ensino && rn53p1==='Não');
+  const rn53p2 = selecionado('rn53_p2');
+  radio('rn53_p3','RN 53 - pergunta 3',1,ensino && (rn53p1==='Sim' || (rn53p1==='Não' && rn53p2==='Sim')));
+  const rn53p3 = selecionado('rn53_p3');
+  campo('rn53_habilidades','Habilidades psicomotoras e competências DCN',1,ensino && rn53p3==='Sim');
+  campo('rn53_excecao_just','Justificativa da exceção da RN 53',1,ensino && document.getElementById('rn53_excecao')?.checked);
+  radio('subst_busca','Busca por métodos substitutivos',1,ensino);
+  const subst = selecionado('subst_busca');
+  campo('subst_metodos','Métodos substitutivos avaliados',1,ensino && subst==='Sim');
+  campo('subst_justificativa','Justificativa para não substituição',1,ensino && subst==='Não');
+
+  campo('r_nome','Nome do responsável',2);
+  campo('r_cpf','CPF do responsável',2);
+  campo('r_inst','Instituição',2);
+  campo('r_unid','Unidade',2);
+  campo('r_tel','Telefone',2);
+  campo('r_email','E-mail institucional',2);
+  campo('r_vinc','Vínculo com a UFPR',2);
+  campo('r_siape','SIAPE ou matrícula',2);
+  checks('cap','Treinamento específico',2);
+  checks('etica','Capacitação em ética',2);
+
+  checks('ci','Finalidade do projeto no CIUCA',3);
+  campo('resumo','Resumo da atividade',3);
+  campo('objetivos','Objetivos',3);
+  campo('justificativa','Justificativa',3);
+
+  campo('ca_teste','Tipo de teste estatístico',4);
+  campo('ca_alfa','Nível de significância',4);
+  campo('ca_poder','Poder do teste',4);
+  campo('ca_efeito','Tamanho do efeito esperado',4);
+  campo('ca_n','N amostral calculado',4);
+  campo('ca_soft','Software/método utilizado',4);
+  campo('ca_just','Justificativa do cálculo amostral',4);
+
+  const sns=[...$$('[name="sn[]"]')], sas=[...$$('[name="sa[]"]')], sws=[...$$('[name="sw[]"]')], sss=[...$$('[name="ss[]"]')], sqs=[...$$('[name="sq[]"]')];
+  if(!sns.some(e=>String(e.value||'').trim())) pendentes.push({name:'sn[]',label:'Espécie/linhagem animal',step:4});
+  for(let i=0;i<sns.length;i++){
+    const any=[sns[i],sas[i],sws[i],sss[i],sqs[i]].some(e=>String((e||{}).value||'').trim());
+    if(any){
+      if(!String((sns[i]||{}).value||'').trim()) pendentes.push({name:'sn[]',label:'Espécie/linhagem animal',step:4});
+      if(!String((sas[i]||{}).value||'').trim()) pendentes.push({name:'sa[]',label:'Idade animal',step:4});
+      if(!String((sws[i]||{}).value||'').trim()) pendentes.push({name:'sw[]',label:'Peso animal',step:4});
+      if(!String((sss[i]||{}).value||'').trim()) pendentes.push({name:'ss[]',label:'Sexo animal',step:4});
+      if(!String((sqs[i]||{}).value||'').trim()) pendentes.push({name:'sq[]',label:'Quantidade de animais',step:4});
+    }
+  }
+  campo('just_esp','Justificativa dos procedimentos e da espécie',4);
+  campo('proc','Procedência',4);
+  radio('gi','Grau de invasividade',4);
+  campo('al_loc','Local de alojamento',4);
+  campo('al_amb','Ambiente de alojamento',4);
+  campo('al_alim','Alimentação',4);
+  campo('al_agua','Fonte de água',4);
+  campo('al_lot','Lotação',4);
+  campo('al_exau','Exaustão de ar',4);
+  campo('al_clim','Climatização',4);
+
+  campo('p91d','Descrição do estresse intencional',5,V('p91')==='Sim');
+  campo('p92d','Descrição da dor intencional',5,V('p92')==='Sim');
+  campo('p96d','Descrição da imobilização',5,V('p96')==='Sim');
+  campo('p97jt','Tempo de jejum',5,V('p97j')==='Sim');
+  campo('p97ht','Tempo de restrição hídrica',5,V('p97h')==='Sim');
+  campo('p98d','Descrição da cirurgia/pós-operatório',5,V('p98')==='Sim');
+  campo('p99d','Descrição da exposição/inoculação',5,V('p99')==='Sim');
+  campo('p10m','Material biológico extraído',5,V('p10')==='Sim');
+  campo('p10q','Quantidade de material biológico',5,V('p10')==='Sim');
+  campo('p10f','Frequência da extração',5,V('p10')==='Sim');
+  campo('p10mt','Método da extração',5,V('p10')==='Sim');
+  const dns=[...$$('[name="dn[]"]')], dts=[...$$('[name="dt[]"]')], dds=[...$$('[name="dd[]"]')], dvs=[...$$('[name="dv[]"]')];
+  for(let i=0;i<dns.length;i++){
+    const any=[dns[i],dts[i],dds[i],dvs[i]].some(e=>String((e||{}).value||'').trim());
+    if(any){
+      if(!String((dts[i]||{}).value||'').trim()) pendentes.push({name:'dt[]',label:'Tipo de fármaco',step:5});
+      if(!String((dns[i]||{}).value||'').trim()) pendentes.push({name:'dn[]',label:'Nome do fármaco',step:5});
+      if(!String((dds[i]||{}).value||'').trim()) pendentes.push({name:'dd[]',label:'Dose do fármaco',step:5});
+      if(!String((dvs[i]||{}).value||'').trim()) pendentes.push({name:'dv[]',label:'Via de administração do fármaco',step:5});
+    }
+  }
+
+  campo('f_met','Método utilizado',6,V('f_ab')==='Sim' || V('f_eu')==='Sim');
+  campo('f_dest','Destino dos animais após a atividade',6);
+  campo('f_desc','Descarte da carcaça',6);
+
+  if(pendentes.length){
+    const primeiro = pendentes[0];
+    go(primeiro.step);
+    const lista = pendentes.slice(0,6).map(p=>p.label).join('; ') + (pendentes.length>6 ? '; ...' : '');
+    showStatus('warn','Antes de registrar e gerar o PDF, preencha: ' + lista + '.');
+    setTimeout(()=>{
+      const el = primeiro.id ? document.getElementById(primeiro.id) : document.querySelector('[name="' + primeiro.name + '"]');
+      el?.focus?.();
+    },350);
     return false;
   }
   return true;
@@ -176,12 +297,39 @@ function normalizarPayloadCEUA(dados){
       // Campos também aparecem no PDF gerado.
       html = html.replace("np(); sec('FINALIDADE DO PROJETO — Dados CIUCA');", "np(); sec('INSTALAÇÃO ANIMAL CADASTRADA NO CIUCA');\n  lv('Nome da instalação:',V('inst_ciuca_nome'),42);\n  cbx('Instalação indicada declarada como cadastrada e regular no CIUCA',document.getElementById('inst_ciuca_confirm')?.checked);\n  y+=2;\n  sec('FINALIDADE DO PROJETO — Dados CIUCA');");
       html = html.replace("termoItens.forEach(t=>{ ck(12); const ls=doc.splitTextToSize(t,CW-5); doc.text(ls,ML+3,y); y+=ls.length*3.5+2; });", "termoItens.forEach(t=>{ ck(12); const ls=doc.splitTextToSize(t,CW-5); doc.text(ls,ML+3,y); y+=ls.length*3.5+2; });\n  y+=2; sub('Relatório final de uso dos animais');\n  const relFinal=(document.getElementById('relatorio_final_ciente')?.checked?'[X] ':'[ ] ')+'Declaro estar ciente de que, ao encerramento da atividade/projeto, o coordenador da proposta deverá encaminhar à CEUA o relatório final de uso dos animais, informando espécies utilizadas, número efetivamente utilizado, eventuais alterações em relação ao aprovado e justificativas. Estou ciente de que relatório final pendente poderá impedir nova solicitação até a regularização.';\n  tb(relFinal,5);\n  y+=2; sub('Submissão formal à CEUA');\n  tb('Após assinatura pelo coordenador, encaminhar este PDF assinado para: " + EMAIL_CEUA + ".',2);");
+      html = html.replace('  function tb(t,rows){', `  function lv2(l1,v1,l2,v2){
+    const gap=4, col=(CW-gap)/2;
+    const a=doc.splitTextToSize(v1||'',col-3);
+    const b=doc.splitTextToSize(v2||'',col-3);
+    const h=Math.max(7,a.length*3.5+3,b.length*3.5+3);
+    ck(h+6);
+    [[l1,a,ML],[l2,b,ML+col+gap]].forEach(([label,txt,x])=>{
+      doc.setTextColor(...TD); doc.setFontSize(6.8); doc.setFont('helvetica','bold');
+      doc.text(label,x,y);
+      doc.setDrawColor(180,200,210); doc.setLineWidth(.2); doc.setFillColor(250,252,252);
+      doc.roundedRect(x,y+1.5,col,h,.8,.8,'FD');
+      doc.setTextColor(...BK); doc.setFont('helvetica','normal'); doc.setFontSize(7.3);
+      doc.text(txt,x+1.5,y+5.2);
+    });
+    y+=h+6;
+  }
+
+  function tb(t,rows){`);
+      html = html.replace(/  \/\/ 8\.A C[\s\S]*?  tb\(V\('ca_just'\),4\);/, [
+        "  // 8.A Cálculo Estatístico",
+        "  np(); sec('8.A  CÁLCULO ESTATÍSTICO DA QUANTIDADE DE ANIMAIS');",
+        "  lv2('Tipo de teste estatístico:',V('ca_teste'),'Nível de significância (α):',V('ca_alfa'));",
+        "  lv2('Poder do teste (1-β):',V('ca_poder'),'Tamanho do efeito esperado:',V('ca_efeito'));",
+        "  lv2('N amostral calculado:',V('ca_n'),'Software/método utilizado:',V('ca_soft'));",
+        "  sub('Justificativa do cálculo amostral:');",
+        "  tb(V('ca_just'),4);"
+      ].join('\n'));
 
       // Envio ao Apps Script e validações obrigatórias.
       html = html.replace('// ── Enviar ao Google Sheets ──', helper + '\n// ── Enviar ao Google Sheets ──');
       html = html.replace("headers: { 'Content-Type': 'application/json' },", "headers: { 'Content-Type': 'text/plain;charset=utf-8' },");
       html = html.replace('body: JSON.stringify(dados)', 'body: JSON.stringify(normalizarPayloadCEUA(dados))');
-      html = html.replace('async function enviarEGerarPDF(){\n  const dados = coletarDados();', 'async function enviarEGerarPDF(){\n  if(!validarCamposInstitucionais()) return;\n  const dados = coletarDados();');
+      html = html.replace('async function enviarEGerarPDF(){\n  const dados = coletarDados();', 'async function enviarEGerarPDF(){\n  if(!validarCamposEssenciaisPDF()) return;\n  if(!validarCamposInstitucionais()) return;\n  const dados = coletarDados();');
 
       document.open();
       document.write(html);
