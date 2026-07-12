@@ -111,6 +111,39 @@ function normalizarPayloadCEUA(dados){
     <strong>Importante:</strong> ao clicar no botão abaixo, os dados serão registrados na planilha interna da CEUA e será gerado um PDF no seu dispositivo. A solicitação somente será formalmente submetida após o coordenador assinar o PDF e encaminhá-lo para <strong>${EMAIL_CEUA}</strong>.
   </div>`;
 
+  const giAjudaHtml = `
+      <details data-ceua-help="gi" class="mt-2 mb-3 p-3 bg-tl-50/40 border border-tl-100 rounded-lg text-[.72rem] text-slate-600 leading-relaxed">
+        <summary class="cursor-pointer font-bold text-tl-700">Como classificar o Grau de Invasividade (GI)?</summary>
+        <div class="mt-2 space-y-2">
+          <p><strong>GI1</strong> — Experimentos que causam pouco ou nenhum desconforto ou estresse. Exemplos: observação e exame físico; administração oral, intravenosa, intraperitoneal, subcutânea ou intramuscular de substâncias que não causem reações adversas perceptíveis; eutanásia por métodos aprovados após anestesia ou sedação; privação alimentar ou hídrica por períodos equivalentes aos que ocorrem na natureza.</p>
+          <p><strong>GI2</strong> — Experimentos que causam estresse, desconforto ou dor de leve intensidade. Exemplos: procedimentos cirúrgicos menores, como biópsias, sob anestesia; períodos breves de contenção ou imobilidade em animais conscientes; exposição a níveis não letais de compostos químicos que não causem reações adversas graves.</p>
+          <p><strong>GI3</strong> — Experimentos que causam estresse, desconforto ou dor de intensidade intermediária. Exemplos: procedimentos cirúrgicos invasivos conduzidos em animais anestesiados; imobilidade física por várias horas; indução de estresse por separação materna ou exposição a agressor; estímulos aversivos inescapáveis; choques localizados de intensidade leve; exposição a radiação ou compostos químicos que provoquem prejuízo duradouro da função sensorial ou motora; administração por vias como intracardíaca ou intracerebral.</p>
+          <p><strong>GI4</strong> — Experimentos que causam dor de alta intensidade. Exemplo: indução de trauma em animais não sedados.</p>
+          <p class="text-[.65rem] text-slate-500">Fonte: Resolução Normativa CONCEA/MCTI nº 52, de 19 de maio de 2021.</p>
+        </div>
+      </details>`;
+
+  const farmacosAjudaHtml = `
+    <div data-ceua-help="farmacos" class="mb-3 p-3 bg-tl-50/40 border border-tl-100 rounded-lg text-[.76rem] text-slate-600 leading-relaxed">
+      <p>Informe o nome do princípio ativo utilizando a Denominação Comum Brasileira (DCB) ou, quando cabível, a Denominação Comum Internacional (DCI). Não informe apenas o nome comercial.</p>
+      <a class="inline-flex mt-2 px-3 py-1.5 rounded-md bg-white border border-tl-200 text-tl-700 font-bold hover:bg-tl-50" href="https://www.gov.br/anvisa/pt-br/assuntos/farmacopeia/dcb" target="_blank" rel="noopener noreferrer">Consultar Denominações Comuns Brasileiras — Anvisa</a>
+    </div>`;
+
+  const eutanasiaAjudaHtml = `
+      <div data-ceua-help="eutanasia" class="mt-3 p-3 bg-tl-50/40 border border-tl-100 rounded-lg text-[.76rem] text-slate-600 leading-relaxed">
+        <p>Consulte a Diretriz da Prática de Eutanásia do CONCEA para verificar os métodos recomendados, aceitos com restrições ou inaceitáveis para a espécie, faixa etária e situação descritas no protocolo. Métodos restritos devem ser tecnicamente justificados no campo correspondente.</p>
+        <a class="inline-flex mt-2 px-3 py-1.5 rounded-md bg-white border border-tl-200 text-tl-700 font-bold hover:bg-tl-50" href="https://www.gov.br/mcti/pt-br/composicao/colegiados/concea/arquivos/arquivo/legislacao/anexo-da-resolucao-normativa-no-37-de-15-de-fevereiro-de-2018.pdf" target="_blank" rel="noopener noreferrer">Consultar Diretriz de Eutanásia do CONCEA</a>
+      </div>`;
+
+  function replaceHelp(html, anchor, replacement, marker, label){
+    if(html.includes(marker)) return html;
+    if(!html.includes(anchor)){
+      console.error('CEUA: âncora não encontrada para ' + label);
+      return html;
+    }
+    return html.replace(anchor, replacement);
+  }
+
   fetch(SOURCE_URL, {cache:'no-store'})
     .then(r => {
       if(!r.ok) throw new Error('Não foi possível carregar o formulário original: HTTP ' + r.status);
@@ -123,6 +156,9 @@ function normalizarPayloadCEUA(dados){
       html = html.replace('\n\n  <!-- CIUCA -->', '\n\n' + instalacaoHtml + '\n\n  <!-- CIUCA -->');
       html = html.replace('<p class="ml-3" id="termoItemD" style="display:none"><strong>d)</strong> esta atividade de ensino foi avaliada conforme os critérios da Resolução Normativa CONCEA nº 53, de 19 de maio de 2021, e atende aos requisitos para utilização de animais em atividades didáticas, conforme árvore de decisão do Anexo da referida Resolução.</p>\n    </div>', '<p class="ml-3" id="termoItemD" style="display:none"><strong>d)</strong> esta atividade de ensino foi avaliada conforme os critérios da Resolução Normativa CONCEA nº 53, de 19 de maio de 2021, e atende aos requisitos para utilização de animais em atividades didáticas, conforme árvore de decisão do Anexo da referida Resolução.</p>' + relatorioHtml + '\n    </div>');
       html = html.replace('<!-- ── Painel de Envio ── -->', avisoSubmissaoHtml + '\n\n    <!-- ── Painel de Envio ── -->');
+      html = replaceHelp(html, '      </div>\n      <h4 class="font-bold text-sm mb-2 mt-3">8.3 Condições de Alojamento</h4>', '      </div>\n' + giAjudaHtml + '\n      <h4 class="font-bold text-sm mb-2 mt-3">8.3 Condições de Alojamento</h4>', 'data-ceua-help="gi"', 'ajuda de grau de invasividade');
+      html = replaceHelp(html, '    <div id="drBox" class="space-y-2"></div>', farmacosAjudaHtml + '\n    <div id="drBox" class="space-y-2"></div>', 'data-ceua-help="farmacos"', 'ajuda de nomenclatura dos fármacos');
+      html = replaceHelp(html, '      <input type="text" id="f_met" class="fi" placeholder="Método utilizado">', '      <input type="text" id="f_met" class="fi" placeholder="Método utilizado">\n' + eutanasiaAjudaHtml, 'data-ceua-help="eutanasia"', 'ajuda da diretriz de eutanásia');
 
       // Simplifica o painel: um único botão registra na planilha e gera o PDF para assinatura.
       html = html.replace('grid grid-cols-1 md:grid-cols-2 gap-3 mb-4', 'grid grid-cols-1 gap-3 mb-4');
