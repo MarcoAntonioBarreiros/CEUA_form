@@ -3,384 +3,40 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Carregando Formulário CEUA...</title>
+<title>Formulário CEUA 2025 — UFPR Palotina</title>
 <style>
 body{font-family:Arial,sans-serif;background:#E8F4F6;color:#164549;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;padding:24px}
-.box{background:white;border:1px solid #D1E9ED;border-radius:16px;padding:28px;max-width:680px;box-shadow:0 8px 24px rgba(42,123,136,.12)}
-.err{color:#991B1B;background:#FEE2E2;border:1px solid #FCA5A5;padding:12px;border-radius:10px;margin-top:16px;display:none}
+.box{background:#fff;border:1px solid #D1E9ED;border-radius:16px;padding:28px;max-width:720px;box-shadow:0 8px 24px rgba(42,123,136,.12)}
+.err{display:none;color:#991B1B;background:#FEE2E2;border:1px solid #FCA5A5;padding:12px;border-radius:10px;margin-top:16px;white-space:pre-wrap}
 </style>
 </head>
 <body>
 <div class="box">
   <h1>Carregando formulário CEUA...</h1>
-  <p>Esta página carrega a versão institucional do formulário, com validação visível de pendências e salvamento automático do rascunho.</p>
+  <p>Carregando a versão institucional com registro obrigatório, validação de pendências e preservação automática do rascunho.</p>
   <div id="erro" class="err"></div>
 </div>
 <script>
 (function(){
-  const BASE_LOADER_URL = 'https://raw.githubusercontent.com/MarcoAntonioBarreiros/CEUA_form/95cc54e193cb4199b6563ca5be1316900c438f48/solicitacao-ceua-appscript.html';
-
-  const PATCH = String.raw`
-(function(){
-  var RASCUNHO_KEY = 'ceua-solicitacao-rascunho-v3';
-  var pendenciasAtuais = [];
-  var timerRascunho = null;
-
-  function valor(id){
-    var el = document.getElementById(id);
-    return String(el && el.value || '').trim();
-  }
-
-  function selecionado(name){
-    var el = document.querySelector('[name="' + name + '"]:checked');
-    return el ? el.value : '';
-  }
-
-  function adicionarCampo(lista,id,label,step,cond){
-    if(cond !== false && !valor(id)) lista.push({id:id,label:label,step:step});
-  }
-
-  function adicionarChecks(lista,name,label,step,cond){
-    if(cond !== false && !Cs(name).length) lista.push({name:name,index:0,label:label,step:step});
-  }
-
-  function adicionarRadio(lista,name,label,step,cond){
-    if(cond !== false && !document.querySelector('[name="' + name + '"]:checked')){
-      lista.push({name:name,index:0,label:label,step:step});
-    }
-  }
-
-  function adicionarCheckboxId(lista,id,label,step,cond){
-    var el = document.getElementById(id);
-    if(cond !== false && !(el && el.checked)) lista.push({id:id,label:label,step:step});
-  }
-
-  function coletarPendenciasCEUA(){
-    var pendentes = [];
-    var fins = Cs('fin');
-    var ensino = fins.indexOf('Ensino') >= 0 || fins.indexOf('Treinamento') >= 0;
-
-    adicionarChecks(pendentes,'fin','Finalidade',1,true);
-    adicionarCampo(pendentes,'dt_ini','Início da atividade',1,true);
-    adicionarCampo(pendentes,'dt_fim','Final da atividade',1,true);
-    adicionarCampo(pendentes,'area_capes','Área CAPES',1,true);
-    adicionarCampo(pendentes,'titulo_pt','Título da atividade',1,true);
-    adicionarCampo(pendentes,'titulo_en','Título em inglês',1,true);
-
-    adicionarCampo(pendentes,'nivel_ensino','Nível da atividade didática',1,ensino);
-    adicionarCampo(pendentes,'curso_nome','Nome do curso ou ação de extensão',1,ensino);
-    adicionarCampo(pendentes,'disciplina_nome','Disciplina ou atividade de treinamento',1,ensino);
-    adicionarCampo(pendentes,'disciplina_sem','Semestre ou período',1,ensino);
-    adicionarRadio(pendentes,'rn53_p1','RN 53 — pergunta 1',1,ensino);
-    var rn53p1 = selecionado('rn53_p1');
-    adicionarRadio(pendentes,'rn53_p2','RN 53 — pergunta 2',1,ensino && rn53p1 === 'Não');
-    var rn53p2 = selecionado('rn53_p2');
-    adicionarRadio(pendentes,'rn53_p3','RN 53 — pergunta 3',1,ensino && (rn53p1 === 'Sim' || (rn53p1 === 'Não' && rn53p2 === 'Sim')));
-    var rn53p3 = selecionado('rn53_p3');
-    adicionarCampo(pendentes,'rn53_habilidades','Habilidades psicomotoras e competências DCN',1,ensino && rn53p3 === 'Sim');
-    adicionarCampo(pendentes,'rn53_excecao_just','Justificativa da exceção da RN 53',1,ensino && !!(document.getElementById('rn53_excecao') && document.getElementById('rn53_excecao').checked));
-    adicionarRadio(pendentes,'subst_busca','Busca por métodos substitutivos',1,ensino);
-    adicionarCampo(pendentes,'subst_metodos','Métodos substitutivos avaliados',1,ensino);
-    adicionarCampo(pendentes,'subst_justificativa','Justificativa para não substituição integral',1,ensino);
-
-    adicionarCampo(pendentes,'r_nome','Nome do responsável',2,true);
-    adicionarCampo(pendentes,'r_cpf','CPF do responsável',2,true);
-    adicionarCampo(pendentes,'r_inst','Instituição',2,true);
-    adicionarCampo(pendentes,'r_unid','Unidade',2,true);
-    adicionarCampo(pendentes,'r_tel','Telefone',2,true);
-    adicionarCampo(pendentes,'r_email','E-mail institucional',2,true);
-    adicionarCampo(pendentes,'r_vinc','Vínculo com a UFPR',2,true);
-    adicionarCampo(pendentes,'r_siape','SIAPE ou matrícula',2,true);
-    adicionarChecks(pendentes,'cap','Treinamento específico',2,true);
-    adicionarChecks(pendentes,'etica','Capacitação em ética',2,true);
-
-    adicionarCampo(pendentes,'inst_ciuca_nome','Nome da instalação animal',3,true);
-    adicionarCheckboxId(pendentes,'inst_ciuca_confirm','Declaração de regularidade da instalação no CIUCA',3,true);
-    adicionarChecks(pendentes,'ci','Finalidade do projeto no CIUCA',3,true);
-    adicionarCampo(pendentes,'resumo','Resumo da atividade',3,true);
-    adicionarCampo(pendentes,'objetivos','Objetivos',3,true);
-    adicionarCampo(pendentes,'justificativa','Justificativa',3,true);
-
-    adicionarCampo(pendentes,'ca_teste','Tipo de teste estatístico',4,true);
-    adicionarCampo(pendentes,'ca_alfa','Nível de significância',4,true);
-    adicionarCampo(pendentes,'ca_poder','Poder do teste',4,true);
-    adicionarCampo(pendentes,'ca_efeito','Tamanho do efeito esperado',4,true);
-    adicionarCampo(pendentes,'ca_n','N amostral calculado',4,true);
-    adicionarCampo(pendentes,'ca_soft','Software ou método utilizado',4,true);
-    adicionarCampo(pendentes,'ca_just','Justificativa do cálculo amostral',4,true);
-
-    var sns = Array.prototype.slice.call(document.getElementsByName('sn[]'));
-    var sas = Array.prototype.slice.call(document.getElementsByName('sa[]'));
-    var sws = Array.prototype.slice.call(document.getElementsByName('sw[]'));
-    var sss = Array.prototype.slice.call(document.getElementsByName('ss[]'));
-    var sqs = Array.prototype.slice.call(document.getElementsByName('sq[]'));
-
-    if(!sns.some(function(e){ return String(e.value || '').trim(); })){
-      pendentes.push({name:'sn[]',index:0,label:'Espécie ou linhagem animal',step:4});
-    }
-    for(var i=0;i<sns.length;i++){
-      var grupo = [sns[i],sas[i],sws[i],sss[i],sqs[i]];
-      var algum = grupo.some(function(e){ return String(e && e.value || '').trim(); });
-      if(algum){
-        if(!String(sns[i] && sns[i].value || '').trim()) pendentes.push({name:'sn[]',index:i,label:'Espécie ou linhagem — linha ' + (i+1),step:4});
-        if(!String(sas[i] && sas[i].value || '').trim()) pendentes.push({name:'sa[]',index:i,label:'Idade animal — linha ' + (i+1),step:4});
-        if(!String(sws[i] && sws[i].value || '').trim()) pendentes.push({name:'sw[]',index:i,label:'Peso animal — linha ' + (i+1),step:4});
-        if(!String(sss[i] && sss[i].value || '').trim()) pendentes.push({name:'ss[]',index:i,label:'Sexo animal — linha ' + (i+1),step:4});
-        if(!String(sqs[i] && sqs[i].value || '').trim()) pendentes.push({name:'sq[]',index:i,label:'Quantidade de animais — linha ' + (i+1),step:4});
-      }
-    }
-
-    adicionarCampo(pendentes,'just_esp','Justificativa dos procedimentos e da espécie',4,true);
-    adicionarCampo(pendentes,'proc','Procedência',4,true);
-    adicionarRadio(pendentes,'gi','Grau de invasividade',4,true);
-    adicionarCampo(pendentes,'al_loc','Local de alojamento',4,true);
-    adicionarCampo(pendentes,'al_amb','Ambiente de alojamento',4,true);
-    adicionarCampo(pendentes,'al_alim','Alimentação',4,true);
-    adicionarCampo(pendentes,'al_agua','Fonte de água',4,true);
-    adicionarCampo(pendentes,'al_lot','Lotação',4,true);
-    adicionarCampo(pendentes,'al_exau','Exaustão de ar',4,true);
-    adicionarCampo(pendentes,'al_clim','Climatização',4,true);
-
-    adicionarCampo(pendentes,'p91d','Descrição do estresse intencional',5,V('p91') === 'Sim');
-    adicionarCampo(pendentes,'p92d','Descrição da dor intencional',5,V('p92') === 'Sim');
-    adicionarCampo(pendentes,'p96d','Descrição da imobilização',5,V('p96') === 'Sim');
-    adicionarCampo(pendentes,'p97jt','Tempo de jejum',5,V('p97j') === 'Sim');
-    adicionarCampo(pendentes,'p97ht','Tempo de restrição hídrica',5,V('p97h') === 'Sim');
-    adicionarCampo(pendentes,'p98d','Descrição da cirurgia e pós-operatório',5,V('p98') === 'Sim');
-    adicionarCampo(pendentes,'p99d','Descrição da exposição ou inoculação',5,V('p99') === 'Sim');
-    adicionarCampo(pendentes,'p10m','Material biológico extraído',5,V('p10') === 'Sim');
-    adicionarCampo(pendentes,'p10q','Quantidade de material biológico',5,V('p10') === 'Sim');
-    adicionarCampo(pendentes,'p10f','Frequência da extração',5,V('p10') === 'Sim');
-    adicionarCampo(pendentes,'p10mt','Método da extração',5,V('p10') === 'Sim');
-
-    var dns = Array.prototype.slice.call(document.getElementsByName('dn[]'));
-    var dts = Array.prototype.slice.call(document.getElementsByName('dt[]'));
-    var dds = Array.prototype.slice.call(document.getElementsByName('dd[]'));
-    var dvs = Array.prototype.slice.call(document.getElementsByName('dv[]'));
-    for(var j=0;j<dns.length;j++){
-      var algumFarmaco = [dns[j],dts[j],dds[j],dvs[j]].some(function(e){ return String(e && e.value || '').trim(); });
-      if(algumFarmaco){
-        if(!String(dts[j] && dts[j].value || '').trim()) pendentes.push({name:'dt[]',index:j,label:'Tipo de fármaco — linha ' + (j+1),step:5});
-        if(!String(dns[j] && dns[j].value || '').trim()) pendentes.push({name:'dn[]',index:j,label:'Nome do fármaco — linha ' + (j+1),step:5});
-        if(!String(dds[j] && dds[j].value || '').trim()) pendentes.push({name:'dd[]',index:j,label:'Dose do fármaco — linha ' + (j+1),step:5});
-        if(!String(dvs[j] && dvs[j].value || '').trim()) pendentes.push({name:'dv[]',index:j,label:'Via de administração — linha ' + (j+1),step:5});
-      }
-    }
-
-    adicionarCampo(pendentes,'f_met','Método utilizado',6,V('f_ab') === 'Sim' || V('f_eu') === 'Sim');
-    adicionarCampo(pendentes,'f_dest','Destino dos animais após a atividade',6,true);
-    adicionarCampo(pendentes,'f_desc','Descarte da carcaça',6,true);
-    adicionarCheckboxId(pendentes,'relatorio_final_ciente','Ciência sobre a entrega do relatório final',6,true);
-
-    var vistos = {};
-    return pendentes.filter(function(p){
-      var chave = [p.step,p.id || p.name,p.index || 0,p.label].join('|');
-      if(vistos[chave]) return false;
-      vistos[chave] = true;
-      return true;
-    });
-  }
-
-  function escaparHtml(texto){
-    return String(texto).replace(/[&<>"']/g,function(c){
-      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
-    });
-  }
-
-  window.abrirPendenciaCEUA = function(indice){
-    var p = pendenciasAtuais[indice];
-    if(!p) return;
-    go(p.step);
-    setTimeout(function(){
-      var el = p.id ? document.getElementById(p.id) : (document.getElementsByName(p.name)[p.index || 0]);
-      if(!el) return;
-      try{ el.scrollIntoView({behavior:'smooth',block:'center'}); }catch(e){ el.scrollIntoView(); }
-      if(el.focus) el.focus();
-      var anterior = el.style.outline;
-      var anteriorOffset = el.style.outlineOffset;
-      el.style.outline = '3px solid #f59e0b';
-      el.style.outlineOffset = '3px';
-      setTimeout(function(){
-        el.style.outline = anterior;
-        el.style.outlineOffset = anteriorOffset;
-      },4000);
-    },350);
-  };
-
-  function mostrarPendenciasCEUA(pendentes){
-    pendenciasAtuais = pendentes;
-    go(6);
-    var etapas = ['','Identificação','Equipe','CIUCA / Projeto','Animais','Procedimentos','Finalização'];
-    var itens = pendentes.map(function(p,indice){
-      return '<li class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 py-2 border-b border-amber-200 last:border-0">' +
-        '<span><strong>Etapa ' + p.step + ' — ' + escaparHtml(etapas[p.step]) + ':</strong> ' + escaparHtml(p.label) + '</span>' +
-        '<button type="button" onclick="abrirPendenciaCEUA(' + indice + ')" class="px-3 py-1.5 rounded-md bg-white border border-amber-400 text-amber-900 font-bold text-xs hover:bg-amber-100">Ir ao campo</button>' +
-        '</li>';
-    }).join('');
-
-    var box = document.getElementById('statusBox');
-    if(!box) return;
-    box.className = 'mb-4 p-4 rounded-lg text-sm border-2 border-amber-400 bg-amber-50 text-amber-950';
-    box.innerHTML =
-      '<div class="flex items-start gap-3">' +
-        '<span class="text-xl">⚠️</span>' +
-        '<div class="w-full">' +
-          '<p class="font-bold text-base mb-1">O formulário não foi registrado nem o PDF foi gerado.</p>' +
-          '<p class="mb-3">Foram encontradas <strong>' + pendentes.length + '</strong> pendência(s). Corrija os itens abaixo e clique novamente em “Registrar dados e gerar PDF para assinatura”.</p>' +
-          '<ol class="space-y-0">' + itens + '</ol>' +
-        '</div>' +
-      '</div>';
-    box.classList.remove('hidden');
-    try{ box.scrollIntoView({behavior:'smooth',block:'start'}); }catch(e){ box.scrollIntoView(); }
-  }
-
-  function validarFormularioCEUA(){
-    var pendentes = coletarPendenciasCEUA();
-    if(pendentes.length){
-      mostrarPendenciasCEUA(pendentes);
-      salvarRascunhoCEUA();
-      return false;
-    }
-    return true;
-  }
-
-  function listaNome(name){
-    return Array.prototype.slice.call(document.getElementsByName(name));
-  }
-
-  function capturarRascunhoCEUA(){
-    var form = document.getElementById('F');
-    if(!form) return null;
-    var controles = Array.prototype.slice.call(form.querySelectorAll('input,select,textarea'));
-    var campos = [];
-    controles.forEach(function(el){
-      var tipo = String(el.type || '').toLowerCase();
-      if(tipo === 'button' || tipo === 'submit' || tipo === 'reset' || tipo === 'file') return;
-      var item = {id:el.id || '',name:el.name || '',type:tipo,value:el.value || '',checked:!!el.checked};
-      if(!item.id && item.name) item.index = listaNome(item.name).indexOf(el);
-      if(item.id || item.name) campos.push(item);
-    });
-    return {
-      version:3,
-      savedAt:Date.now(),
-      counts:{
-        especies:listaNome('sn[]').length,
-        colaboradores:listaNome('cn[]').length,
-        farmacos:listaNome('dn[]').length
-      },
-      campos:campos
-    };
-  }
-
-  function salvarRascunhoCEUA(){
-    try{
-      var estado = capturarRascunhoCEUA();
-      if(estado) localStorage.setItem(RASCUNHO_KEY,JSON.stringify(estado));
-    }catch(e){
-      console.warn('CEUA: não foi possível salvar o rascunho.',e);
-    }
-  }
-
-  function limparRascunhoCEUA(){
-    try{ localStorage.removeItem(RASCUNHO_KEY); }catch(e){}
-  }
-
-  function restaurarRascunhoCEUA(){
-    var bruto = null;
-    try{ bruto = localStorage.getItem(RASCUNHO_KEY); }catch(e){}
-    if(!bruto) return;
-    var estado;
-    try{ estado = JSON.parse(bruto); }catch(e){ return; }
-    if(!estado || !estado.campos) return;
-
-    try{
-      while(listaNome('sn[]').length < Number(estado.counts && estado.counts.especies || 1)) addSp();
-      while(listaNome('cn[]').length < Number(estado.counts && estado.counts.colaboradores || 0)) addC();
-      while(listaNome('dn[]').length < Number(estado.counts && estado.counts.farmacos || 0)) addDr();
-
-      estado.campos.forEach(function(item){
-        var el = item.id ? document.getElementById(item.id) : listaNome(item.name)[item.index || 0];
-        if(!el) return;
-        if(item.type === 'checkbox' || item.type === 'radio') el.checked = !!item.checked;
-        else el.value = item.value == null ? '' : item.value;
-      });
-
-      if(typeof toggleEnsino === 'function') toggleEnsino();
-      if(typeof avaliarRN53 === 'function') avaliarRN53();
-      var nome = document.getElementById('r_nome');
-      var termo = document.getElementById('termoNome');
-      if(nome && termo) termo.textContent = nome.value || '\u00a0';
-    }catch(e){
-      console.warn('CEUA: não foi possível restaurar integralmente o rascunho.',e);
-    }
-  }
-
-  var form = document.getElementById('F');
-  if(form){
-    form.addEventListener('input',function(){
-      clearTimeout(timerRascunho);
-      timerRascunho = setTimeout(salvarRascunhoCEUA,500);
-    });
-    form.addEventListener('change',function(){
-      clearTimeout(timerRascunho);
-      timerRascunho = setTimeout(salvarRascunhoCEUA,250);
-    });
-  }
-  setTimeout(restaurarRascunhoCEUA,0);
-
-  window.enviarEGerarPDF = async function(){
-    if(!validarFormularioCEUA()) return;
-
-    if(!(window.jspdf && window.jspdf.jsPDF)){
-      go(6);
-      showStatus('error','O gerador de PDF não foi carregado pelo navegador. Os dados não foram enviados. Atualize a página e tente novamente; o rascunho foi preservado.');
-      salvarRascunhoCEUA();
-      return;
-    }
-
-    salvarRascunhoCEUA();
-    var dados = coletarDados();
-    var ok = await enviarParaSheets(dados);
-    if(!ok){
-      salvarRascunhoCEUA();
-      return;
-    }
-
-    try{
-      gerarPDF();
-      limparRascunhoCEUA();
-      showToast('✓ Dados registrados e PDF gerado. Assine e envie para ceua.palotina@gmail.com.');
-    }catch(err){
-      console.error('CEUA: falha na geração do PDF após o envio.',err);
-      salvarRascunhoCEUA();
-      go(6);
-      showStatus('error','O envio à planilha foi iniciado, mas o PDF não pôde ser gerado: ' + (err && err.message ? err.message : 'erro desconhecido') + '. Não reenvie antes de confirmar o registro com a CEUA, para evitar duplicidade.');
-    }
-  };
-})();
-`;
-
-  fetch(BASE_LOADER_URL,{cache:'no-store'})
-    .then(function(r){
-      if(!r.ok) throw new Error('Não foi possível carregar a base do formulário: HTTP ' + r.status);
-      return r.text();
+  const BASE_URL='https://raw.githubusercontent.com/MarcoAntonioBarreiros/CEUA_form/95cc54e193cb4199b6563ca5be1316900c438f48/solicitacao-ceua-appscript.html';
+  const PATCH_URL='https://marcoantoniobarreiros.github.io/CEUA_form/ceua-validation-fix.js?v=20260803-1248';
+  fetch(BASE_URL,{cache:'no-store'})
+    .then(function(response){
+      if(!response.ok) throw new Error('Falha ao carregar a base do formulário: HTTP '+response.status);
+      return response.text();
     })
     .then(function(loader){
-      var marker = "      document.open();\n      document.write(html);\n      document.close();";
-      if(loader.indexOf(marker) < 0) throw new Error('A estrutura da base do formulário mudou e o patch de validação não pôde ser aplicado.');
-      var runtimeTag = '<script>' + PATCH + '<\/script>';
-      var replacement =
-        "      html = html.replace('</body>', " + JSON.stringify(runtimeTag + '</body>') + ");\n" +
-        marker;
-      loader = loader.replace(marker,replacement);
+      const replacement="html = html.replace('</body>', '<script src=\""+PATCH_URL+"\"><\\/script></body>');\n      document.write(html);";
+      const modified=loader.replace(/document\.write\(html\);/,replacement);
+      if(modified===loader) throw new Error('Não foi possível inserir o módulo de validação na base restaurada.');
       document.open();
-      document.write(loader);
+      document.write(modified);
       document.close();
     })
-    .catch(function(err){
-      var e = document.getElementById('erro');
-      e.style.display = 'block';
-      e.textContent = 'Erro ao carregar o formulário: ' + err.message;
+    .catch(function(error){
+      const box=document.getElementById('erro');
+      box.style.display='block';
+      box.textContent='Erro ao carregar o formulário: '+error.message;
     });
 })();
 </script>
