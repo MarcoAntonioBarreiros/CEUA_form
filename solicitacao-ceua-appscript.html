@@ -19,16 +19,24 @@ body{font-family:Arial,sans-serif;background:#E8F4F6;color:#164549;display:flex;
 <script>
 (function(){
   const BASE_URL='https://raw.githubusercontent.com/MarcoAntonioBarreiros/CEUA_form/95cc54e193cb4199b6563ca5be1316900c438f48/solicitacao-ceua-appscript.html';
-  const PATCH_URL='https://marcoantoniobarreiros.github.io/CEUA_form/ceua-validation-v2.js?v=20260803-1405';
+  const VALIDATION_URL='https://marcoantoniobarreiros.github.io/CEUA_form/ceua-validation-v2.js?v=20260803-1405';
+  const INSTALLATION_URL='https://marcoantoniobarreiros.github.io/CEUA_form/ceua-installation-status.js?v=20260803-1458';
   fetch(BASE_URL,{cache:'no-store'})
     .then(function(response){
       if(!response.ok) throw new Error('Falha ao carregar a base do formulário: HTTP '+response.status);
       return response.text();
     })
     .then(function(loader){
-      const replacement="html = html.replace('</body>', '<script src=\""+PATCH_URL+"\"><\\/script></body>');\n      document.write(html);";
-      const modified=loader.replace(/document\.write\(html\);/,replacement);
-      if(modified===loader) throw new Error('Não foi possível inserir o módulo de validação na base restaurada.');
+      let modified=loader.replace(
+        'Instalação indicada declarada como cadastrada e regular no CIUCA',
+        'Instalação declarada como cadastrada no CIUCA'
+      );
+      const pdfNeedle="lv('Nome da instalação:',V('inst_ciuca_nome'),42);\\n  cbx(";
+      const pdfReplacement="lv('Nome da instalação:',V('inst_ciuca_nome'),42);\\n  lv('Cadastro no CIUCA:',V('inst_ciuca_cadastro'),42);\\n  lv('Situação do licenciamento:',V('inst_ciuca_lic_status'),42);\\n  if(V('inst_ciuca_protocolo')) lv('Licença/protocolo:',V('inst_ciuca_protocolo'),42);\\n  if(V('inst_ciuca_justificativa')){ sub('Justificativa do enquadramento:'); tb(V('inst_ciuca_justificativa'),3); }\\n  cbx(";
+      modified=modified.replace(pdfNeedle,pdfReplacement);
+      const replacement="html = html.replace('</body>', '<script src=\""+VALIDATION_URL+"\"><\\/script><script src=\""+INSTALLATION_URL+"\"><\\/script></body>');\n      document.write(html);";
+      modified=modified.replace(/document\.write\(html\);/,replacement);
+      if(modified===loader) throw new Error('Não foi possível inserir os módulos institucionais na base restaurada.');
       document.open();
       document.write(modified);
       document.close();
