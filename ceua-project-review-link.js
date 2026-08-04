@@ -21,12 +21,12 @@
 
     var link = document.createElement('a');
     link.id = 'ceua-project-review-link';
-    link.href = new URL('parecer-ceua.html', window.location.href).href;
+    link.href = 'https://script.google.com/macros/s/AKfycbxO_RAbl_pSZE0GLhh9EXVT2wJx4tkMTkC_0nzSeBKDjnHMZi5wSGRdZZ3XW4Ez4nqE/exec';
     link.target = '_blank';
     link.rel = 'noopener noreferrer';
     link.className = 'text-[.6rem] font-bold bg-white text-tl-700 px-3 py-1 rounded-full border border-tl-200 hover:bg-tl-50 transition-colors whitespace-nowrap';
     link.textContent = 'Emissão de pareceres';
-    link.setAttribute('aria-label', 'Abrir emissão de pareceres de projetos da CEUA');
+    link.setAttribute('aria-label', 'Abrir sistema integrado de emissão de pareceres de projetos da CEUA');
 
     actions.appendChild(link);
   }
