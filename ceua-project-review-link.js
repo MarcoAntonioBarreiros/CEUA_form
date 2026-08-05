@@ -21,7 +21,7 @@
 
     var link = document.createElement('a');
     link.id = 'ceua-project-review-link';
-    link.href = 'https://script.google.com/macros/s/AKfycbxO_RAbl_pSZE0GLhh9EXVT2wJx4tkMTkC_0nzSeBKDjnHMZi5wSGRdZZ3XW4Ez4nqE/exec';
+    link.href = 'https://script.google.com/macros/s/AKfycbwYg6qS24helcTYBqHCzVz5l5jXJy_diA-X_dSz605mGvrHCoC9srCQ27swRMug6HBM/exec';
     link.target = '_blank';
     link.rel = 'noopener noreferrer';
     link.className = 'text-[.6rem] font-bold bg-white text-tl-700 px-3 py-1 rounded-full border border-tl-200 hover:bg-tl-50 transition-colors whitespace-nowrap';
