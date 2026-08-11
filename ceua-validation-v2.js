@@ -113,7 +113,7 @@
     addCheckedGroup(list, 'etica', 'Capacitação em ética', 2, true);
 
     addField(list, 'inst_ciuca_nome', 'Nome da instalação animal cadastrada no CIUCA', 3, true);
-    addCheckbox(list, 'inst_ciuca_confirm', 'Declaração sobre a instalação no CIUCA', 3, true);
+    addCheckbox(list, 'inst_ciuca_confirm', 'Declaração sobre a instalação no CIUCA', 3, false);
     addCheckedGroup(list, 'ci', 'Finalidade do projeto no CIUCA', 3, true);
     addField(list, 'resumo', 'Resumo da atividade', 3, true);
     addField(list, 'objetivos', 'Objetivos', 3, true);

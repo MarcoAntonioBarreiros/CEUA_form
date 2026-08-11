@@ -33,8 +33,9 @@ body{font-family:Arial,sans-serif;background:#E8F4F6;color:#164549;display:flex;
         'Instalação indicada declarada como cadastrada e regular no CIUCA',
         'Instalação declarada como cadastrada no CIUCA'
       );
+      modified=modified.replace("const instOk = document.getElementById('inst_ciuca_confirm')?.checked;","const instOk = true;");
       const pdfNeedle="lv('Nome da instalação:',V('inst_ciuca_nome'),42);\\n  cbx(";
-      const pdfReplacement="lv('Nome da instalação:',V('inst_ciuca_nome'),42);\\n  lv('Cadastro no CIUCA:',V('inst_ciuca_cadastro'),42);\\n  lv('Situação do licenciamento:',V('inst_ciuca_lic_status'),42);\\n  if(V('inst_ciuca_protocolo')) lv('Licença/protocolo:',V('inst_ciuca_protocolo'),42);\\n  if(V('inst_ciuca_justificativa')){ sub('Justificativa do enquadramento:'); tb(V('inst_ciuca_justificativa'),3); }\\n  cbx(";
+      const pdfReplacement="lv('Nome da instalação:',V('inst_ciuca_nome'),42);\\n  lv('Cadastro no CIUCA:',V('inst_ciuca_cadastro'),42);\\n  lv('Situação / enquadramento:',(V('inst_ciuca_lic_status')||V('inst_ciuca_nao_motivo')),42);\\n  if(V('inst_ciuca_protocolo')) lv('Licença/protocolo:',V('inst_ciuca_protocolo'),42);\\n  if(V('inst_ciuca_justificativa')){ sub('Justificativa do enquadramento:'); tb(V('inst_ciuca_justificativa'),3); }\\n  cbx(";
       modified=modified.replace(pdfNeedle,pdfReplacement);
       const replacement="html = html.replace('</body>', '<script src=\""+VALIDATION_URL+"\"><\\/script><script src=\""+INSTALLATION_URL+"\"><\\/script><script src=\""+COMBINED_URL+"\"><\\/script><script src=\""+PROJECT_REVIEW_URL+"\"><\\/script></body>');\n      document.write(html);";
       modified=modified.replace(/document\.write\(html\);/,replacement);
