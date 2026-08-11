@@ -337,8 +337,14 @@
     }
   }
 
+  window.limparFormularioCEUA = function () {
+    if (confirm('Limpar o formulário e recomeçar? Todos os dados preenchidos serão apagados.')) {
+      clearDraft();
+      location.reload();
+    }
+  };
+
   function restoreDraft() {
-    return; /* rascunho automatico desativado: o formulario sempre inicia limpo (evita reexibir dados de teste ou de outro usuario no mesmo navegador) */
     var raw;
     try {
       raw = localStorage.getItem(DRAFT_KEY);

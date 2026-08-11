@@ -29,6 +29,17 @@
     link.setAttribute('aria-label', 'Abrir sistema integrado de emissão de pareceres de projetos da CEUA');
 
     actions.appendChild(link);
+
+    var clearBtn = document.createElement('button');
+    clearBtn.type = 'button';
+    clearBtn.id = 'ceua-clear-form';
+    clearBtn.className = 'text-[.6rem] font-bold bg-white text-red-700 px-3 py-1 rounded-full border border-red-200 hover:bg-red-50 transition-colors whitespace-nowrap';
+    clearBtn.textContent = 'Limpar formulário';
+    clearBtn.setAttribute('aria-label', 'Limpar o formulário e recomeçar do zero');
+    clearBtn.onclick = function () {
+      if (typeof window.limparFormularioCEUA === 'function') window.limparFormularioCEUA();
+    };
+    actions.appendChild(clearBtn);
   }
 
   if (document.readyState === 'loading') {
