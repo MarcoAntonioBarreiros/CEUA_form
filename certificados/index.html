@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Emissão de Certificados CEUA</title>
+  <style>
+    :root{--g:#245c2b;--g2:#3d7f35;--b:#e8efe8;--t:#1f2937;--m:#6b7280;--r:#b91c1c}
+    body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f6f8f6;color:var(--t)}
+    .wrap{max-width:1100px;margin:0 auto;padding:24px}
+    header{background:white;border:1px solid #dfe8df;border-radius:16px;padding:18px;display:flex;gap:16px;align-items:center;box-shadow:0 6px 20px #0000000d}
+    header img{width:74px;height:74px;object-fit:contain}.kicker{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--g);font-weight:bold}.muted{color:var(--m);font-size:13px}.card{background:white;border:1px solid #dfe8df;border-radius:16px;padding:18px;margin-top:16px;box-shadow:0 6px 20px #0000000d}
+    .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:12px}.c12{grid-column:span 12}.c8{grid-column:span 8}.c6{grid-column:span 6}.c4{grid-column:span 4}.c3{grid-column:span 3}.c2{grid-column:span 2}
+    label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.04em;font-weight:bold;color:#667085;margin-bottom:4px}input,textarea,select{box-sizing:border-box;width:100%;border:1px solid #cfdacf;border-radius:10px;padding:10px;font-size:14px;background:#fff}textarea{min-height:82px;resize:vertical}button{border:0;border-radius:10px;padding:10px 14px;font-weight:bold;cursor:pointer;background:var(--g);color:white}button.secondary{background:#eef3ee;color:var(--g);border:1px solid #cfdacf}button.danger{background:var(--r)}button:disabled{opacity:.45;cursor:not-allowed}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.pill{display:inline-block;background:var(--b);border:1px solid #cfdacf;border-radius:999px;padding:5px 10px;font-size:12px}.status{padding:10px;border-radius:10px;background:#eef3ee;font-size:13px}.err{background:#fee2e2;color:#7f1d1d}.ok{background:#dcfce7;color:#14532d}.preview{font-family:Georgia,serif;line-height:1.55;border:1px dashed #cfdacf;border-radius:12px;padding:18px;background:#fcfdfc}.preview h2{text-align:center;font-size:18px;margin:8px 0 12px}.raw{max-height:180px;overflow:auto;background:#111827;color:#e5e7eb;border-radius:10px;padding:12px;font-size:12px;white-space:pre-wrap}.hide{display:none}@media(max-width:780px){.c8,.c6,.c4,.c3,.c2{grid-column:span 12}.wrap{padding:12px}}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <img alt="Logo CEUA" src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAMCAgMCAgMDAwMEAwMEBQgFBQQEBQoHBwYIDAoMDAsKCwsNDhIQDQ4RDgsLEBYQERMUFRUVDA8XGBYUGBIUFRT/2wBDAQMEBAUEBQkFBQkUDQsNFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBT/wAARCABXAFcDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD9K6KKKgsKKKKACik6UZBoAWiiigAooooAKKTFFAC0UUUAFFFMmmSCJ5JGCIoLFj0AoA5b4meP7L4b+Eb7Wb1h+6Q+VHnl3xwBXy3+zf8AtM63e/EC+03xfc77HVZi1o7cC3YnhPoal+PHiu4+J3iM28LN/Y1ixSJO0jd2rzAeDSmHUFJFIZWUcgjoRXy2JzFqunT2X4nPOUlJW2P0ZByARzmlryf4CfEh/Fvh8aXqT/8AE4sFCPk8yqOjCvWK+jpVY1oKcXubhRRRWwwooooAKKKKACvFv2ifiY3h3QLjStNRrzUZImc2sMirLMQpIhjycF2wQB1r0jxz4utvBnh+4v52XeARGhONzf4V+fXjP4iSfE3xZe6W7WE8l1KBb6drEL+RqSMQIrq2uI/nR1bcVaPcAqZYqSK8fH4jlXsobvfyRlUlyrQ7D4ZeNbP4k6dJc2mr6dO5a2k4DcGSPPIYA+lfot8PvHGnfEPwpY63pkokguEBIByUbuD719Zl+K9tDkm/eR0U6insdHRRRXrmxgeO9U1HRvCWp3mkWbX+pxQsbe3Xq744r8vvEvwf+NPi3Xr7V9Q8J3813dSmR3JHc8Ae1fq/RiuHFYRYq3NJqxzVqCrWTZ+Rw/Z8+LeP+ROvv0quf2cPis939ql8FX0syR7IlfBRTvVtxGeSCgxnjPOOBX684pTzXFHK4Rd4yZzrBQX2mfkGf2Z/ieHilXwdqhuFIZ5HWMh23Rkkr0IPlDjpyfaoz+y98Slt5bdPBeqpE4AHEe4nymjyxxz94nHQV+v+KMVt9Q/vv8Cvqce7PyIj/Zt+J0UyuvgjUQqStMkQEYUOS2OnbDYx7dqlT9nv4uqoDeDr79K/XKlrOeWRqfFN/gJ4KD+0z8jT+z58XP8AoTr39K+k/wBi7Tvin8OPFVxoniHw5d23hu9BfzJjxDIO4+tfb2KMCqo5dGjNTjJ3RdPCxpy5lJi0UlFeudotFFFABRRRQAUUUUAFFFFABRRRQAUUUUAf/9k=">
+    <div><div class="kicker">CEUA/Palotina · UFPR</div><h1 style="margin:.2rem 0">Emissão de certificados de aprovação</h1><div class="muted">Página técnica não vinculada ao formulário público. Acesso por link com chave.</div></div>
+  </header>
+
+  <section class="card" id="setupBox">
+    <strong>Configuração necessária:</strong> cole a URL do Apps Script na constante <code>APPS_SCRIPT_URL</code> deste arquivo e use o link com <code>?token=SUA_CHAVE</code>.
+  </section>
+
+  <section class="card">
+    <div class="grid">
+      <div class="c8"><label>URL do Apps Script</label><input id="scriptUrl" placeholder="https://script.google.com/macros/s/.../exec"></div>
+      <div class="c4"><label>Chave de acesso</label><input id="token" type="password" placeholder="token"></div>
+      <div class="c12 row"><button id="btnLoad" type="button">Carregar dados da planilha</button><button class="secondary" type="button" id="btnClear">Limpar campos</button><span class="pill" id="count">0 registros</span></div>
+      <div class="c8"><label>Filtrar por protocolo, título ou responsável</label><input id="q" placeholder="Digite para filtrar"></div>
+      <div class="c4"><label>Registro importado</label><select id="records"><option value="">Nenhum</option></select></div>
+    </div>
+    <div id="msg" class="status" style="margin-top:12px">Pronto.</div>
+  </section>
+
+  <section class="card">
+    <h2>Dados do certificado</h2>
+    <div class="grid">
+      <div class="c3"><label>Protocolo</label><input id="protocolo" placeholder="E03/2026"></div>
+      <div class="c3"><label>Data do certificado</label><input id="data_certificado" type="date"></div>
+      <div class="c3"><label>Início</label><input id="dt_ini" type="date"></div>
+      <div class="c3"><label>Fim</label><input id="dt_fim" type="date"></div>
+      <div class="c12"><label>Título em português</label><textarea id="titulo"></textarea></div>
+      <div class="c12"><label>Título em inglês</label><textarea id="titulo_en"></textarea></div>
+      <div class="c6"><label>Responsável</label><input id="responsavel"></div>
+      <div class="c4"><label>Espécies aprovadas</label><input id="especies" placeholder="Bos taurus"></div>
+      <div class="c2"><label>Quantidade total</label><input id="quantidade" type="number" min="0"></div>
+      <div class="c6"><label>Assinatura</label><input id="assinatura" value="Prof. Dr. Marco Antônio Bacellar Barreiros / Palotina"></div>
+      <div class="c6"><label>Portaria</label><input id="portaria" value="Portaria Nº 1475/2024-PL"></div>
+    </div>
+    <details style="margin-top:12px"><summary>Ver dados brutos importados</summary><pre id="raw" class="raw"></pre></details>
+  </section>
+
+  <section class="card">
+    <div class="row" style="justify-content:space-between"><h2>Prévia do texto</h2><div class="row"><button class="secondary" type="button" id="btnPreview">Atualizar prévia</button><button type="button" id="btnEmit">Emitir PDF e registrar</button></div></div>
+    <div class="preview" id="preview"></div>
+    <div id="result" class="status hide" style="margin-top:12px"></div>
+  </section>
+</div>
+<script>
+const APPS_SCRIPT_URL = 'COLE_A_URL_DO_APPS_SCRIPT_AQUI';
+let allRecords=[];
+const $=id=>document.getElementById(id);
+const ids=['protocolo','data_certificado','dt_ini','dt_fim','titulo','titulo_en','responsavel','especies','quantidade','assinatura','portaria'];
+function getParam(k){return new URLSearchParams(location.search).get(k)||''}
+function today(){return new Date().toISOString().slice(0,10)}
+function brDate(s){if(!s)return ''; const d=new Date(s+'T12:00:00'); return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+d.getFullYear()}
+function enDate(s){if(!s)return ''; const d=new Date(s+'T12:00:00'); return d.toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'})}
+function val(id){return $(id).value.trim()}
+function setMsg(t,err=false){$('msg').className='status '+(err?'err':'');$('msg').textContent=t}
+function endpoint(){return (val('scriptUrl')||APPS_SCRIPT_URL).trim()}
+function token(){return val('token')||getParam('token')}
+function data(){let o={}; ids.forEach(id=>o[id]=val(id)); o.periodo=brDate(o.dt_ini)+' a '+brDate(o.dt_fim); o.data_pt=brDate(o.data_certificado); o.data_en=enDate(o.data_certificado); return o}
+function fill(d){ids.forEach(id=>{if(d[id]!==undefined && d[id]!==null) $(id).value=d[id]}); $('raw').textContent=JSON.stringify(d.raw||d,null,2); preview()}
+function clearFields(){ids.forEach(id=>{ if(!['assinatura','portaria'].includes(id)) $(id).value=''}); $('data_certificado').value=today(); $('raw').textContent=''; preview()}
+function preview(){const d=data(); $('preview').innerHTML=`<h2>CERTIFICADO DE APROVAÇÃO</h2><p>Certifico que o formulário sob o protocolo nº <strong>${d.protocolo||'____'}</strong>, referente ao projeto de pesquisa intitulado <strong>${d.titulo||'____'}</strong>, envolvendo as seguintes espécies animais aprovadas (<strong>${d.especies||'____'}</strong>) na quantidade total de <strong>${d.quantidade||'____'}</strong> indivíduos, para execução no período <strong>${d.periodo||'____'}</strong>, sob responsabilidade de <strong>${d.responsavel||'____'}</strong>, foi apreciado pela CEUA/Palotina e considerado <strong>APROVADO</strong>.</p><p>Palotina, ${d.data_pt||'____'}.</p><h2>CERTIFICATE OF APPROVAL</h2><p>I certify that the form under protocol no. <strong>${d.protocolo||'____'}</strong>, related to the research project entitled <strong>${d.titulo_en||d.titulo||'____'}</strong>, involving the following approved animal species (<strong>${d.especies||'____'}</strong>) in the total number of <strong>${d.quantidade||'____'}</strong> individuals, to be carried out during the period <strong>${d.periodo||'____'}</strong>, under the responsibility of <strong>${d.responsavel||'____'}</strong>, was reviewed by CEUA/Palotina and considered <strong>APPROVED</strong>.</p><p>Palotina, ${d.data_en||'____'}.</p><p style="text-align:center;margin-top:34px">________________________________________<br>${d.assinatura}<br>(${d.portaria})</p>`}
+function normalize(s){return (s||'').toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')}
+function renderList(){const q=normalize(val('q')); const sel=$('records'); sel.innerHTML='<option value="">Selecione...</option>'; allRecords.filter(r=>!q||normalize([r.protocolo,r.responsavel,r.titulo].join(' ')).includes(q)).forEach(r=>{const opt=document.createElement('option'); opt.value=r.rowNumber; opt.textContent=`${r.protocolo||'sem protocolo'} · ${r.responsavel||''} · ${(r.titulo||'').slice(0,90)}`; sel.appendChild(opt)}); $('count').textContent=(sel.options.length-1)+' registros'}
+async function loadRows(){if(!endpoint()||endpoint().includes('COLE_A_URL')) return setMsg('Cole a URL do Apps Script.',true); if(!token()) return setMsg('Informe a chave de acesso.',true); setMsg('Carregando registros...'); const url=endpoint()+`?action=list&token=${encodeURIComponent(token())}`; const r=await fetch(url); const j=await r.json(); if(!j.ok) throw new Error(j.error||'Erro ao carregar'); allRecords=j.records||[]; renderList(); setMsg('Dados carregados. Selecione uma linha para importar.');}
+async function getRow(row){setMsg('Importando linha '+row+'...'); const url=endpoint()+`?action=get&token=${encodeURIComponent(token())}&row=${encodeURIComponent(row)}`; const r=await fetch(url); const j=await r.json(); if(!j.ok) throw new Error(j.error||'Erro ao importar'); fill(j.data); setMsg('Dados importados. Você pode editar antes de emitir.');}
+async function emit(){preview(); if(!endpoint()||endpoint().includes('COLE_A_URL')) return setMsg('Cole a URL do Apps Script.',true); const payload={action:'emitir',token:token(),data:data()}; $('btnEmit').disabled=true; $('result').className='status'; $('result').textContent='Gerando PDF no Google Drive...'; try{const r=await fetch(endpoint(),{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)}); const j=await r.json(); if(!j.ok) throw new Error(j.error||'Erro ao emitir'); $('result').className='status ok'; $('result').innerHTML=`PDF gerado e registrado: <a target="_blank" href="${j.pdfUrl}">${j.pdfName}</a>`;}catch(e){$('result').className='status err'; $('result').textContent=e.message} finally{$('btnEmit').disabled=false}}
+$('btnLoad').onclick=()=>loadRows().catch(e=>setMsg(e.message,true)); $('records').onchange=e=>{if(e.target.value)getRow(e.target.value).catch(er=>setMsg(er.message,true))}; $('q').oninput=renderList; $('btnPreview').onclick=preview; $('btnClear').onclick=clearFields; $('btnEmit').onclick=emit;
+$('scriptUrl').value=getParam('script')||''; $('token').value=getParam('token')||''; $('data_certificado').value=today(); if(!APPS_SCRIPT_URL.includes('COLE_A_URL')) $('setupBox').classList.add('hide'); preview();
+</script>
+</body>
+</html>
