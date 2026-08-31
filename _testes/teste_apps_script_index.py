@@ -109,12 +109,14 @@ def test_engine_runtime(source: str) -> None:
     js = f"""
 const vm=require('vm');
 const events=[];
+const pdfText=[];
 const elements={{
   purpose:{{value:'Utilização',classList:{{toggle:()=>{{}}}},setAttribute:()=>{{}}}}, cTot:{{}}, cOk:{{}}, cNo:{{}}, cNa:{{}}, cPend:{{}}, btnPend:{{}},
   verdict:{{textContent:'EM PREENCHIMENTO',style:{{}}}}, statusBox:{{textContent:'',style:{{}}}}
 }};
 const fieldIds=['inst','cnpj','ceua','addr','city','mail','unit','situation','subsel','animalDetail','campus','building','room','area','cap','coord','coordCpf','coordMail','rt','rtCpf','rtMail','crmv','crmvUf'];
 for(const id of fieldIds) elements[id]={{value:'preenchido',classList:{{toggle:()=>{{}}}},setAttribute:()=>{{}},focus:()=>{{}},scrollIntoView:()=>{{}}}};
+elements.coord.value='Coordenador Teste'; elements.rt.value='RT Teste'; elements.subsel.value='Cães';
 const document={{
   getElementById:id=>elements[id]||null,
   querySelectorAll:()=>[],
@@ -122,7 +124,7 @@ const document={{
   readyState:'loading'
 }};
 class FakePDF{{
-  setFont(){{}} setFontSize(){{}} setTextColor(){{}} addPage(){{}} text(){{}}
+  setFont(){{}} setFontSize(){{}} setTextColor(){{}} addPage(){{}} text(t){{pdfText.push(String(t))}}
   splitTextToSize(t){{return [String(t)]}}
   save(){{events.push('pdf')}}
 }}
@@ -134,7 +136,7 @@ const window={{
   setTimeout:setTimeout
 }};
 const context={{
-  CFG:{{modo:'coordenador',grupo:'Teste',rn:'RN Teste',slug:'teste',itens:[]}},
+  CFG:{{modo:'coordenador',grupo:'Teste',rn:'RN Teste',slug:'teste',itens:[{{id:'r1',rn:'RN Teste',d:'art. 1º',g:'Geral',c:'R',fin:[],sub:'',cond:'',t:'Critério recomendado',n:'',obs:''}}]}},
   document,window,alert:()=>{{}},console,setTimeout,globalThis:null
 }};
 context.globalThis=context;
@@ -143,6 +145,7 @@ vm.runInContext({json.dumps(exposed)},context);
 (async()=>{{
   const ok=await context.__ciucaTest.registrarEpdf({{type:'click'}});
   if(!ok || events.join(',')!=='fetch,pdf') throw new Error('sequência esperada fetch,pdf; obtida '+events.join(','));
+  if(!pdfText.some(t=>t.includes('Coordenador Teste')) || !pdfText.some(t=>t.includes('RT Teste')) || !pdfText.some(t=>t.includes('Cães'))) throw new Error('PDF não contém coordenador, RT e espécie selecionada');
   elements.coord.value='';
   const before=events.length;
   const missing=await context.__ciucaTest.registrarDados(async()=>{{events.push('envio-indevido')}});
