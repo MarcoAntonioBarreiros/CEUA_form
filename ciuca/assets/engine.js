@@ -285,13 +285,14 @@ function aplicar(id){
   const c=$('c-'+id), o=$('o-'+id); if(!c) return;
   const s=(st[id]||{}).s||'—';
   c.dataset.s=s;
-  const req = EXIGE_JUST.indexOf(s)>-1;
+  const item=CFG.itens.find(it=>it.id===id);
+  const req = item&&item.c==='OB'&&EXIGE_JUST.indexOf(s)>-1;
   o.classList.toggle('req',req);
   o.placeholder = req ? 'Justificativa obrigatória' : 'Observação (opcional)';
 }
 
 function pendentes(){
-  return ativos().filter(it=>{
+  return ativos().filter(it=>it.c==='OB').filter(it=>{
     const atual=st[it.id]||{s:'—',o:''};
     const semResposta=!atual.s||atual.s==='—';
     const semJustificativa=EXIGE_JUST.indexOf(atual.s)>-1 && !(atual.o||'').trim();
@@ -319,7 +320,7 @@ function resumo(){
   const its=ativos();
   const g=s=>its.filter(i=>(st[i.id]||{}).s===s).length;
   const ob=its.filter(i=>i.c==='OB');
-  const semJust=its.filter(i=>EXIGE_JUST.indexOf((st[i.id]||{}).s)>-1 && !((st[i.id]||{}).o||'').trim());
+  const semJust=ob.filter(i=>EXIGE_JUST.indexOf((st[i.id]||{}).s)>-1 && !((st[i.id]||{}).o||'').trim());
   $('cTot').textContent=its.length; $('cOk').textContent=g('Atende');
   $('cNo').textContent=g('Não atende'); $('cNa').textContent=g('Não se aplica');
   if($('cIf')) $('cIf').textContent=g('Informação insuficiente');

@@ -76,6 +76,8 @@ def main():
     assert "CIUCA_APPS_SCRIPT_URL" not in engine
     assert "Google Sheet" not in engine
     assert "const itens=ativos()" in engine
+    assert "const ids=ativos().filter(x=>x.c==='OB').map" in engine
+    assert "Obrigatórios pendentes" in engine
     assert "Parâmetro do Guia / o que conferir" in engine
     assert "parâmetro complementar" in engine
 

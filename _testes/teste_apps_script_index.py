@@ -7,6 +7,7 @@ import json
 import re
 import subprocess
 import sys
+import tempfile
 from html.parser import HTMLParser
 from pathlib import Path
 
@@ -93,6 +94,9 @@ def test_engine_static() -> str:
     check("validarCamposObrigatorios" in source and "estado.obPend" in source and
           "if(estado.pendentes)" not in source,
           "campos iniciais e obrigatórios são validados sem bloquear recomendações em branco")
+    check("return ativos().filter(it=>it.c==='OB').filter" in source and
+          "const semJust=ob.filter" in source,
+          "recomendados não entram em pendências nem exigem justificativa para liberar")
     check("instalacao['Espécie / subgrupo selecionado']=g('subsel')" in source and
           "Object.entries(d.instalacao).forEach(([k,val])=>kv(k,val))" in source,
           "PDF inclui o subgrupo selecionado e todos os dados iniciais")
@@ -113,7 +117,7 @@ def test_engine_static() -> str:
 def test_engine_runtime(source: str) -> None:
     marker = "})();"
     exposed = source.rsplit(marker, 1)[0] + (
-        "globalThis.__ciucaTest={registrarDados,registrarEpdf,payloadAppsScript,enviarAppsScript};" + marker
+        "globalThis.__ciucaTest={registrarDados,registrarEpdf,payloadAppsScript,enviarAppsScript,st};" + marker
     )
     js = f"""
 const vm=require('vm');
@@ -166,6 +170,10 @@ vm.runInContext({json.dumps(exposed)},context);
   const iv=pdfText.findIndex(t=>t.includes('art. 3º, IV')), v=pdfText.findIndex(t=>t.includes('art. 3º, V')), ix=pdfText.findIndex(t=>t.includes('art. 3º, IX'));
   if(!(iv>-1&&iv<v&&v<ix)) throw new Error('incisos romanos não foram ordenados juridicamente');
   if(!pdfText.some(t=>t.includes('Obrigatórios respondidos')) || !pdfText.some(t=>t.includes('Recomendados respondidos'))) throw new Error('resumo não separa obrigatórios e recomendados');
+  context.__ciucaTest.st.r1={{s:'Não atende',o:''}};
+  const recStart=events.length;
+  const recOk=await context.__ciucaTest.registrarEpdf(async()=>{{events.push('fetch-recomendado')}});
+  if(!recOk || events.slice(recStart).join(',')!=='fetch-recomendado,pdf') throw new Error('recomendado sem justificativa bloqueou o fluxo');
   elements.coord.value='';
   const before=events.length;
   const missing=await context.__ciucaTest.registrarDados(async()=>{{events.push('envio-indevido')}});
@@ -177,14 +185,17 @@ vm.runInContext({json.dumps(exposed)},context);
   console.log('PASSA: Apps Script antes do PDF, campos obrigatórios e falha de rede controlada');
 }})().catch(err=>{{console.error(err.stack||err);process.exit(1)}});
 """
-    completed = subprocess.run(
-        ["node", "-e", js],
-        cwd=ROOT,
-        text=True,
-        capture_output=True,
-        encoding="utf-8",
-        check=False,
-    )
+    with tempfile.TemporaryDirectory() as tmpdir:
+        script = Path(tmpdir) / "teste_apps_script.js"
+        script.write_text(js, encoding="utf-8")
+        completed = subprocess.run(
+            ["node", str(script)],
+            cwd=ROOT,
+            text=True,
+            capture_output=True,
+            encoding="utf-8",
+            check=False,
+        )
     if completed.stdout:
         print(completed.stdout.strip())
     if completed.returncode:

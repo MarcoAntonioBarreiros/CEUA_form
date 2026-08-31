@@ -53,7 +53,7 @@ function montarPagina(){
     <section class="card step" data-step="2"><div class="step-head"><span class="step-tag">Etapa 2</span><h2 class="step-title">Cenário avaliado</h2></div><p class="info"><b>Marque apenas o que existe.</b> Os filtros controlam os dispositivos normativos e os parâmetros práticos aplicáveis.</p><div class="grid g3">${camposCenario()}</div>${checks('Fase/categoria animal','phase',CONFIG.fases)}${checks('Estruturas/ambientes existentes','typ',CONFIG.tipos)}<div style="margin-top:14px"><label class="lbl">Descrição do cenário</label><textarea id="cenario" class="fi" rows="5" placeholder="Descreva instalações, lotação, manejo, procedimentos e limitações observadas."></textarea></div><p class="info">Critérios normativos ativos: <b id="critCount">0</b>. Parâmetros complementares do Guia: <b id="guideCount">0</b>.</p><div class="nav"><button class="btn" data-go="1">← Anterior</button><button class="btn primary" data-go="3">Próximo →</button></div></section>
     <section class="card step" data-step="3"><div class="step-head"><span class="step-tag">Etapa 3</span><h2 class="step-title">${esc(TITULOS[3])}</h2></div><div id="ambList"></div><div class="nav"><button class="btn" data-go="2">← Anterior</button><button class="btn primary" data-go="4">Próximo →</button></div></section>
     <section class="card step" data-step="4"><div class="step-head"><span class="step-tag">Etapa 4</span><h2 class="step-title">${esc(TITULOS[4])}</h2></div><div id="reqList"></div><div class="nav"><button class="btn" data-go="3">← Anterior</button><button class="btn primary" data-go="5">Próximo →</button></div></section>
-    <section class="card step" data-step="5"><div class="step-head"><span class="step-tag">Etapa 5</span><h2 class="step-title">Conclusão do parecerista</h2></div><div id="veredito" class="verdict">PREENCHIMENTO NÃO INICIADO</div><div class="pills"><span class="pill p-d">Ativos: <b id="cTot">0</b></span><span class="pill p-ok">Atende: <b id="cOk">0</b></span><span class="pill p-no">Não atende: <b id="cNao">0</b></span><span class="pill p-if">Informação insuficiente: <b id="cSem">0</b></span><span class="pill p-na">Não se aplica: <b id="cNa">0</b></span><span class="pill p-pend">Não avaliados: <b id="cPend">0</b></span></div><div class="grid g2">
+    <section class="card step" data-step="5"><div class="step-head"><span class="step-tag">Etapa 5</span><h2 class="step-title">Conclusão do parecerista</h2></div><div id="veredito" class="verdict">PREENCHIMENTO NÃO INICIADO</div><div class="pills"><span class="pill p-d">Ativos: <b id="cTot">0</b></span><span class="pill p-ok">Atende: <b id="cOk">0</b></span><span class="pill p-no">Não atende: <b id="cNao">0</b></span><span class="pill p-if">Informação insuficiente: <b id="cSem">0</b></span><span class="pill p-na">Não se aplica: <b id="cNa">0</b></span><span class="pill p-pend">Obrigatórios pendentes: <b id="cPend">0</b></span></div><div class="grid g2">
       <div><label class="lbl">Conclusão técnica</label><select id="conclusao" class="fi"><option></option><option>Informações suficientes — favorável ao encaminhamento</option><option>Favorável com exigências/recomendações de adequação</option><option>Diligência — solicitar complementação</option><option>Não favorável no momento</option></select></div>
       <div><label class="lbl">Necessita visita técnica?</label><select id="visita" class="fi"><option></option><option>Não</option><option>Sim, antes da aprovação</option><option>Sim, como recomendação posterior</option><option>A critério da plenária</option></select></div>
       <div style="grid-column:span 2"><label class="lbl">Pendências/documentos a solicitar</label><textarea id="pendencias" class="fi" rows="3"></textarea></div><div style="grid-column:span 2"><label class="lbl">Exigências ou recomendações de adequação</label><textarea id="recomendacoes" class="fi" rows="3"></textarea></div><div style="grid-column:span 2"><label class="lbl">Texto do parecer complementar</label><textarea id="parecer" class="fi" rows="7"></textarea></div></div>
@@ -115,7 +115,8 @@ function aplicarEstado(id){
   const el=$('it-'+id); if(!el) return;
   const d=state[id]||{status:'—',obs:''}; el.dataset.s=d.status;
   const obs=el.querySelector('[data-obs]');
-  const exige=['Não atende','Informação insuficiente','Não se aplica'].includes(d.status)&&!String(d.obs||'').trim();
+  const item=CFG.itens.find(x=>x.id===id);
+  const exige=item&&item.c==='OB'&&['Não atende','Informação insuficiente','Não se aplica'].includes(d.status)&&!String(d.obs||'').trim();
   if(obs) obs.classList.toggle('req',exige);
 }
 function renderSecao(step,grupo,alvoId){
@@ -136,7 +137,7 @@ function resumo(){
   const itens=ativos();
   const dados=itens.map(x=>({item:x,...(state[x.id]||{status:'—',obs:''})}));
   const conta=s=>dados.filter(x=>x.status===s).length;
-  $('cTot').textContent=itens.length; $('cOk').textContent=conta('Atende'); $('cNao').textContent=conta('Não atende'); $('cSem').textContent=conta('Informação insuficiente'); $('cNa').textContent=conta('Não se aplica'); $('cPend').textContent=conta('—');
+  $('cTot').textContent=itens.length; $('cOk').textContent=conta('Atende'); $('cNao').textContent=conta('Não atende'); $('cSem').textContent=conta('Informação insuficiente'); $('cNa').textContent=conta('Não se aplica'); $('cPend').textContent=dados.filter(x=>x.item.c==='OB'&&x.status==='—').length;
   const obrig=dados.filter(x=>x.item.c==='OB');
   const nao=obrig.filter(x=>x.status==='Não atende').length;
   const sem=obrig.filter(x=>x.status==='Informação insuficiente'||x.status==='—').length;
@@ -155,7 +156,7 @@ function irEtapa(n){
   window.scrollTo({top:0,behavior:'smooth'});
 }
 function validarJustificativas(){
-  const ids=[...ativos().map(x=>x.id),...extrasAtivos('amb').map(x=>'guia-'+x.id),...extrasAtivos('req').map(x=>'guia-'+x.id)];
+  const ids=ativos().filter(x=>x.c==='OB').map(x=>x.id);
   const falta=ids.find(id=>{ const d=state[id]; return d&&['Não atende','Informação insuficiente','Não se aplica'].includes(d.status)&&!d.obs.trim(); });
   if(!falta) return true;
   const el=$('it-'+falta); const step=Number(el?.closest('.step')?.dataset.step||3); irEtapa(step); setTimeout(()=>{el?.scrollIntoView({behavior:'smooth',block:'center'});el?.querySelector('[data-obs]')?.focus();},100); alert('Todo item marcado como Não atende, Informação insuficiente ou Não se aplica precisa de justificativa/evidência.'); return false;
