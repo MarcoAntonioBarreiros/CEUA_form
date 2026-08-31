@@ -1,6 +1,14 @@
 
 (function(){
 const MODO = CFG.modo || 'coordenador';
+function aplicarParametrosParecerista(){
+  if(MODO!=='parecerista') return;
+  const parametros=(window.CIUCA_PARECERISTA_PARAMETROS||{})[CFG.slug]||{};
+  CFG.itens.forEach(item=>{
+    const parametro=parametros[item.id];
+    if(parametro) item.obs=parametro;
+  });
+}
 const STATUS = MODO==='parecerista'
   ? ['—','Atende','Não atende','Informação insuficiente','Não se aplica']
   : ['—','Atende','Não atende','Não se aplica'];
@@ -570,6 +578,7 @@ function montarPDF(){
 }
 
 window.addEventListener('DOMContentLoaded',()=>{
+  aplicarParametrosParecerista();
   montarFluxo();
   marcarCamposObrigatorios();
   $('purpose').onchange=render;
