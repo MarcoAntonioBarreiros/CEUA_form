@@ -75,11 +75,18 @@ def test_engine_static() -> str:
           "todos os formulários ativos possuem somente o botão integrado")
     check(not any(term in active_source for term in ["Exportar Excel", "btnXls", "xlsx.full.min.js", 'id="btnPdf"', ">Exportar PDF<"]),
           "não há exportação Excel nem PDF independente nos formulários ativos")
-    check("await registrarDados(fetchImpl)" in source and "if(registrado) exportarPDF()" in source,
-          "registro no Apps Script ocorre antes da geração do PDF")
+    check(source.index("arquivo=montarPDF()") < source.index("const registrado=await registrarDados(fetchImpl)") <
+          source.index("arquivo.doc.save(arquivo.nome)"),
+          "PDF é preparado antes do registro e baixado somente após o Apps Script")
     check("typeof fetchImpl==='function'?fetchImpl:undefined" in source and
           "$('btnRegistrarPdf').onclick=()=>registrarEpdf()" in source,
           "evento de clique não é tratado como função de rede")
+    check("validarCamposObrigatorios" in source and "estado.obPend" in source and
+          "if(estado.pendentes)" not in source,
+          "campos iniciais e obrigatórios são validados sem bloquear recomendações em branco")
+    check("instalacao['Espécie / subgrupo selecionado']=g('subsel')" in source and
+          "Object.entries(o).forEach(([k,v])=>linha(`${k}: ${v||'—'}`,8.5))" in source,
+          "PDF inclui o subgrupo selecionado e todos os dados iniciais")
     check("catch(erro)" in source and "showStatus('error','Erro ao registrar dados:" in source,
           "falha de rede possui tratamento e mensagem controlada")
 
@@ -103,9 +110,11 @@ def test_engine_runtime(source: str) -> None:
 const vm=require('vm');
 const events=[];
 const elements={{
-  purpose:{{value:'Utilização'}}, cTot:{{}}, cOk:{{}}, cNo:{{}}, cNa:{{}}, cPend:{{}}, btnPend:{{}},
+  purpose:{{value:'Utilização',classList:{{toggle:()=>{{}}}},setAttribute:()=>{{}}}}, cTot:{{}}, cOk:{{}}, cNo:{{}}, cNa:{{}}, cPend:{{}}, btnPend:{{}},
   verdict:{{textContent:'EM PREENCHIMENTO',style:{{}}}}, statusBox:{{textContent:'',style:{{}}}}
 }};
+const fieldIds=['inst','cnpj','ceua','addr','city','mail','unit','situation','subsel','animalDetail','campus','building','room','area','cap','coord','coordCpf','coordMail','rt','rtCpf','rtMail','crmv','crmvUf'];
+for(const id of fieldIds) elements[id]={{value:'preenchido',classList:{{toggle:()=>{{}}}},setAttribute:()=>{{}},focus:()=>{{}},scrollIntoView:()=>{{}}}};
 const document={{
   getElementById:id=>elements[id]||null,
   querySelectorAll:()=>[],
@@ -134,10 +143,15 @@ vm.runInContext({json.dumps(exposed)},context);
 (async()=>{{
   const ok=await context.__ciucaTest.registrarEpdf({{type:'click'}});
   if(!ok || events.join(',')!=='fetch,pdf') throw new Error('sequência esperada fetch,pdf; obtida '+events.join(','));
+  elements.coord.value='';
+  const before=events.length;
+  const missing=await context.__ciucaTest.registrarDados(async()=>{{events.push('envio-indevido')}});
+  if(missing!==false || events.length!==before) throw new Error('campo obrigatório vazio não bloqueou o registro');
+  elements.coord.value='preenchido';
   const fail=await context.__ciucaTest.registrarDados(async()=>{{throw new Error('rede indisponível')}});
   if(fail!==false) throw new Error('falha de rede não retornou false');
   if(!elements.statusBox.textContent.includes('Erro ao registrar dados: rede indisponível')) throw new Error('mensagem de erro controlada ausente');
-  console.log('PASSA: Apps Script antes do PDF e falha de rede controlada');
+  console.log('PASSA: Apps Script antes do PDF, campos obrigatórios e falha de rede controlada');
 }})().catch(err=>{{console.error(err.stack||err);process.exit(1)}});
 """
     completed = subprocess.run(

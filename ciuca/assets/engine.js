@@ -28,6 +28,40 @@ const TITULOS_ETAPAS = {
 };
 const $ = id => document.getElementById(id);
 const esc = s => String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const CAMPOS_OBRIGATORIOS = [
+  {id:'coord',etapa:3,nome:'Coordenador da instalação'}, {id:'coordCpf',etapa:3,nome:'CPF do coordenador'},
+  {id:'coordMail',etapa:3,nome:'E-mail do coordenador'}, {id:'rt',etapa:3,nome:'Responsável Técnico'},
+  {id:'rtCpf',etapa:3,nome:'CPF do RT'}, {id:'rtMail',etapa:3,nome:'E-mail do RT'},
+  {id:'crmv',etapa:3,nome:'CRMV'}, {id:'crmvUf',etapa:3,nome:'UF do CRMV'}
+];
+
+function marcarCamposObrigatorios(){
+  CAMPOS_OBRIGATORIOS.forEach(campo=>{
+    const el=$(campo.id);
+    if(!el) return;
+    el.required=true;
+    const label=el.parentElement&&el.parentElement.querySelector('.lbl');
+    if(label&&!label.dataset.required){ label.dataset.required='true'; label.textContent+=' *'; }
+  });
+}
+
+function validarCamposObrigatorios(){
+  const ausentes=[];
+  CAMPOS_OBRIGATORIOS.forEach(campo=>{
+    const el=$(campo.id);
+    if(!el) return;
+    const vazio=!String(el.value||'').trim();
+    el.classList.toggle('req',vazio);
+    el.setAttribute('aria-invalid',vazio?'true':'false');
+    if(vazio) ausentes.push({...campo,el});
+  });
+  if(!ausentes.length) return true;
+  const primeiro=ausentes[0];
+  alert(`Preencha os campos obrigatórios antes de registrar: ${ausentes.map(c=>c.nome).join(', ')}.`);
+  irEtapa(primeiro.etapa);
+  window.setTimeout(()=>{ primeiro.el.focus(); primeiro.el.scrollIntoView({behavior:'smooth',block:'center'}); },80);
+  return false;
+}
 
 function finAtual(){ return FIN[$('purpose').value] || []; }
 function subAtual(){ const e=$('subsel'); return e ? e.value : ''; }
@@ -298,18 +332,20 @@ function resumo(){
     v.textContent=`CONFORME COM RESSALVA — ${obNa} item(ns) obrigatório(s) assinalado(s) como Não se aplica, com justificativa, a ser avaliada pela CEUA.`; }
   else { v.style.background='#dcfce7'; v.style.color='#166534';
     v.textContent='CONFORME — todos os itens obrigatórios aplicáveis foram atendidos.'; }
-  return {semJust:semJust.length,pendentes:listaPendentes.length};
+  return {semJust:semJust.length,pendentes:listaPendentes.length,obPend};
 }
 
 function dados(){
   const g=id=>($(id)?$(id).value:'');
+  const instalacao={'Nome / identificação':g('unit'),'Finalidade':g('purpose'),'Situação':g('situation'),
+    'Espécie(s) / grupo abrangido(s)':g('animalDetail'),'Campus':g('campus'),'Prédio':g('building'),
+    'Sala / setor':g('room'),'Área (m²)':g('area'),'Capacidade':g('cap')};
+  if($('subsel')) instalacao['Espécie / subgrupo selecionado']=g('subsel');
   return {
     meta:{grupo:CFG.grupo, rn:CFG.rn, slug:CFG.slug, modo:MODO, emitido:new Date().toLocaleString('pt-BR'),
       sei_destino:SEI_DESTINO,versao_formulario:'CIUCA Instalações v3 auditada 2026-08-31',origem:'Formulários CIUCA GitHub Pages'},
     instituicao:{Instituição:g('inst'),CNPJ:g('cnpj'),Endereço:g('addr'),'Município / UF':g('city'),'CEUA vinculada':g('ceua'),'E-mail da instalação':g('mail')},
-    instalacao:{'Nome / identificação':g('unit'),'Finalidade':g('purpose'),'Situação':g('situation'),
-      'Espécie(s) / grupo abrangido(s)':g('animalDetail'),'Campus':g('campus'),'Prédio':g('building'),
-      'Sala / setor':g('room'),'Área (m²)':g('area'),'Capacidade':g('cap')},
+    instalacao,
     responsaveis:{'Coordenador da instalação':g('coord'),'CPF':g('coordCpf'),'E-mail':g('coordMail'),
       'Responsável Técnico':g('rt'),'CPF do RT':g('rtCpf'),'CRMV':g('crmv'),'UF do CRMV':g('crmvUf'),'E-mail do RT':g('rtMail')},
     itens: ativos().map(i=>({rn:i.rn,dispositivo:i.d,classificacao:i.c==='OB'?'Obrigatório':'Recomendado',
@@ -393,12 +429,13 @@ async function enviarAppsScript(payload,fetchImpl){
 }
 
 async function registrarDados(fetchImpl){
+  if(!validarCamposObrigatorios()) return false;
   if(bloqueado()) return false;
   showStatus('warn','Registrando dados na planilha interna da CEUA/UNIBIO...');
   try{
     const enviar=typeof fetchImpl==='function'?fetchImpl:undefined;
     await enviarAppsScript(payloadAppsScript(),enviar);
-    showStatus('success','Dados registrados na planilha interna. Anexe o PDF assinado no processo SEI.');
+    showStatus('success','Dados registrados na planilha interna. Gerando o PDF para o SEI...');
     return true;
   }catch(erro){
     showStatus('error','Erro ao registrar dados: '+(erro&&erro.message?erro.message:'falha de rede'));
@@ -407,18 +444,35 @@ async function registrarDados(fetchImpl){
 }
 
 async function registrarEpdf(fetchImpl){
+  if(!validarCamposObrigatorios()||bloqueado()) return false;
+  let arquivo;
+  try{
+    arquivo=montarPDF();
+  }catch(erro){
+    showStatus('error','Não foi possível preparar o PDF: '+(erro&&erro.message?erro.message:'erro desconhecido'));
+    return false;
+  }
   const registrado=await registrarDados(fetchImpl);
-  if(registrado) exportarPDF();
-  return registrado;
+  if(!registrado) return false;
+  try{
+    arquivo.doc.save(arquivo.nome);
+    showStatus('success','Dados registrados no Google Sheet da CEUA e PDF gerado para o processo SEI.');
+    return true;
+  }catch(erro){
+    showStatus('error','Dados registrados no Google Sheet, mas o PDF não pôde ser baixado: '+(erro&&erro.message?erro.message:'erro desconhecido'));
+    return false;
+  }
 }
 
 function bloqueado(){
-  if(resumo().semJust){ alert('Há itens marcados como Não atende, Não se aplica ou Informação insuficiente sem justificativa. Preencha a justificativa antes de exportar.'); return true; }
+  const estado=resumo();
+  if(estado.semJust){ alert('Há itens marcados como Não atende, Não se aplica ou Informação insuficiente sem justificativa. Preencha a justificativa antes de registrar.'); return true; }
+  if(estado.obPend){ alert(`Ainda há ${estado.obPend} critério(s) obrigatório(s) sem resposta. Responda os obrigatórios antes de registrar no Google Sheet da CEUA.`); return true; }
   return false;
 }
 
-function exportarPDF(){
-  if(bloqueado()) return;
+function montarPDF(){
+  if(!window.jspdf||typeof window.jspdf.jsPDF!=='function') throw new Error('a biblioteca jsPDF 2.5.1 não foi carregada pelo navegador');
   const d=dados(), {jsPDF}=window.jspdf, doc=new jsPDF({unit:'pt',format:'a4'});
   let y=44; const M=40, W=515;
   const linha=(t,sz,bold,cor)=>{ doc.setFont('helvetica',bold?'bold':'normal'); doc.setFontSize(sz);
@@ -427,7 +481,7 @@ function exportarPDF(){
   linha(`CEUA UFPR Palotina — Instalação animal: ${d.meta.grupo}`,13,true);
   linha(`${d.meta.rn} · ${MODO==='parecerista'?'Parecer técnico':'Cadastro do coordenador'} · ${d.meta.emitido}`,8,false,'#64748b'); y+=6;
   [['Instituição',d.instituicao],['Instalação',d.instalacao],['Responsáveis',d.responsaveis]].forEach(([t,o])=>{
-    linha(t,10,true); Object.entries(o).forEach(([k,v])=>{ if(v) linha(`${k}: ${v}`,8.5); }); y+=6; });
+    linha(t,10,true); Object.entries(o).forEach(([k,v])=>linha(`${k}: ${v||'—'}`,8.5)); y+=6; });
   linha('Critérios avaliados',10,true);
   d.itens.forEach(i=>{
     const cor = i.status==='Atende'?'#166534' : i.status==='Não atende'?'#991b1b' : i.status==='—'?'#94a3b8':'#92400e';
@@ -442,11 +496,12 @@ function exportarPDF(){
   linha('Anexar este PDF assinado pelo coordenador da instalação e pelo responsável técnico, com despacho solicitando avaliação da CEUA e encaminhamento para cadastro ou regularização no CIUCA.',8.5);
   y+=12; linha('Assinatura do coordenador da instalação: __________________________________________',8.5,true);
   y+=8; linha('Assinatura do responsável técnico: ______________________________________________',8.5,true);
-  doc.save(`CIUCA_${d.meta.slug}_${MODO}_${new Date().toISOString().slice(0,10)}.pdf`);
+  return {doc,nome:`CIUCA_${d.meta.slug}_${MODO}_${new Date().toISOString().slice(0,10)}.pdf`};
 }
 
 window.addEventListener('DOMContentLoaded',()=>{
   montarFluxo();
+  marcarCamposObrigatorios();
   $('purpose').onchange=render;
   if($('subsel')) $('subsel').onchange=render;
   $('btnRegistrarPdf').onclick=()=>registrarEpdf();

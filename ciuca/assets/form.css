@@ -26,6 +26,7 @@ h2{font-size:1rem;font-weight:800;margin:0 0 4px}
 .lbl{display:block;font-size:.63rem;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:#94a3b8;margin:0 0 3px}
 .fi{width:100%;padding:10px 12px;border:1.5px solid #D1E9ED;border-radius:9px;background:#FAFCFC;font-size:.92rem;font-family:inherit}
 .fi:focus{outline:none;border-color:#2A7B88;box-shadow:0 0 0 3px rgba(42,123,136,.12);background:#fff}
+.fi.req{border-color:#dc2626;background:#fff7f7}
 .cat{font-size:.72rem;font-weight:900;text-transform:uppercase;letter-spacing:.05em;color:#1D5B64;background:#E8F4F6;padding:8px 11px;border-radius:8px;margin:18px 0 8px}
 .section-tabs{display:flex;flex-wrap:wrap;gap:7px;margin:16px 0 8px}
 .section-tab{border:1.5px solid #D1E9ED;background:#fff;color:#1D5B64;border-radius:999px;padding:7px 12px;font-family:inherit;font-size:.73rem;font-weight:800;cursor:pointer;line-height:1.2}
