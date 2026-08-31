@@ -17,6 +17,8 @@ const FIN = {
 const st = {};
 let etapa = 1;
 let categoriaAtiva = '';
+const CIUCA_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw9PB2XNSFrX42tQfgnnfXzlW3J8VFweVydGTJzdMSeL3fTwe472lu9qpughGQsu4UQ4A/exec';
+const SEI_DESTINO = 'UFPR / R / PL / CEUA';
 const TITULOS_ETAPAS = {
   1:'Identificação institucional',
   2:'Dados da instalação',
@@ -143,6 +145,19 @@ function montarFluxo(){
   const abrirPendencias=botaoNavegacao('Ver pendências',verPendencias,'pending-button');
   abrirPendencias.id='btnPend';
   resumo.append(abrirPendencias);
+  const seiInfo=document.createElement('div');
+  seiInfo.className='info';
+  seiInfo.innerHTML=`<b>Tramitação no SEI:</b> registre os dados na base interna da CEUA/UNIBIO e gere o PDF para assinatura do coordenador da instalação e do responsável técnico. Depois, encaminhe o processo para <b>${esc(SEI_DESTINO)}</b>.`;
+  const statusBox=document.createElement('div');
+  statusBox.id='statusBox';
+  statusBox.className='info';
+  statusBox.style.display='none';
+  const registrarNav=document.createElement('div');
+  registrarNav.className='nav sei-nav';
+  const registrar=botaoNavegacao('Registrar dados e gerar PDF para SEI',registrarEpdf,'primary');
+  registrar.id='btnRegistrarPdf';
+  registrarNav.append(registrar);
+  resumo.append(seiInfo,statusBox,registrarNav);
   exportNav.classList.add('summary-nav');
   exportNav.prepend(botaoNavegacao('← Anterior',()=>irEtapa(4)));
   resumo.append(exportNav);
@@ -291,7 +306,8 @@ function resumo(){
 function dados(){
   const g=id=>($(id)?$(id).value:'');
   return {
-    meta:{grupo:CFG.grupo, rn:CFG.rn, slug:CFG.slug, modo:MODO, emitido:new Date().toLocaleString('pt-BR')},
+    meta:{grupo:CFG.grupo, rn:CFG.rn, slug:CFG.slug, modo:MODO, emitido:new Date().toLocaleString('pt-BR'),
+      sei_destino:SEI_DESTINO,versao_formulario:'CIUCA Instalações v3 auditada 2026-08-31',origem:'Formulários CIUCA GitHub Pages'},
     instituicao:{Instituição:g('inst'),CNPJ:g('cnpj'),Endereço:g('addr'),'Município / UF':g('city'),'CEUA vinculada':g('ceua'),'E-mail da instalação':g('mail')},
     instalacao:{'Nome / identificação':g('unit'),'Finalidade':g('purpose'),'Situação':g('situation'),
       'Espécie(s) / grupo abrangido(s)':g('animalDetail'),'Campus':g('campus'),'Prédio':g('building'),
@@ -302,6 +318,99 @@ function dados(){
       finalidade:i.fin.join(' / ')||'todas',subgrupo:i.sub||'',condicao:i.cond||'',criterio:i.t,
       status:(st[i.id]||{}).s||'—',justificativa:(st[i.id]||{}).o||''}))
   };
+}
+
+function payloadAppsScript(){
+  const d=dados();
+  const g=id=>($(id)?$(id).value:'');
+  const contagem=status=>d.itens.filter(i=>i.status===status).length;
+  const resumoAtual={
+    criterios_ativos:d.itens.length,
+    obrigatorios:d.itens.filter(i=>i.classificacao==='Obrigatório').length,
+    recomendados:d.itens.filter(i=>i.classificacao==='Recomendado').length,
+    atende:contagem('Atende'),
+    nao_atende:contagem('Não atende'),
+    nao_se_aplica:contagem('Não se aplica'),
+    informacao_insuficiente:contagem('Informação insuficiente'),
+    situacao_geral:$('verdict')?$('verdict').textContent:''
+  };
+  return {
+    meta:d.meta,
+    g1:d.instituicao,
+    g2:d.instalacao,
+    g3:d.responsaveis,
+    itens:d.itens,
+    resumo:resumoAtual,
+    grupo_animal:d.meta.grupo,
+    slug:d.meta.slug,
+    rn:d.meta.rn,
+    modo:d.meta.modo,
+    instituicao:g('inst'),
+    cnpj:g('cnpj'),
+    endereco:g('addr'),
+    municipio_uf:g('city'),
+    ceua_vinculada:g('ceua'),
+    email_instalacao:g('mail'),
+    nome_instalacao:g('unit'),
+    finalidade:g('purpose'),
+    situacao:g('situation'),
+    animal_grupo:g('subsel'),
+    animal_detalhamento:g('animalDetail'),
+    campus:g('campus'),
+    predio:g('building'),
+    sala_setor:g('room'),
+    area_m2:g('area'),
+    capacidade:g('cap'),
+    coordenador:g('coord'),
+    cpf_coord:g('coordCpf'),
+    email_coord:g('coordMail'),
+    rt:g('rt'),
+    cpf_rt:g('rtCpf'),
+    crmv:g('crmv'),
+    crmv_uf:g('crmvUf'),
+    email_rt:g('rtMail'),
+    situacao_geral:resumoAtual.situacao_geral
+  };
+}
+
+function showStatus(tipo,mensagem){
+  const box=$('statusBox');
+  if(!box) return;
+  box.style.display='block';
+  box.style.borderColor=tipo==='error'?'#fecaca':tipo==='success'?'#bbf7d0':'#fde68a';
+  box.style.background=tipo==='error'?'#fee2e2':tipo==='success'?'#dcfce7':'#fef3c7';
+  box.style.color=tipo==='error'?'#991b1b':tipo==='success'?'#166534':'#92400e';
+  box.textContent=(tipo==='success'?'✅ ':tipo==='error'?'❌ ':'⚠️ ')+mensagem;
+}
+
+async function enviarAppsScript(payload,fetchImpl){
+  const enviar=fetchImpl||(window.fetch&&window.fetch.bind(window));
+  if(!enviar) throw new Error('recurso de rede indisponível');
+  await enviar(CIUCA_APPS_SCRIPT_URL,{
+    method:'POST',
+    mode:'no-cors',
+    headers:{'Content-Type':'text/plain;charset=utf-8'},
+    body:JSON.stringify(payload)
+  });
+}
+
+async function registrarDados(fetchImpl){
+  if(bloqueado()) return false;
+  showStatus('warn','Registrando dados na planilha interna da CEUA/UNIBIO...');
+  try{
+    await enviarAppsScript(payloadAppsScript(),fetchImpl);
+    showStatus('success','Dados registrados na planilha interna. Anexe o PDF assinado no processo SEI.');
+    return true;
+  }catch(erro){
+    showStatus('error','Erro ao registrar dados: '+(erro&&erro.message?erro.message:'falha de rede'));
+    return false;
+  }
+}
+
+async function registrarEpdf(fetchImpl){
+  const registrado=await registrarDados(fetchImpl);
+  if(registrado) exportarPDF();
+  return registrado;
 }
 
 function bloqueado(){
@@ -329,6 +438,11 @@ function exportarPDF(){
     y+=3;
   });
   y+=6; linha($('verdict').textContent,9,true);
+  y+=8; linha('Tramitação no SEI',10,true);
+  linha(`Destino SEI: ${SEI_DESTINO}`,8.5);
+  linha('Anexar este PDF assinado pelo coordenador da instalação e pelo responsável técnico, com despacho solicitando avaliação da CEUA e encaminhamento para cadastro ou regularização no CIUCA.',8.5);
+  y+=12; linha('Assinatura do coordenador da instalação: __________________________________________',8.5,true);
+  y+=8; linha('Assinatura do responsável técnico: ______________________________________________',8.5,true);
   doc.save(`CIUCA_${d.meta.slug}_${MODO}_${new Date().toISOString().slice(0,10)}.pdf`);
 }
 
