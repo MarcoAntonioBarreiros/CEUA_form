@@ -1,1 +1,100 @@
-<!doctype html><html lang="pt-br"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>CIUCA — Cães e Gatos</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700;800;900&display=swap"><link rel="stylesheet" href="assets/form.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script><script>const CFG={group:'Cães e Gatos',slug:'caes-gatos',rn:'RN 59/2023 · RN 51/2021',footer:'Fontes: RN CONCEA/MCTI nº 59/2023 e nº 51/2021. O texto oficial vigente prevalece.',animalLabel:'Espécie(s) alojada(s)',animalDetailLabel:'Detalhamento / raça / porte',animalOptions:['Cães','Gatos','Cães e gatos'],animalMap:{'Cães':'caes','Gatos':'gatos','Cães e gatos':'ambos'},filterPurpose:true,filterAnimal:true,purposeHint:'A finalidade filtra itens específicos de criação. Quando houver cães e gatos, o checklist exibe o item obrigatório de separação acústica e visual.',criteria:[{cat:'Ambientes Físicos para cães e gatos',items:[{t:'Instalações de criação que realizam reprodução separadas de outras instalações.',c:'Obrigatório',aplic:['criacao']},{t:'Em edificação com diferentes finalidades, as instalações de criação devem ter áreas e rotinas com barreiras exclusivas e separadas das de manutenção/utilização.',c:'Obrigatório',aplic:['criacao']},{t:'Área administrativa.',c:'Recomendado'},{t:'Área de recepção de animais e avaliação (triagem).',c:'Recomendado'},{t:'Quando houver cães e gatos na mesma instalação, as áreas de alojamento devem ser isoladas acústica e visualmente uma da outra.',c:'Obrigatório',spec:'ambos'},{t:'Sala de procedimentos clínicos.',c:'Recomendado'},{t:'Ambientes específicos conforme os procedimentos experimentais executados na instalação.',c:'Obrigatório'},{t:'Sala de descanso e copa.',c:'Recomendado'},{t:'Áreas de higienização separadas das salas de animais e com controles específicos.',c:'Obrigatório'},{t:'Vestiário.',c:'Recomendado'},{t:'Corredores com dimensões conforme especificações do Guia Brasileiro do CONCEA.',c:'Recomendado'},{t:'Lavanderia própria.',c:'Recomendado'},{t:'Sanitários fora de áreas controladas em instalações de criação.',c:'Obrigatório',aplic:['criacao']},{t:'Dimensionamento dos alojamentos de acordo com as especificidades dos animais.',c:'Obrigatório'},{t:'Área para eutanásia separada do alojamento dos animais.',c:'Obrigatório'},{t:'Área exclusiva para depósito de materiais.',c:'Obrigatório'},{t:'Área exclusiva para depósito de resíduos.',c:'Obrigatório'},{t:'Local para armazenamento de produtos químicos e medicamentos.',c:'Recomendado'},{t:'Freezer para acondicionamento de carcaças.',c:'Obrigatório'},{t:'Paredes, pisos e tetos em materiais que possibilitem higienização e desinfecção.',c:'Obrigatório'},{t:'Grupo gerador próprio para fornecimento emergencial de energia elétrica.',c:'Recomendado'},{t:'Luminárias e interruptores vedados ou aterrados.',c:'Recomendado'},{t:'Controle de ruídos e vibrações.',c:'Recomendado'},{t:'Controle de temperatura e umidade.',c:'Obrigatório'},{t:'Controle de trocas de ar e ciclo claro-escuro em ambientes fechados.',c:'Obrigatório'},{t:'Instalações de criação com parâmetros ambientais, genéticos, sanitários e de bem-estar controlados.',c:'Recomendado',aplic:['criacao']},{t:'Área dedicada para quarentena.',c:'Obrigatório'},{t:'Manual de Procedimentos Operacionais Padrão (POPs) em instalações de criação.',c:'Recomendado',aplic:['criacao']},{t:'Enriquecimento ambiental.',c:'Obrigatório'}]},{cat:'Instalações específicas para cães',items:[{t:'Alojamento em pares ou grupos, exceto em casos autorizados pela CEUA ou por condições clínicas.',c:'Obrigatório',spec:'caes'},{t:'Contato visual entre os animais.',c:'Obrigatório',spec:'caes'},{t:'Recinto primário com parte do espaço coberto.',c:'Obrigatório',spec:'caes'},{t:'Áreas definidas para recreação e descanso noturno em instalações de criação.',c:'Obrigatório',aplic:['criacao'],spec:'caes'}]},{cat:'Instalações específicas para gatos',items:[{t:'Instalações animais organizadas em zonas principais e periféricas.',c:'Obrigatório',spec:'gatos'},{t:'Baias de acasalamento isoladas de outros animais.',c:'Obrigatório',aplic:['criacao'],spec:'gatos'}]},{cat:'Biossegurança',items:[{t:'Uso de equipamentos de proteção individual preconizados pelo nível de biossegurança da instalação.',c:'Obrigatório'},{t:'Barreiras sanitárias conforme o nível de biossegurança da instalação.',c:'Obrigatório'}]}]};</script><script src="assets/shell.js"></script><script src="assets/form-engine.js"></script></head><body></body></html>
+<!doctype html>
+<html lang="pt-br"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CIUCA — Cadastro — Cães e Gatos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700;800;900&display=swap">
+<link rel="stylesheet" href="assets/form.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head><body>
+<div class="wrap">
+
+<div class="card"><div class="top">
+  <div style="display:flex;gap:12px;align-items:center">
+    <div class="logo">CEUA</div>
+    <div><div class="eyebrow">UFPR Setor Palotina</div>
+      <div class="title">Cadastro — Cães e Gatos</div>
+      <div class="sub">RN 59/2023 · 37 critérios</div></div>
+  </div>
+  <div class="badge">Cadastro da instalação</div>
+</div></div>
+
+<div class="card">
+  <h2>1. Instituição</h2>
+  <div class="grid g3">
+    <div><label class="lbl">Instituição</label><input class="fi" id="inst"></div>
+    <div><label class="lbl">CNPJ</label><input class="fi" id="cnpj"></div>
+    <div><label class="lbl">CEUA vinculada</label><input class="fi" id="ceua"></div>
+    <div style="grid-column:span 2"><label class="lbl">Endereço</label><input class="fi" id="addr"></div>
+    <div><label class="lbl">Município / UF</label><input class="fi" id="city"></div>
+    <div style="grid-column:span 3"><label class="lbl">E-mail institucional da instalação</label><input class="fi" id="mail"></div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>2. Instalação</h2>
+  <p class="hint">A finalidade filtra os critérios que a norma restringe a determinado tipo de instalação.</p>
+  <div class="grid g3">
+    <div style="grid-column:span 2"><label class="lbl">Nome / identificação</label><input class="fi" id="unit"></div>
+    <div><label class="lbl">Finalidade</label><select class="fi" id="purpose">
+      <option>Produção/criação</option><option>Manutenção</option><option>Utilização</option>
+      <option>Produção/criação + Manutenção</option><option>Produção/criação + Utilização</option>
+      <option>Manutenção + Utilização</option><option>Produção/criação + Manutenção + Utilização</option></select></div>
+    <div><label class="lbl">Situação</label><select class="fi" id="situation">
+      <option>Em funcionamento</option><option>Nova / em implantação</option><option>Em adequação</option></select></div>
+    <div><label class="lbl">Espécie</label><select id="subsel" class="fi"><option>Cães</option><option>Gatos</option><option>Cães e gatos</option></select></div>
+    <div style="grid-column:span 2"><label class="lbl">Espécie(s) / grupo abrangido(s)</label><input class="fi" id="animalDetail"></div>
+    <div><label class="lbl">Campus</label><input class="fi" id="campus"></div>
+    <div><label class="lbl">Prédio</label><input class="fi" id="building"></div>
+    <div><label class="lbl">Sala / setor</label><input class="fi" id="room"></div>
+    <div><label class="lbl">Área (m²)</label><input class="fi" id="area"></div>
+    <div><label class="lbl">Capacidade</label><input class="fi" id="cap"></div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>3. Coordenador e Responsável Técnico</h2>
+  <div class="grid g4">
+    <div style="grid-column:span 2"><label class="lbl">Coordenador da instalação</label><input class="fi" id="coord"></div>
+    <div><label class="lbl">CPF</label><input class="fi" id="coordCpf"></div>
+    <div><label class="lbl">E-mail</label><input class="fi" id="coordMail"></div>
+    <div style="grid-column:span 2"><label class="lbl">Responsável Técnico (médico-veterinário)</label><input class="fi" id="rt"></div>
+    <div><label class="lbl">CPF do RT</label><input class="fi" id="rtCpf"></div>
+    <div><label class="lbl">E-mail do RT</label><input class="fi" id="rtMail"></div>
+    <div><label class="lbl">CRMV</label><input class="fi" id="crmv"></div>
+    <div><label class="lbl">UF do CRMV</label><input class="fi" id="crmvUf"></div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>4. Critérios</h2>
+  <div class="info"><b>Obrigatório</b> é o que a Portaria MCTI 9.037/2025, art. 3º, exige para licenciar.
+  <b>Recomendado</b> não bloqueia a licença. <b>Não se aplica</b> é permitido, inclusive em item obrigatório
+  materialmente inaplicável, e exige justificativa — sem ela, a exportação fica bloqueada.
+  Cada critério mostra a Resolução e o dispositivo de onde vem.</div>
+  <div class="pills">
+    <span class="pill p-d">Critérios ativos: <b id="cTot">0</b></span>
+    <span class="pill p-ok">Atende: <b id="cOk">0</b></span>
+    <span class="pill p-no">Não atende: <b id="cNo">0</b></span>
+    
+    <span class="pill p-na">Não se aplica: <b id="cNa">0</b></span>
+  </div>
+  <div id="verdict" class="verdict">EM PREENCHIMENTO</div>
+  <div id="itens"></div>
+  <div class="nav">
+    <button class="btn primary" id="btnPdf">Exportar PDF</button>
+    <button class="btn" id="btnXls">Exportar Excel</button>
+  </div>
+</div>
+
+<div class="foot">Gerado a partir da planilha de critérios das RNs CONCEA. O texto oficial vigente prevalece.</div>
+</div>
+
+<script>
+const CFG = { grupo:'Cães e Gatos', slug:'caes-gatos', rn:'RN 59/2023', modo:'coordenador',
+  itens: [{"rn": "RN 59/2023", "d": "art. 2º, I, \"a\"", "g": "Infraestrutura", "c": "OB", "fin": ["criação"], "sub": "", "cond": "", "t": "instalações de criação de animais separadas das instalações com outras finalidades", "n": "", "id": "rn-59-2023-art-2o-i-a"}, {"rn": "RN 59/2023", "d": "art. 2º, I, \"b\"", "g": "Infraestrutura", "c": "OB", "fin": ["criação"], "sub": "", "cond": "em caso de edificação que abrigue biotérios com diferentes finalidades", "t": "instalações de criação de animais com áreas físicas e rotinas com barreiras exclusivas, delimitadas e separadas das instalações de manutenção e de utilização, em caso de edificação que abrigue biotérios com diferentes finalidades", "n": "", "id": "rn-59-2023-art-2o-i-b"}, {"rn": "RN 59/2023", "d": "art. 2º, I, \"c\"", "g": "Infraestrutura", "c": "OB", "fin": [], "sub": "", "cond": "", "t": "áreas de alojamento de cães e gatos isoladas acústica e visualmente uma da outra", "n": "", "id": "rn-59-2023-art-2o-i-c"}, {"rn": "RN 59/2023", "d": "art. 2º, I, \"d\"", "g": "Infraestrutura", "c": "OB", "fin": [], "sub": "", "cond": "", "t": "ambientes específicos apropriados para os procedimentos experimentais executados na instalação", "n": "", "id": "rn-59-2023-art-2o-i-d"}, {"rn": "RN 59/2023", "d": "art. 2º, I, \"e\"", "g": "Infraestrutura", "c": "OB", "fin": [], "sub": "", "cond": "", "t": "áreas de higienização separadas das salas de animais", "n": "", "id": "rn-59-2023-art-2o-i-e"}, {"rn": "RN 59/2023", "d": "art. 2º, I, \"f\"", "g": "Infraestrutura", "c": "OB", "fin": [], "sub": "", "cond": "", "t": "sanitários separados das áreas controladas ou de criação", "n": "DIVERGÊNCIA: o Anexo restringe às instalações de criação. Prevalece o artigo.", "id": "rn-59-2023-art-2o-i-f"}, {"rn": "RN 59/2023", "d": "art. 2º, I, \"g\"", "g": "Infraestrutura", "c": "OB", "fin": [], "sub": "", "cond": "", "t": "alojamentos dimensionados de acordo com as especificidades dos animais", "n": "", "id": "rn-59-2023-art-2o-i-g"}, {"rn": "RN 59/2023", "d": "art. 2º, I, \"h\"", "g": "Infraestrutura", "c": "OB", "fin": [], "sub": "", "cond": "", "t": "área para eutanásia separada do alojamento dos animais", "n": "", "id": "rn-59-2023-art-2o-i-h"}, {"rn": "RN 59/2023", "d": "art. 2º, I, \"i\"", "g": "Infraestrutura", "c": "OB", "fin": [], "sub": "", "cond": "", "t": "área exclusiva para depósitos de resíduos", "n": "", "id": "rn-59-2023-art-2o-i-i"}, {"rn": "RN 59/2023", "d": "art. 2º, I, \"j\"", "g": "Infraestrutura", "c": "OB", "fin": [], "sub": "", "cond": "", "t": "área exclusiva para depósitos de materiais", "n": "", "id": "rn-59-2023-art-2o-i-j"}, {"rn": "RN 59/2023", "d": "art. 2º, I, \"k\"", "g": "Infraestrutura", "c": "OB", "fin": [], "sub": "", "cond": "", "t": "freezer para acondicionamento de carcaças", "n": "", "id": "rn-59-2023-art-2o-i-k"}, {"rn": "RN 59/2023", "d": "art. 2º, I, \"l\"", "g": "Infraestrutura", "c": "OB", "fin": [], "sub": "", "cond": "", "t": "paredes, pisos e tetos das instalações revestidos por materiais que possibilitem higienização e desinfecção", "n": "", "id": "rn-59-2023-art-2o-i-l"}, {"rn": "RN 59/2023", "d": "art. 2º, I, \"m\"", "g": "Infraestrutura", "c": "OB", "fin": [], "sub": "", "cond": "", "t": "controle de temperatura e umidade nas instalações animais", "n": "", "id": "rn-59-2023-art-2o-i-m"}, {"rn": "RN 59/2023", "d": "art. 2º, I, \"n\"", "g": "Infraestrutura", "c": "OB", "fin": [], "sub": "", "cond": "em instalações fechadas", "t": "controle de trocas de ar e da iluminação com ciclo claro escuro, em instalações fechadas, seguindo especificações do Guia Brasileiro do CONCEA", "n": "", "id": "rn-59-2023-art-2o-i-n"}, {"rn": "RN 59/2023", "d": "art. 2º, I, \"o\"", "g": "Infraestrutura", "c": "OB", "fin": [], "sub": "", "cond": "", "t": "área dedicada para quarentena", "n": "", "id": "rn-59-2023-art-2o-i-o"}, {"rn": "RN 59/2023", "d": "art. 2º, I, \"p\"", "g": "Infraestrutura", "c": "OB", "fin": [], "sub": "Cães", "cond": "", "t": "recinto primário com parte do espaço coberto em instalações específicas para cães", "n": "", "id": "rn-59-2023-art-2o-i-p"}, {"rn": "RN 59/2023", "d": "art. 2º, I, \"q\"", "g": "Infraestrutura", "c": "OB", "fin": ["criação"], "sub": "Cães", "cond": "", "t": "instalações de criação de cães com áreas definidas para recreação e descanso noturno dos animais", "n": "", "id": "rn-59-2023-art-2o-i-q"}, {"rn": "RN 59/2023", "d": "art. 2º, I, \"r\"", "g": "Infraestrutura", "c": "OB", "fin": [], "sub": "Gatos", "cond": "", "t": "instalações para gatos organizadas em zonas principais e periféricas", "n": "", "id": "rn-59-2023-art-2o-i-r"}, {"rn": "RN 59/2023", "d": "art. 2º, I, \"s\"", "g": "Infraestrutura", "c": "OB", "fin": [], "sub": "Gatos", "cond": "", "t": "baias de acasalamento isoladas de outros animais em instalações para gatos", "n": "", "id": "rn-59-2023-art-2o-i-s"}, {"rn": "RN 59/2023", "d": "art. 2º, I, \"t\"", "g": "Infraestrutura", "c": "OB", "fin": [], "sub": "", "cond": "", "t": "barreiras sanitárias de bioexclusão e biocontenção preconizadas pelo nível de biossegurança da instalação", "n": "", "id": "rn-59-2023-art-2o-i-t"}, {"rn": "RN 59/2023", "d": "art. 3º, I", "g": "Infraestrutura", "c": "R", "fin": [], "sub": "", "cond": "", "t": "área administrativa", "n": "", "id": "rn-59-2023-art-3o-i"}, {"rn": "RN 59/2023", "d": "art. 3º, II", "g": "Infraestrutura", "c": "R", "fin": [], "sub": "", "cond": "", "t": "área de recepção de animais e avaliação (triagem)", "n": "", "id": "rn-59-2023-art-3o-ii"}, {"rn": "RN 59/2023", "d": "art. 3º, III", "g": "Infraestrutura", "c": "R", "fin": [], "sub": "", "cond": "", "t": "sala de procedimentos clínicos", "n": "", "id": "rn-59-2023-art-3o-iii"}, {"rn": "RN 59/2023", "d": "art. 3º, IV", "g": "Infraestrutura", "c": "R", "fin": [], "sub": "", "cond": "", "t": "sala de descanso e copa", "n": "", "id": "rn-59-2023-art-3o-iv"}, {"rn": "RN 59/2023", "d": "art. 3º, IX", "g": "Infraestrutura", "c": "R", "fin": [], "sub": "", "cond": "", "t": "luminárias e interruptores vedados ou aterrados", "n": "", "id": "rn-59-2023-art-3o-ix"}, {"rn": "RN 59/2023", "d": "art. 3º, V", "g": "Infraestrutura", "c": "R", "fin": [], "sub": "", "cond": "", "t": "corredores com as dimensões de acordo com especificações do Guia Brasileiro do CONCEA", "n": "", "id": "rn-59-2023-art-3o-v"}, {"rn": "RN 59/2023", "d": "art. 3º, VI", "g": "Infraestrutura", "c": "R", "fin": [], "sub": "", "cond": "", "t": "lavanderia própria", "n": "", "id": "rn-59-2023-art-3o-vi"}, {"rn": "RN 59/2023", "d": "art. 3º, VII", "g": "Infraestrutura", "c": "R", "fin": [], "sub": "", "cond": "", "t": "local para armazenamento de produtos químicos e medicamentos", "n": "", "id": "rn-59-2023-art-3o-vii"}, {"rn": "RN 59/2023", "d": "art. 3º, VIII", "g": "Infraestrutura", "c": "R", "fin": [], "sub": "", "cond": "", "t": "grupo gerador próprio para fornecimento emergencial de energia elétrica", "n": "", "id": "rn-59-2023-art-3o-viii"}, {"rn": "RN 59/2023", "d": "art. 3º, X", "g": "Infraestrutura", "c": "R", "fin": [], "sub": "", "cond": "", "t": "controle de ruídos e vibrações", "n": "", "id": "rn-59-2023-art-3o-x"}, {"rn": "RN 59/2023", "d": "art. 3º, XI", "g": "Infraestrutura", "c": "R", "fin": [], "sub": "", "cond": "", "t": "vestiário", "n": "", "id": "rn-59-2023-art-3o-xi"}, {"rn": "RN 59/2023", "d": "art. 3º, XII", "g": "Infraestrutura", "c": "R", "fin": ["criação"], "sub": "", "cond": "", "t": "controle dos parâmetros ambientais, genéticos, sanitários e de bem-estar, em instalações de criação", "n": "", "id": "rn-59-2023-art-3o-xii"}, {"rn": "RN 59/2023", "d": "art. 2º, II, \"a\"", "g": "Procedimentos", "c": "OB", "fin": [], "sub": "", "cond": "", "t": "equipamentos de proteção individual preconizados pelo nível de biossegurança da instalação", "n": "", "id": "rn-59-2023-art-2o-ii-a"}, {"rn": "RN 59/2023", "d": "art. 2º, II, \"b\"", "g": "Procedimentos", "c": "OB", "fin": [], "sub": "", "cond": "", "t": "enriquecimento ambiental", "n": "", "id": "rn-59-2023-art-2o-ii-b"}, {"rn": "RN 59/2023", "d": "art. 2º, II, \"c\"", "g": "Procedimentos", "c": "OB", "fin": [], "sub": "Cães", "cond": "exceto casos autorizados pela CEUA ou condições clínicas", "t": "alojamento em pares ou grupos, em instalações para cães, exceto em casos autorizados pela CEUA ou devido a condições clínicas", "n": "", "id": "rn-59-2023-art-2o-ii-c"}, {"rn": "RN 59/2023", "d": "art. 2º, II, \"d\"", "g": "Procedimentos", "c": "OB", "fin": [], "sub": "Cães", "cond": "", "t": "contato visual entre os animais nas instalações para cães", "n": "", "id": "rn-59-2023-art-2o-ii-d"}, {"rn": "RN 59/2023", "d": "art. 3º, XIII", "g": "Procedimentos", "c": "R", "fin": ["criação"], "sub": "", "cond": "", "t": "manual de Procedimentos Operacionais Padrão (POPs), em instalações de criação", "n": "", "id": "rn-59-2023-art-3o-xiii"}] };
+</script>
+<script src="assets/defaults.js"></script>
+<script src="assets/engine.js"></script>
+</body></html>

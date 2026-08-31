@@ -1,1 +1,100 @@
-<!doctype html><html lang="pt-br"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>CIUCA — Roedores e Lagomorfos</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700;800;900&display=swap"><link rel="stylesheet" href="assets/form.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script><script>const CFG={group:'Roedores e Lagomorfos',slug:'roedores-lagomorfos',rn:'RN 57/2022 · RN 51/2021',footer:'Fontes: RN CONCEA/MCTI nº 57/2022 e nº 51/2021. O texto oficial vigente prevalece.',animalLabel:'Espécies / linhagens',animalDetailLabel:'Detalhamento / linhagem / observações',animalPlaceholder:'Ex: camundongo C57BL/6; rato Wistar; coelho',animalOptions:['Camundongos','Ratos','Coelhos','Roedores e lagomorfos diversos'],filterPurpose:true,purposeHint:'A finalidade filtra os critérios aplicáveis da RN 57/2022, pois há itens específicos para criação, manutenção e experimentação.',criteria:[{cat:'Ambientes Físicos da Instalação Animal',items:[{t:'Biotérios de criação separados de biotérios com outras finalidades; quando houver diferentes finalidades na mesma edificação, as áreas físicas e rotinas devem ter barreiras exclusivas, delimitadas e separadas.',c:'Obrigatório',aplic:['criacao']}]},{cat:'Áreas de Apoio',items:[{t:'Área administrativa.',c:'Recomendado'},{t:'Área de recepção de pessoal (usuários e visitantes).',c:'Recomendado'},{t:'No biotério de criação, o ingresso de animais deve ocorrer por meio da área de recepção de animais e quarentena.',c:'Obrigatório',aplic:['criacao']},{t:'No biotério de manutenção ou experimentação, o ingresso de animais deve ocorrer por recepção em área de quarentena, exceto animais com estado sanitário conhecido e compatível.',c:'Obrigatório',aplic:['manutencao','experimentacao']}]},{cat:'Áreas de Serviço',items:[{t:'Área de higienização separada fisicamente da área de salas de animais.',c:'Obrigatório'},{t:'Sanitários localizados fora das áreas controladas, em biotérios de criação.',c:'Obrigatório',aplic:['criacao']},{t:'Salas de animais separadas por espécie.',c:'Obrigatório'},{t:'Vestiário.',c:'Obrigatório'},{t:'Sala destinada à eutanásia, separada das salas de animais, em biotérios de criação e manutenção.',c:'Obrigatório',aplic:['criacao','manutencao']},{t:'Sala destinada à eutanásia, separada das salas de procedimentos, em biotérios de experimentação.',c:'Recomendado',aplic:['experimentacao']}]},{cat:'Depósitos',items:[{t:'Local para estocagem de alimentos e forração que atenda às recomendações dos fabricantes.',c:'Obrigatório'},{t:'Alimentos e forração sem contato com o piso ou paredes.',c:'Obrigatório'},{t:'Área exclusiva para depósito de resíduos.',c:'Obrigatório'},{t:'Local para armazenamento de produtos químicos e medicamentos.',c:'Recomendado'},{t:'Freezer para acondicionamento de carcaças.',c:'Obrigatório'}]},{cat:'Detalhes Construtivos',items:[{t:'Paredes, pisos e tetos lisos, livres de rejuntes e reentrâncias, construídos com materiais que possibilitem higienização e desinfecção.',c:'Obrigatório'},{t:'Ausência de janelas com acesso direto para as salas de animais de laboratório.',c:'Obrigatório'},{t:'Grupo gerador próprio para fornecimento emergencial de energia elétrica.',c:'Recomendado'},{t:'Sistema de monitoramento remoto da ambiência das salas dos animais, na ausência de grupo gerador próprio.',c:'Obrigatório'},{t:'Sistema de iluminação com fotoperíodo regulável nas áreas controladas e salas de animais.',c:'Obrigatório'}]},{cat:'Ambiente',items:[{t:'Salas de animais com ventilação, exaustão, temperatura e umidade controladas conforme as características das espécies mantidas no recinto.',c:'Obrigatório'},{t:'Monitoramento com registro das condições ambientais das salas de animais.',c:'Obrigatório'}]},{cat:'Biossegurança',items:[{t:'Uso de equipamentos de proteção individual preconizados pelo nível de biossegurança da instalação.',c:'Obrigatório'},{t:'Barreiras sanitárias de bioexclusão e biocontenção preconizadas pelo nível de biossegurança da instalação.',c:'Obrigatório'}]},{cat:'Procedimentos',items:[{t:'Manual de Procedimentos Operacionais Padrão (POPs) em biotérios de criação.',c:'Obrigatório',aplic:['criacao']},{t:'Controle genético e sanitário.',c:'Recomendado'},{t:'Alojamento em pares ou grupos, exceto em casos autorizados pela CEUA ou em virtude de condições clínicas.',c:'Obrigatório'},{t:'Procedimentos experimentais não podem ser realizados na sala de manutenção e criação de animais.',c:'Obrigatório'}]},{cat:'Enriquecimento Ambiental',items:[{t:'Adoção de práticas de enriquecimento ambiental.',c:'Obrigatório'}]},{cat:'Orientações complementares — Guia Brasileiro CONCEA 2023',items:[{t:'Sala de procedimentos localizada próxima às salas de animais; pode atender múltiplas finalidades, desde que higienizada entre procedimentos.',c:'Recomendado',aplic:['experimentacao'],src:'CEUA'},{t:'Em sistemas IVC, a manipulação e troca das gaiolas deve ocorrer em cabines de biossegurança ou estações de troca móveis.',c:'Recomendado',aplic:['experimentacao'],src:'CEUA'},{t:'Barreiras de biocontenção reforçadas quando os animais são intencionalmente infectados com agentes patogênicos.',c:'Recomendado',aplic:['experimentacao'],src:'CEUA'}]}]};</script><script src="assets/shell.js"></script><script src="assets/form-engine.js"></script></head><body></body></html>
+<!doctype html>
+<html lang="pt-br"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CIUCA — Cadastro — Roedores e Lagomorfos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700;800;900&display=swap">
+<link rel="stylesheet" href="assets/form.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head><body>
+<div class="wrap">
+
+<div class="card"><div class="top">
+  <div style="display:flex;gap:12px;align-items:center">
+    <div class="logo">CEUA</div>
+    <div><div class="eyebrow">UFPR Setor Palotina</div>
+      <div class="title">Cadastro — Roedores e Lagomorfos</div>
+      <div class="sub">RN 57/2022 · 30 critérios</div></div>
+  </div>
+  <div class="badge">Cadastro da instalação</div>
+</div></div>
+
+<div class="card">
+  <h2>1. Instituição</h2>
+  <div class="grid g3">
+    <div><label class="lbl">Instituição</label><input class="fi" id="inst"></div>
+    <div><label class="lbl">CNPJ</label><input class="fi" id="cnpj"></div>
+    <div><label class="lbl">CEUA vinculada</label><input class="fi" id="ceua"></div>
+    <div style="grid-column:span 2"><label class="lbl">Endereço</label><input class="fi" id="addr"></div>
+    <div><label class="lbl">Município / UF</label><input class="fi" id="city"></div>
+    <div style="grid-column:span 3"><label class="lbl">E-mail institucional da instalação</label><input class="fi" id="mail"></div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>2. Instalação</h2>
+  <p class="hint">A finalidade filtra os critérios que a norma restringe a determinado tipo de instalação.</p>
+  <div class="grid g3">
+    <div style="grid-column:span 2"><label class="lbl">Nome / identificação</label><input class="fi" id="unit"></div>
+    <div><label class="lbl">Finalidade</label><select class="fi" id="purpose">
+      <option>Produção/criação</option><option>Manutenção</option><option>Utilização</option>
+      <option>Produção/criação + Manutenção</option><option>Produção/criação + Utilização</option>
+      <option>Manutenção + Utilização</option><option>Produção/criação + Manutenção + Utilização</option></select></div>
+    <div><label class="lbl">Situação</label><select class="fi" id="situation">
+      <option>Em funcionamento</option><option>Nova / em implantação</option><option>Em adequação</option></select></div>
+    
+    <div style="grid-column:span 3"><label class="lbl">Espécie(s) / grupo abrangido(s)</label><input class="fi" id="animalDetail"></div>
+    <div><label class="lbl">Campus</label><input class="fi" id="campus"></div>
+    <div><label class="lbl">Prédio</label><input class="fi" id="building"></div>
+    <div><label class="lbl">Sala / setor</label><input class="fi" id="room"></div>
+    <div><label class="lbl">Área (m²)</label><input class="fi" id="area"></div>
+    <div><label class="lbl">Capacidade</label><input class="fi" id="cap"></div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>3. Coordenador e Responsável Técnico</h2>
+  <div class="grid g4">
+    <div style="grid-column:span 2"><label class="lbl">Coordenador da instalação</label><input class="fi" id="coord"></div>
+    <div><label class="lbl">CPF</label><input class="fi" id="coordCpf"></div>
+    <div><label class="lbl">E-mail</label><input class="fi" id="coordMail"></div>
+    <div style="grid-column:span 2"><label class="lbl">Responsável Técnico (médico-veterinário)</label><input class="fi" id="rt"></div>
+    <div><label class="lbl">CPF do RT</label><input class="fi" id="rtCpf"></div>
+    <div><label class="lbl">E-mail do RT</label><input class="fi" id="rtMail"></div>
+    <div><label class="lbl">CRMV</label><input class="fi" id="crmv"></div>
+    <div><label class="lbl">UF do CRMV</label><input class="fi" id="crmvUf"></div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>4. Critérios</h2>
+  <div class="info"><b>Obrigatório</b> é o que a Portaria MCTI 9.037/2025, art. 3º, exige para licenciar.
+  <b>Recomendado</b> não bloqueia a licença. <b>Não se aplica</b> é permitido, inclusive em item obrigatório
+  materialmente inaplicável, e exige justificativa — sem ela, a exportação fica bloqueada.
+  Cada critério mostra a Resolução e o dispositivo de onde vem.</div>
+  <div class="pills">
+    <span class="pill p-d">Critérios ativos: <b id="cTot">0</b></span>
+    <span class="pill p-ok">Atende: <b id="cOk">0</b></span>
+    <span class="pill p-no">Não atende: <b id="cNo">0</b></span>
+    
+    <span class="pill p-na">Não se aplica: <b id="cNa">0</b></span>
+  </div>
+  <div id="verdict" class="verdict">EM PREENCHIMENTO</div>
+  <div id="itens"></div>
+  <div class="nav">
+    <button class="btn primary" id="btnPdf">Exportar PDF</button>
+    <button class="btn" id="btnXls">Exportar Excel</button>
+  </div>
+</div>
+
+<div class="foot">Gerado a partir da planilha de critérios das RNs CONCEA. O texto oficial vigente prevalece.</div>
+</div>
+
+<script>
+const CFG = { grupo:'Roedores e Lagomorfos', slug:'roedores-lagomorfos', rn:'RN 57/2022', modo:'coordenador',
+  itens: [{"rn": "RN 57/2022", "d": "art. 2º, I, \"a\"", "g": "Infraestrutura", "c": "OB", "fin": ["criação"], "sub": "", "cond": "", "t": "instalações de criação de animais separadas dos biotérios com outras finalidades", "n": "", "id": "rn-57-2022-art-2o-i-a"}, {"rn": "RN 57/2022", "d": "art. 2º, I, \"b\"", "g": "Infraestrutura", "c": "OB", "fin": ["criação"], "sub": "", "cond": "em caso de edificação que abrigue biotérios com diferentes finalidades", "t": "instalações de criação de animais com áreas físicas e rotinas com barreiras exclusivas, delimitadas e separadas dos biotérios de manutenção e de utilização, em caso de edificação que abrigue biotérios com diferentes finalidades", "n": "", "id": "rn-57-2022-art-2o-i-b"}, {"rn": "RN 57/2022", "d": "art. 2º, I, \"c\"", "g": "Infraestrutura", "c": "OB", "fin": ["criação"], "sub": "", "cond": "", "t": "área destinadas à recepção e quarentena, em biotérios de criação, para ingresso de animais", "n": "", "id": "rn-57-2022-art-2o-i-c"}, {"rn": "RN 57/2022", "d": "art. 2º, I, \"d\"", "g": "Infraestrutura", "c": "OB", "fin": [], "sub": "", "cond": "", "t": "áreas destinadas à higienização (lavagem, desinfecção ou esterilização de materiais) fisicamente separadas das salas de animais", "n": "", "id": "rn-57-2022-art-2o-i-d"}, {"rn": "RN 57/2022", "d": "art. 2º, I, \"e\"", "g": "Infraestrutura", "c": "OB", "fin": ["criação"], "sub": "", "cond": "", "t": "sanitários localizados fora de áreas controladas, em biotérios de criação", "n": "", "id": "rn-57-2022-art-2o-i-e"}, {"rn": "RN 57/2022", "d": "art. 2º, I, \"f\"", "g": "Infraestrutura", "c": "OB", "fin": [], "sub": "", "cond": "", "t": "salas de animais separadas por espécie", "n": "", "id": "rn-57-2022-art-2o-i-f"}, {"rn": "RN 57/2022", "d": "art. 2º, I, \"g\"", "g": "Infraestrutura", "c": "OB", "fin": [], "sub": "", "cond": "", "t": "vestiários", "n": "", "id": "rn-57-2022-art-2o-i-g"}, {"rn": "RN 57/2022", "d": "art. 2º, I, \"h\"", "g": "Infraestrutura", "c": "OB", "fin": ["criação", "manutenção"], "sub": "", "cond": "", "t": "sala destinada a eutanásia, separada das salas de animais, em biotérios de criação e manutenção", "n": "", "id": "rn-57-2022-art-2o-i-h"}, {"rn": "RN 57/2022", "d": "art. 2º, I, \"i\"", "g": "Infraestrutura", "c": "OB", "fin": [], "sub": "", "cond": "", "t": "local para estocagem de alimentos e forração, que atenda às recomendações dos fabricantes e que mantenha os materiais sem contato com o piso ou paredes", "n": "", "id": "rn-57-2022-art-2o-i-i"}, {"rn": "RN 57/2022", "d": "art. 2º, I, \"j\"", "g": "Infraestrutura", "c": "OB", "fin": [], "sub": "", "cond": "", "t": "área exclusiva para depósitos de resíduos", "n": "", "id": "rn-57-2022-art-2o-i-j"}, {"rn": "RN 57/2022", "d": "art. 2º, I, \"k\"", "g": "Infraestrutura", "c": "OB", "fin": [], "sub": "", "cond": "", "t": "freezer para acondicionar carcaças de animais", "n": "", "id": "rn-57-2022-art-2o-i-k"}, {"rn": "RN 57/2022", "d": "art. 2º, I, \"l\"", "g": "Infraestrutura", "c": "OB", "fin": [], "sub": "", "cond": "", "t": "paredes, pisos e tetos lisos, livres de rejuntes e reentrâncias, e construídos com materiais que possibilitem higienização e desinfecção", "n": "", "id": "rn-57-2022-art-2o-i-l"}, {"rn": "RN 57/2022", "d": "art. 2º, I, \"m\"", "g": "Infraestrutura", "c": "OB", "fin": [], "sub": "", "cond": "", "t": "ausência de janelas com acesso direto para as salas de animais de laboratório", "n": "", "id": "rn-57-2022-art-2o-i-m"}, {"rn": "RN 57/2022", "d": "art. 2º, I, \"n\"", "g": "Infraestrutura", "c": "OB", "fin": [], "sub": "", "cond": "na ausência de grupo gerador próprio", "t": "sistema de monitoramento remoto da ambiência das salas dos animais, na ausência de grupo gerador próprio", "n": "", "id": "rn-57-2022-art-2o-i-n"}, {"rn": "RN 57/2022", "d": "art. 2º, I, \"o\"", "g": "Infraestrutura", "c": "OB", "fin": [], "sub": "", "cond": "", "t": "sistema de iluminação com fotoperíodo regulável nas áreas controladas e salas de animais", "n": "", "id": "rn-57-2022-art-2o-i-o"}, {"rn": "RN 57/2022", "d": "art. 2º, I, \"p\"", "g": "Infraestrutura", "c": "OB", "fin": [], "sub": "", "cond": "", "t": "salas de animais com ventilação, exaustão temperatura e umidade, controladas conforme as características das espécies mantidas no recinto", "n": "", "id": "rn-57-2022-art-2o-i-p"}, {"rn": "RN 57/2022", "d": "art. 2º, I, \"q\"", "g": "Infraestrutura", "c": "OB", "fin": [], "sub": "", "cond": "", "t": "barreiras sanitárias de bioexclusão e biocontenção preconizadas pelo nível de biossegurança da instalação", "n": "", "id": "rn-57-2022-art-2o-i-q"}, {"rn": "RN 57/2022", "d": "art. 3º, I", "g": "Infraestrutura", "c": "R", "fin": [], "sub": "", "cond": "", "t": "área administrativa", "n": "", "id": "rn-57-2022-art-3o-i"}, {"rn": "RN 57/2022", "d": "art. 3º, II", "g": "Infraestrutura", "c": "R", "fin": [], "sub": "", "cond": "", "t": "área de recepção de pessoal (usuários e visitantes)", "n": "", "id": "rn-57-2022-art-3o-ii"}, {"rn": "RN 57/2022", "d": "art. 3º, III", "g": "Infraestrutura", "c": "R", "fin": ["experimentação"], "sub": "", "cond": "", "t": "sala destinada a eutanásia, separada das salas de procedimentos, em biotérios de experimentação", "n": "", "id": "rn-57-2022-art-3o-iii"}, {"rn": "RN 57/2022", "d": "art. 3º, IV", "g": "Infraestrutura", "c": "R", "fin": [], "sub": "", "cond": "", "t": "local para armazenamento de produtos químicos e medicamentos", "n": "", "id": "rn-57-2022-art-3o-iv"}, {"rn": "RN 57/2022", "d": "art. 3º, V", "g": "Infraestrutura", "c": "R", "fin": [], "sub": "", "cond": "", "t": "grupo gerador próprio para fornecimento emergencial de energia elétrica", "n": "", "id": "rn-57-2022-art-3o-v"}, {"rn": "RN 57/2022", "d": "art. 2º, II, \"a\"", "g": "Procedimentos", "c": "OB", "fin": ["manutenção", "experimentação"], "sub": "", "cond": "exceto animais com estado sanitário conhecido e compatível com o biotério de destino", "t": "ingresso de animais, em biotérios de manutenção e experimentação, por meio de recepção em área de quarentena, exceto com relação aos animais com estado sanitário conhecido e compatível com o biotério de destino, que poderão ser introduzidos diretamente na sala de animais", "n": "", "id": "rn-57-2022-art-2o-ii-a"}, {"rn": "RN 57/2022", "d": "art. 2º, II, \"b\"", "g": "Procedimentos", "c": "OB", "fin": [], "sub": "", "cond": "", "t": "monitoramento com registro das condições ambientais das salas de animais", "n": "", "id": "rn-57-2022-art-2o-ii-b"}, {"rn": "RN 57/2022", "d": "art. 2º, II, \"c\"", "g": "Procedimentos", "c": "OB", "fin": [], "sub": "", "cond": "", "t": "uso de equipamentos de proteção individual preconizados pelo nível de biossegurança da instalação", "n": "", "id": "rn-57-2022-art-2o-ii-c"}, {"rn": "RN 57/2022", "d": "art. 2º, II, \"d\"", "g": "Procedimentos", "c": "OB", "fin": ["criação"], "sub": "", "cond": "", "t": "disponibilização de Manual de Procedimentos Operacionais Padrão (POPs) em biotérios de criação", "n": "", "id": "rn-57-2022-art-2o-ii-d"}, {"rn": "RN 57/2022", "d": "art. 2º, II, \"e\"", "g": "Procedimentos", "c": "OB", "fin": [], "sub": "", "cond": "exceto casos autorizados pela CEUA ou recomendações clínicas", "t": "alojamento de animais em pares ou grupos, exceto em casos autorizados pela CEUA ou em virtude de recomendações clínicas", "n": "", "id": "rn-57-2022-art-2o-ii-e"}, {"rn": "RN 57/2022", "d": "art. 2º, II, \"f\"", "g": "Procedimentos", "c": "OB", "fin": [], "sub": "", "cond": "", "t": "realização de procedimentos experimentais em local diferente das salas de manutenção e criação de animais", "n": "", "id": "rn-57-2022-art-2o-ii-f"}, {"rn": "RN 57/2022", "d": "art. 2º, II, \"g\"", "g": "Procedimentos", "c": "OB", "fin": [], "sub": "", "cond": "", "t": "adoção de práticas de enriquecimento ambiental", "n": "", "id": "rn-57-2022-art-2o-ii-g"}, {"rn": "RN 57/2022", "d": "art. 3º, parágrafo único", "g": "Procedimentos", "c": "R", "fin": [], "sub": "", "cond": "", "t": "é recomendada a realização de controle genético e sanitário", "n": "", "id": "rn-57-2022-art-3o-paragrafo-unico"}] };
+</script>
+<script src="assets/defaults.js"></script>
+<script src="assets/engine.js"></script>
+</body></html>

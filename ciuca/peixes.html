@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="pt-br"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CIUCA — Cadastro — Peixes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700;800;900&display=swap">
+<link rel="stylesheet" href="assets/form.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head><body>
+<div class="wrap">
+
+<div class="card"><div class="top">
+  <div style="display:flex;gap:12px;align-items:center">
+    <div class="logo">CEUA</div>
+    <div><div class="eyebrow">UFPR Setor Palotina</div>
+      <div class="title">Cadastro — Peixes</div>
+      <div class="sub">RN 61/2023 · 29 critérios</div></div>
+  </div>
+  <div class="badge">Cadastro da instalação</div>
+</div></div>
+
+<div class="card">
+  <h2>1. Instituição</h2>
+  <div class="grid g3">
+    <div><label class="lbl">Instituição</label><input class="fi" id="inst"></div>
+    <div><label class="lbl">CNPJ</label><input class="fi" id="cnpj"></div>
+    <div><label class="lbl">CEUA vinculada</label><input class="fi" id="ceua"></div>
+    <div style="grid-column:span 2"><label class="lbl">Endereço</label><input class="fi" id="addr"></div>
+    <div><label class="lbl">Município / UF</label><input class="fi" id="city"></div>
+    <div style="grid-column:span 3"><label class="lbl">E-mail institucional da instalação</label><input class="fi" id="mail"></div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>2. Instalação</h2>
+  <p class="hint">A finalidade filtra os critérios que a norma restringe a determinado tipo de instalação.</p>
+  <div class="grid g3">
+    <div style="grid-column:span 2"><label class="lbl">Nome / identificação</label><input class="fi" id="unit"></div>
+    <div><label class="lbl">Finalidade</label><select class="fi" id="purpose">
+      <option>Produção/criação</option><option>Manutenção</option><option>Utilização</option>
+      <option>Produção/criação + Manutenção</option><option>Produção/criação + Utilização</option>
+      <option>Manutenção + Utilização</option><option>Produção/criação + Manutenção + Utilização</option></select></div>
+    <div><label class="lbl">Situação</label><select class="fi" id="situation">
+      <option>Em funcionamento</option><option>Nova / em implantação</option><option>Em adequação</option></select></div>
+    <div><label class="lbl">Grupo</label><select id="subsel" class="fi"><option>Peixes de laboratório</option><option>Demais espécies</option></select></div>
+    <div style="grid-column:span 2"><label class="lbl">Espécie(s) / grupo abrangido(s)</label><input class="fi" id="animalDetail"></div>
+    <div><label class="lbl">Campus</label><input class="fi" id="campus"></div>
+    <div><label class="lbl">Prédio</label><input class="fi" id="building"></div>
+    <div><label class="lbl">Sala / setor</label><input class="fi" id="room"></div>
+    <div><label class="lbl">Área (m²)</label><input class="fi" id="area"></div>
+    <div><label class="lbl">Capacidade</label><input class="fi" id="cap"></div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>3. Coordenador e Responsável Técnico</h2>
+  <div class="grid g4">
+    <div style="grid-column:span 2"><label class="lbl">Coordenador da instalação</label><input class="fi" id="coord"></div>
+    <div><label class="lbl">CPF</label><input class="fi" id="coordCpf"></div>
+    <div><label class="lbl">E-mail</label><input class="fi" id="coordMail"></div>
+    <div style="grid-column:span 2"><label class="lbl">Responsável Técnico (médico-veterinário)</label><input class="fi" id="rt"></div>
+    <div><label class="lbl">CPF do RT</label><input class="fi" id="rtCpf"></div>
+    <div><label class="lbl">E-mail do RT</label><input class="fi" id="rtMail"></div>
+    <div><label class="lbl">CRMV</label><input class="fi" id="crmv"></div>
+    <div><label class="lbl">UF do CRMV</label><input class="fi" id="crmvUf"></div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>4. Critérios</h2>
+  <div class="info"><b>Obrigatório</b> é o que a Portaria MCTI 9.037/2025, art. 3º, exige para licenciar.
+  <b>Recomendado</b> não bloqueia a licença. <b>Não se aplica</b> é permitido, inclusive em item obrigatório
+  materialmente inaplicável, e exige justificativa — sem ela, a exportação fica bloqueada.
+  Cada critério mostra a Resolução e o dispositivo de onde vem.</div>
+  <div class="pills">
+    <span class="pill p-d">Critérios ativos: <b id="cTot">0</b></span>
+    <span class="pill p-ok">Atende: <b id="cOk">0</b></span>
+    <span class="pill p-no">Não atende: <b id="cNo">0</b></span>
+    
+    <span class="pill p-na">Não se aplica: <b id="cNa">0</b></span>
+  </div>
+  <div id="verdict" class="verdict">EM PREENCHIMENTO</div>
+  <div id="itens"></div>
+  <div class="nav">
+    <button class="btn primary" id="btnPdf">Exportar PDF</button>
+    <button class="btn" id="btnXls">Exportar Excel</button>
+  </div>
+</div>
+
+<div class="foot">Gerado a partir da planilha de critérios das RNs CONCEA. O texto oficial vigente prevalece.</div>
+</div>
+
+<script>
+const CFG = { grupo:'Peixes', slug:'peixes', rn:'RN 61/2023', modo:'coordenador',
+  itens: [{"rn": "RN 61/2023", "d": "art. 2º, I, \"a\"", "g": "Infraestrutura", "c": "OB", "fin": [], "sub": "", "cond": "", "t": "alojamento em tanques escavados, tanques de lona, aquários ou caixas ou tanques rede, de acordo com especificações do Guia Brasileiro do CONCEA", "n": "", "id": "rn-61-2023-art-2o-i-a"}, {"rn": "RN 61/2023", "d": "art. 2º, I, \"b\"", "g": "Infraestrutura", "c": "OB", "fin": [], "sub": "", "cond": "", "t": "tanque para quarentena", "n": "", "id": "rn-61-2023-art-2o-i-b"}, {"rn": "RN 61/2023", "d": "art. 2º, I, \"c\"", "g": "Infraestrutura", "c": "OB", "fin": [], "sub": "", "cond": "", "t": "depósito de alimentos que atendam às recomendações dos fabricantes", "n": "", "id": "rn-61-2023-art-2o-i-c"}, {"rn": "RN 61/2023", "d": "art. 2º, I, \"d\"", "g": "Infraestrutura", "c": "OB", "fin": [], "sub": "", "cond": "", "t": "freezer para acondicionar carcaças", "n": "", "id": "rn-61-2023-art-2o-i-d"}, {"rn": "RN 61/2023", "d": "art. 2º, I, \"e\"", "g": "Infraestrutura", "c": "OB", "fin": [], "sub": "", "cond": "", "t": "barreiras sanitárias de bioexclusão e biocontenção preconizadas pelo nível de biossegurança da instalação", "n": "OMITIDO no Anexo II", "id": "rn-61-2023-art-2o-i-e"}, {"rn": "RN 61/2023", "d": "art. 2º, I, \"f\"", "g": "Infraestrutura", "c": "OB", "fin": [], "sub": "", "cond": "", "t": "controle de iluminação", "n": "", "id": "rn-61-2023-art-2o-i-f"}, {"rn": "RN 61/2023", "d": "art. 2º, I, \"g\"", "g": "Infraestrutura", "c": "OB", "fin": [], "sub": "", "cond": "", "t": "controle de temperatura", "n": "", "id": "rn-61-2023-art-2o-i-g"}, {"rn": "RN 61/2023", "d": "art. 2º, I, \"h\"", "g": "Infraestrutura", "c": "OB", "fin": [], "sub": "Peixes de laboratório", "cond": "", "t": "sistema de abastecimento de água e reservatório de armazenamento para peixes de laboratório", "n": "", "id": "rn-61-2023-art-2o-i-h"}, {"rn": "RN 61/2023", "d": "art. 2º, I, \"i\"", "g": "Infraestrutura", "c": "OB", "fin": [], "sub": "", "cond": "", "t": "bomba de renovação e abastecimento de água dos aquários", "n": "", "id": "rn-61-2023-art-2o-i-i"}, {"rn": "RN 61/2023", "d": "art. 2º, I, \"j\"", "g": "Infraestrutura", "c": "OB", "fin": [], "sub": "", "cond": "", "t": "controle de efluentes dos alojamentos", "n": "", "id": "rn-61-2023-art-2o-i-j"}, {"rn": "RN 61/2023", "d": "art. 2º, I, \"k\"", "g": "Infraestrutura", "c": "OB", "fin": [], "sub": "", "cond": "", "t": "condições de alojamento conforme as especificações do Guia Brasileiro do CONCEA", "n": "", "id": "rn-61-2023-art-2o-i-k"}, {"rn": "RN 61/2023", "d": "art. 2º, I, \"l\"", "g": "Infraestrutura", "c": "OB", "fin": [], "sub": "", "cond": "", "t": "controle de filtragem, pH, oxigênio dissolvido, salinidade e níveis de amônia e nitrito da água dos tanques e aquários de manutenção de acordo com especificações do CONCEA", "n": "O Anexo I traz 'amônia e dureza'; o artigo não menciona dureza. Prevalece o artigo.", "id": "rn-61-2023-art-2o-i-l"}, {"rn": "RN 61/2023", "d": "art. 3º, I", "g": "Infraestrutura", "c": "R", "fin": [], "sub": "", "cond": "", "t": "área administrativa", "n": "", "id": "rn-61-2023-art-3o-i"}, {"rn": "RN 61/2023", "d": "art. 3º, II", "g": "Infraestrutura", "c": "R", "fin": [], "sub": "", "cond": "", "t": "área de recepção de pessoal", "n": "", "id": "rn-61-2023-art-3o-ii"}, {"rn": "RN 61/2023", "d": "art. 3º, III", "g": "Infraestrutura", "c": "R", "fin": [], "sub": "", "cond": "", "t": "área para recepção de animais", "n": "", "id": "rn-61-2023-art-3o-iii"}, {"rn": "RN 61/2023", "d": "art. 3º, IV", "g": "Infraestrutura", "c": "R", "fin": [], "sub": "", "cond": "", "t": "vestiário", "n": "", "id": "rn-61-2023-art-3o-iv"}, {"rn": "RN 61/2023", "d": "art. 3º, IX", "g": "Infraestrutura", "c": "R", "fin": [], "sub": "Peixes de laboratório", "cond": "", "t": "sanitários fora das áreas controladas para peixes de laboratório", "n": "", "id": "rn-61-2023-art-3o-ix"}, {"rn": "RN 61/2023", "d": "art. 3º, V", "g": "Infraestrutura", "c": "R", "fin": [], "sub": "", "cond": "", "t": "depósito de produtos químicos e medicamentos", "n": "", "id": "rn-61-2023-art-3o-v"}, {"rn": "RN 61/2023", "d": "art. 3º, VI", "g": "Infraestrutura", "c": "R", "fin": [], "sub": "", "cond": "", "t": "manual de Procedimentos Operacionais Padrão (POPs)", "n": "", "id": "rn-61-2023-art-3o-vi"}, {"rn": "RN 61/2023", "d": "art. 3º, VII", "g": "Infraestrutura", "c": "R", "fin": [], "sub": "Peixes de laboratório", "cond": "", "t": "área de quarentena para peixes de laboratório", "n": "", "id": "rn-61-2023-art-3o-vii"}, {"rn": "RN 61/2023", "d": "art. 3º, VIII", "g": "Infraestrutura", "c": "R", "fin": [], "sub": "Peixes de laboratório", "cond": "", "t": "área de higienização separada fisicamente das salas de animais para peixes de laboratório", "n": "", "id": "rn-61-2023-art-3o-viii"}, {"rn": "RN 61/2023", "d": "art. 3º, X", "g": "Infraestrutura", "c": "R", "fin": [], "sub": "", "cond": "", "t": "controle de nitrato na água dos tanques de manutenção", "n": "", "id": "rn-61-2023-art-3o-x"}, {"rn": "RN 61/2023", "d": "art. 2º, II, \"a\"", "g": "Procedimentos", "c": "OB", "fin": [], "sub": "", "cond": "", "t": "captura dos animais de acordo com a legislação", "n": "", "id": "rn-61-2023-art-2o-ii-a"}, {"rn": "RN 61/2023", "d": "art. 2º, II, \"b\"", "g": "Procedimentos", "c": "OB", "fin": [], "sub": "", "cond": "", "t": "controle de densidade na estocagem de acordo com a espécie", "n": "", "id": "rn-61-2023-art-2o-ii-b"}, {"rn": "RN 61/2023", "d": "art. 2º, II, \"c\"", "g": "Procedimentos", "c": "OB", "fin": [], "sub": "Peixes de laboratório", "cond": "", "t": "controle de patógenos nos aquários de peixes de laboratório", "n": "OMITIDO no Anexo II", "id": "rn-61-2023-art-2o-ii-c"}, {"rn": "RN 61/2023", "d": "art. 2º, II, \"d\"", "g": "Procedimentos", "c": "OB", "fin": [], "sub": "", "cond": "", "t": "alimentação de acordo com a fase de desenvolvimento dos animais e hábito alimentar da espécie", "n": "", "id": "rn-61-2023-art-2o-ii-d"}, {"rn": "RN 61/2023", "d": "art. 2º, II, \"e\"", "g": "Procedimentos", "c": "OB", "fin": [], "sub": "", "cond": "", "t": "enriquecimento ambiental", "n": "", "id": "rn-61-2023-art-2o-ii-e"}, {"rn": "RN 61/2023", "d": "art. 2º, II, \"f\"", "g": "Procedimentos", "c": "OB", "fin": [], "sub": "", "cond": "", "t": "gerenciamento de resíduos sólidos de acordo com a legislação vigente", "n": "", "id": "rn-61-2023-art-2o-ii-f"}, {"rn": "RN 61/2023", "d": "art. 2º, II, \"g\"", "g": "Procedimentos", "c": "OB", "fin": [], "sub": "", "cond": "", "t": "equipamentos de proteção individual que atendam ao nível de biossegurança da instalação", "n": "OMITIDO no Anexo II", "id": "rn-61-2023-art-2o-ii-g"}] };
+</script>
+<script src="assets/defaults.js"></script>
+<script src="assets/engine.js"></script>
+</body></html>
