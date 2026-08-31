@@ -20,7 +20,8 @@ const FIN={
  'Manutenção + Utilização':['manutenção','experimentação'],
  'Produção/criação + Manutenção + Utilização':['criação','manutenção','experimentação']};
 function vis(it,f,s){ if(f.length&&it.fin.length&&!it.fin.some(x=>f.indexOf(x)>-1)) return false;
-  if(s&&it.sub){ if(s.indexOf(' e ')>-1) return true;
+  const geralNaMatriz=it.id==='rn-59-2023-art-2o-i-c';
+  if(s&&it.sub&&!geralNaMatriz){ if(s.indexOf(' e ')>-1) return true;
     if(s==='Demais espécies'&&it.sub==='Peixes de laboratório') return false;
     if(s!=='Demais espécies'&&it.sub!==s) return false; } return true; }
 const todas=cfg.filter(i=>vis(FIN['Produção/criação + Manutenção + Utilização']?i:i,FIN['Produção/criação + Manutenção + Utilização'],'Cães e gatos')).length;
@@ -34,13 +35,13 @@ console.log('T-F4 filtro finalidade (todas/utilização/criação/manut+util):',
 // T-F5: filtro de subgrupo
 const soCaes =cfg.filter(i=>vis(i,FIN['Produção/criação + Manutenção + Utilização'],'Cães')).length;
 const soGatos=cfg.filter(i=>vis(i,FIN['Produção/criação + Manutenção + Utilização'],'Gatos')).length;
-const vazouOutroSubgrupo=cfg.filter(i=>vis(i,FIN['Produção/criação + Manutenção + Utilização'],'Cães')).some(i=>i.sub==='Gatos'||i.sub==='Cães e gatos');
+const vazouOutroSubgrupo=cfg.filter(i=>vis(i,FIN['Produção/criação + Manutenção + Utilização'],'Cães')).some(i=>i.sub==='Gatos'||(i.sub==='Cães e gatos'&&i.id!=='rn-59-2023-art-2o-i-c'));
 console.log('T-F5 filtro subgrupo (cães/gatos/ambos):',soCaes,soGatos,todas,(!vazouOutroSubgrupo&&soCaes<todas&&soGatos<todas)?'PASSA':'FALHA');
 // T-F6: caso do professor — utilização, cães, itens de alojamento presentes para marcar N/A
 const util_caes=cfg.filter(i=>vis(i,FIN['Utilização'],'Cães'));
 const ob=util_caes.filter(i=>i.c==='OB').length;
 console.log('T-F6 utilização+cães: '+util_caes.length+' critérios ativos, '+ob+' obrigatórios',
-  (util_caes.length===29&&ob===18)?'PASSA':'FALHA');
+  (util_caes.length===30&&ob===19)?'PASSA':'FALHA');
 const quar=util_caes.find(i=>i.t.indexOf('quarentena')>-1);
 console.log('T-F7 quarentena aparece para marcar Não se aplica:', quar?('PASSA ('+quar.d+')'):'FALHA');
 """

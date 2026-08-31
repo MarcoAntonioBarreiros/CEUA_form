@@ -70,7 +70,8 @@ function visivel(it){
   const f = finAtual();
   if (f.length && it.fin.length && !it.fin.some(x=>f.indexOf(x)>-1)) return false;
   const s = subAtual();
-  if (s && it.sub){
+  const geralNaMatriz = it.id === 'rn-59-2023-art-2o-i-c';
+  if (s && it.sub && !geralNaMatriz){
     if (s.indexOf(' e ') > -1 || s === 'Cães e gatos' || s === 'Anfíbios e serpentes') return true;
     if (s === 'Demais espécies' && it.sub === 'Peixes de laboratório') return false;
     if (s !== 'Demais espécies' && it.sub !== s) return false;
@@ -471,6 +472,31 @@ function bloqueado(){
   return false;
 }
 
+function romanoNumero(valor){
+  const mapa={I:1,V:5,X:10,L:50,C:100,D:500,M:1000};
+  let total=0, anterior=0;
+  String(valor||'').toUpperCase().split('').reverse().forEach(letra=>{
+    const atual=mapa[letra]||0;
+    total+=atual<anterior?-atual:atual;
+    if(atual>anterior) anterior=atual;
+  });
+  return total;
+}
+
+function ordenarItensPDF(itens){
+  const categorias=[];
+  itens.forEach(i=>{ if(categorias.indexOf(i.categoria)===-1) categorias.push(i.categoria); });
+  const chave=(i,indice)=>{
+    const m=String(i.dispositivo||'').match(/art\.\s*(\d+)[^,]*(?:,\s*([IVXLCDM]+))?(?:,\s*"([^"]+)")?/i);
+    return {categoria:categorias.indexOf(i.categoria),artigo:m?Number(m[1]):9999,
+      inciso:m&&m[2]?romanoNumero(m[2]):0,alinea:m&&m[3]?m[3].toLowerCase():'',indice};
+  };
+  return itens.map((item,indice)=>({item,chave:chave(item,indice)})).sort((a,b)=>
+    a.chave.categoria-b.chave.categoria || a.chave.artigo-b.chave.artigo ||
+    a.chave.inciso-b.chave.inciso || a.chave.alinea.localeCompare(b.chave.alinea,'pt-BR') ||
+    a.chave.indice-b.chave.indice).map(x=>x.item);
+}
+
 function montarPDF(){
   if(!window.jspdf||typeof window.jspdf.jsPDF!=='function') throw new Error('a biblioteca jsPDF 2.5.1 não foi carregada pelo navegador');
   const d=dados(), {jsPDF}=window.jspdf, doc=new jsPDF('p','mm','a4');
@@ -504,7 +530,7 @@ function montarPDF(){
   sec('4. CHECKLIST');
   kv('Critérios ativos',String(d.itens.length));
   let categoria='';
-  d.itens.forEach(i=>{
+  ordenarItensPDF(d.itens).forEach(i=>{
     if(i.categoria!==categoria){
       categoria=i.categoria; ckpg(8); doc.setFillColor(225,244,246); doc.rect(ML,y-3,CW,5,'F');
       doc.setTextColor(22,69,73); doc.setFont('helvetica','bold'); doc.setFontSize(7);
@@ -513,24 +539,27 @@ function montarPDF(){
     const referencia=`${i.rn} · ${i.dispositivo}`;
     const criterio=doc.splitTextToSize(i.criterio,CW-10);
     const justificativa=i.justificativa?doc.splitTextToSize(`Justificativa/observação: ${i.justificativa}`,CW-10):[];
-    ckpg(7+criterio.length*3.5+justificativa.length*3.5);
+    const alturaItem=7+criterio.length*3.7+justificativa.length*3.7+2.5;
+    ckpg(alturaItem);
     doc.setTextColor(42,123,136); doc.setFont('helvetica','bold'); doc.setFontSize(7);
     doc.text(referencia,ML+2,y);
     doc.setTextColor(100,116,139);
     doc.text(`${i.classificacao} · ${i.status==='—'?'não avaliado':i.status}`,MR-2,y,{align:'right'}); y+=4;
-    doc.setTextColor(30,41,59); doc.setFont('helvetica','normal'); doc.text(criterio,ML+2,y); y+=criterio.length*3.5+1.5;
+    doc.setTextColor(30,41,59); doc.setFont('helvetica','normal');
+    criterio.forEach(linha=>{ doc.text(linha,ML+2,y); y+=3.7; });
     if(justificativa.length){
-      doc.setTextColor(146,64,14); doc.setFont('helvetica','italic'); doc.text(justificativa,ML+2,y);
-      y+=justificativa.length*3.5+1.5;
+      y+=1; doc.setTextColor(146,64,14); doc.setFont('helvetica','italic');
+      justificativa.forEach(linha=>{ doc.text(linha,ML+2,y); y+=3.7; });
     }
+    y+=2.5;
   });
-  const respondidos=d.itens.filter(i=>i.status!=='—').length;
   const obrigatorios=d.itens.filter(i=>i.classificacao==='Obrigatório');
   const recomendados=d.itens.filter(i=>i.classificacao==='Recomendado');
   sec('RESUMO');
-  kv('Critérios respondidos',`${respondidos} de ${d.itens.length}`);
+  kv('Critérios ativos',`${d.itens.length} (${obrigatorios.length} obrigatórios; ${recomendados.length} recomendados)`);
+  kv('Obrigatórios respondidos',`${obrigatorios.filter(i=>i.status!=='—').length} de ${obrigatorios.length}`);
   kv('Obrigatórios atendidos',`${obrigatorios.filter(i=>i.status==='Atende').length} de ${obrigatorios.length}`);
-  kv('Recomendados atendidos',`${recomendados.filter(i=>i.status==='Atende').length} de ${recomendados.length}`);
+  kv('Recomendados respondidos',`${recomendados.filter(i=>i.status!=='—').length} de ${recomendados.length}`);
   kv('Situação geral',$('verdict').textContent);
   sec('TRAMITAÇÃO NO SEI');
   kv('Destino SEI',SEI_DESTINO);

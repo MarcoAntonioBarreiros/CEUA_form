@@ -137,7 +137,12 @@ const window={{
   setTimeout:setTimeout
 }};
 const context={{
-  CFG:{{modo:'coordenador',grupo:'Teste',rn:'RN Teste',slug:'teste',itens:[{{id:'r1',rn:'RN Teste',d:'art. 1º',g:'Geral',c:'R',fin:[],sub:'',cond:'',t:'Critério recomendado',n:'',obs:''}}]}},
+  CFG:{{modo:'coordenador',grupo:'Teste',rn:'RN Teste',slug:'teste',itens:[
+    {{id:'r1',rn:'RN Teste',d:'art. 3º, IV',g:'Geral',c:'R',fin:[],sub:'',cond:'',t:'Critério IV',n:'',obs:''}},
+    {{id:'r2',rn:'RN Teste',d:'art. 3º, IX',g:'Geral',c:'R',fin:[],sub:'',cond:'',t:'Critério IX',n:'',obs:''}},
+    {{id:'r3',rn:'RN Teste',d:'art. 3º, V',g:'Geral',c:'R',fin:[],sub:'',cond:'',t:'Critério V',n:'',obs:''}},
+    {{id:'r4',rn:'RN Teste',d:'art. 2º, I, "g"',g:'Geral',c:'R',fin:[],sub:'',cond:'',t:'Critério com alínea',n:'',obs:''}}
+  ]}},
   document,window,alert:()=>{{}},console,setTimeout,globalThis:null
 }};
 context.globalThis=context;
@@ -148,6 +153,10 @@ vm.runInContext({json.dumps(exposed)},context);
   if(!ok || events.join(',')!=='fetch,pdf') throw new Error('sequência esperada fetch,pdf; obtida '+events.join(','));
   if(!pdfText.some(t=>t.includes('Coordenador Teste')) || !pdfText.some(t=>t.includes('RT Teste')) || !pdfText.some(t=>t.includes('Cães'))) throw new Error('PDF não contém coordenador, RT e espécie selecionada');
   if(!pdfText.some(t=>t.includes('UFPR · CEUA Palotina')) || pdfRects<2) throw new Error('PDF não preservou a identidade visual do formulário original');
+  if(!pdfText.some(t=>t.includes('RN Teste · art. 2º, I, "g"'))) throw new Error('PDF perdeu RN, inciso ou alínea');
+  const iv=pdfText.findIndex(t=>t.includes('art. 3º, IV')), v=pdfText.findIndex(t=>t.includes('art. 3º, V')), ix=pdfText.findIndex(t=>t.includes('art. 3º, IX'));
+  if(!(iv>-1&&iv<v&&v<ix)) throw new Error('incisos romanos não foram ordenados juridicamente');
+  if(!pdfText.some(t=>t.includes('Obrigatórios respondidos')) || !pdfText.some(t=>t.includes('Recomendados respondidos'))) throw new Error('resumo não separa obrigatórios e recomendados');
   elements.coord.value='';
   const before=events.length;
   const missing=await context.__ciucaTest.registrarDados(async()=>{{events.push('envio-indevido')}});
