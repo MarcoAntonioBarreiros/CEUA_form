@@ -136,7 +136,7 @@ function montarFluxo(){
   prepararEtapa(resumo,5,TITULOS_ETAPAS[5]);
   const pills=checklist.querySelector('.pills');
   const verdict=$('verdict');
-  const exportNav=Array.from(checklist.querySelectorAll('.nav')).find(n=>n.querySelector('#btnPdf'));
+  const exportNav=Array.from(checklist.querySelectorAll('.nav')).find(n=>n.querySelector('#btnRegistrarPdf,#btnPdf'));
   const pendentes=document.createElement('span');
   pendentes.className='pill p-pend';
   pendentes.innerHTML='Pendências: <b id="cPend">0</b>';
@@ -152,12 +152,10 @@ function montarFluxo(){
   statusBox.id='statusBox';
   statusBox.className='info';
   statusBox.style.display='none';
-  const registrarNav=document.createElement('div');
-  registrarNav.className='nav sei-nav';
-  const registrar=botaoNavegacao('Registrar dados e gerar PDF para SEI',registrarEpdf,'primary');
+  const registrar=$('btnRegistrarPdf')||$('btnPdf');
   registrar.id='btnRegistrarPdf';
-  registrarNav.append(registrar);
-  resumo.append(seiInfo,statusBox,registrarNav);
+  registrar.textContent='Registrar dados no Google Sheet e gerar PDF para SEI';
+  resumo.append(seiInfo,statusBox);
   exportNav.classList.add('summary-nav');
   exportNav.prepend(botaoNavegacao('← Anterior',()=>irEtapa(4)));
   resumo.append(exportNav);
@@ -398,7 +396,8 @@ async function registrarDados(fetchImpl){
   if(bloqueado()) return false;
   showStatus('warn','Registrando dados na planilha interna da CEUA/UNIBIO...');
   try{
-    await enviarAppsScript(payloadAppsScript(),fetchImpl);
+    const enviar=typeof fetchImpl==='function'?fetchImpl:undefined;
+    await enviarAppsScript(payloadAppsScript(),enviar);
     showStatus('success','Dados registrados na planilha interna. Anexe o PDF assinado no processo SEI.');
     return true;
   }catch(erro){
@@ -446,24 +445,11 @@ function exportarPDF(){
   doc.save(`CIUCA_${d.meta.slug}_${MODO}_${new Date().toISOString().slice(0,10)}.pdf`);
 }
 
-function exportarXLSX(){
-  if(bloqueado()) return;
-  const d=dados(), wb=XLSX.utils.book_new();
-  const cab=[];
-  [['Instituição',d.instituicao],['Instalação',d.instalacao],['Responsáveis',d.responsaveis]].forEach(([t,o])=>{
-    cab.push([t,'']); Object.entries(o).forEach(([k,v])=>cab.push([k,v])); cab.push(['','']); });
-  cab.push(['Situação geral',$('verdict').textContent]);
-  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(cab),'Identificação');
-  XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(d.itens),'Critérios');
-  XLSX.writeFile(wb,`CIUCA_${d.meta.slug}_${MODO}_${new Date().toISOString().slice(0,10)}.xlsx`);
-}
-
 window.addEventListener('DOMContentLoaded',()=>{
   montarFluxo();
   $('purpose').onchange=render;
   if($('subsel')) $('subsel').onchange=render;
-  $('btnPdf').onclick=exportarPDF;
-  $('btnXls').onclick=exportarXLSX;
+  $('btnRegistrarPdf').onclick=()=>registrarEpdf();
   render();
   irEtapa(1);
 });

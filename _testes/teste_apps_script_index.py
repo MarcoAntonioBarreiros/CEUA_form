@@ -64,12 +64,22 @@ def test_index() -> None:
 
 def test_engine_static() -> str:
     source = ENGINE.read_text(encoding="utf-8")
+    active_forms = [path for path in (ROOT / "ciuca").glob("*.html") if path.name != "index.html"]
+    active_source = "\n".join(path.read_text(encoding="utf-8") for path in active_forms)
     expected_url = "https://script.google.com/macros/s/AKfycbw9PB2XNSFrX42tQfgnnfXzlW3J8VFweVydGTJzdMSeL3fTwe472lu9qpughGQsu4UQ4A/exec"
     check(expected_url in source, "CIUCA_APPS_SCRIPT_URL do fluxo original foi preservada")
     check("const SEI_DESTINO = 'UFPR / R / PL / CEUA'" in source, "destino SEI do fluxo original foi preservado")
-    check("Registrar dados e gerar PDF para SEI" in source, "botão de registro e PDF para SEI está presente")
+    check("Registrar dados no Google Sheet e gerar PDF para SEI" in source,
+          "botão único de registro no Google Sheet e PDF para SEI está presente")
+    check(active_source.count('id="btnRegistrarPdf"') == 20,
+          "todos os formulários ativos possuem somente o botão integrado")
+    check(not any(term in active_source for term in ["Exportar Excel", "btnXls", "xlsx.full.min.js", 'id="btnPdf"', ">Exportar PDF<"]),
+          "não há exportação Excel nem PDF independente nos formulários ativos")
     check("await registrarDados(fetchImpl)" in source and "if(registrado) exportarPDF()" in source,
           "registro no Apps Script ocorre antes da geração do PDF")
+    check("typeof fetchImpl==='function'?fetchImpl:undefined" in source and
+          "$('btnRegistrarPdf').onclick=()=>registrarEpdf()" in source,
+          "evento de clique não é tratado como função de rede")
     check("catch(erro)" in source and "showStatus('error','Erro ao registrar dados:" in source,
           "falha de rede possui tratamento e mensagem controlada")
 
@@ -109,7 +119,7 @@ class FakePDF{{
 }}
 const window={{
   addEventListener:()=>{{}},
-  fetch:null,
+  fetch:async()=>{{events.push('fetch')}},
   jspdf:{{jsPDF:FakePDF}},
   scrollTo:()=>{{}},
   setTimeout:setTimeout
@@ -122,7 +132,7 @@ context.globalThis=context;
 vm.createContext(context);
 vm.runInContext({json.dumps(exposed)},context);
 (async()=>{{
-  const ok=await context.__ciucaTest.registrarEpdf(async()=>{{events.push('fetch')}});
+  const ok=await context.__ciucaTest.registrarEpdf({{type:'click'}});
   if(!ok || events.join(',')!=='fetch,pdf') throw new Error('sequência esperada fetch,pdf; obtida '+events.join(','));
   const fail=await context.__ciucaTest.registrarDados(async()=>{{throw new Error('rede indisponível')}});
   if(fail!==false) throw new Error('falha de rede não retornou false');
