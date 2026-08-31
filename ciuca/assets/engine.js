@@ -70,8 +70,7 @@ function visivel(it){
   const f = finAtual();
   if (f.length && it.fin.length && !it.fin.some(x=>f.indexOf(x)>-1)) return false;
   const s = subAtual();
-  const geralNaMatriz = it.id === 'rn-59-2023-art-2o-i-c';
-  if (s && it.sub && !geralNaMatriz){
+  if (s && it.sub){
     if (s.indexOf(' e ') > -1 || s === 'Cães e gatos' || s === 'Anfíbios e serpentes') return true;
     if (s === 'Demais espécies' && it.sub === 'Peixes de laboratório') return false;
     if (s !== 'Demais espécies' && it.sub !== s) return false;
