@@ -15,6 +15,15 @@ const FIN = {
   'Produção/criação + Manutenção + Utilização':['criação','manutenção','experimentação']
 };
 const st = {};
+let etapa = 1;
+let categoriaAtiva = '';
+const TITULOS_ETAPAS = {
+  1:'Identificação institucional',
+  2:'Dados da instalação',
+  3:'Coordenador e Responsável Técnico',
+  4:'Checklist',
+  5:'Resumo e exportação'
+};
 const $ = id => document.getElementById(id);
 const esc = s => String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
@@ -33,13 +42,128 @@ function visivel(it){
   return true;
 }
 
+function ativos(){ return CFG.itens.filter(visivel); }
+
+function categoriasAtivas(){
+  const categorias=[];
+  ativos().forEach(it=>{ if(categorias.indexOf(it.g)===-1) categorias.push(it.g); });
+  return categorias;
+}
+
+function prepararEtapa(card,numero,titulo){
+  card.classList.add('step');
+  card.dataset.step=String(numero);
+  const h2=card.querySelector('h2');
+  if(!h2) return;
+  h2.textContent=titulo;
+  h2.classList.add('step-title');
+  const head=document.createElement('div');
+  head.className='step-head';
+  const tag=document.createElement('span');
+  tag.className='step-tag';
+  tag.textContent=`Etapa ${numero}`;
+  h2.before(head);
+  head.append(tag,h2);
+}
+
+function botaoNavegacao(rotulo,acao,classe){
+  const b=document.createElement('button');
+  b.type='button';
+  b.className='btn'+(classe?' '+classe:'');
+  b.textContent=rotulo;
+  b.onclick=acao;
+  return b;
+}
+
+function adicionarNavegacao(card,anterior,proximo){
+  const nav=document.createElement('div');
+  nav.className='nav step-nav';
+  if(anterior) nav.append(botaoNavegacao('← Anterior',anterior));
+  else nav.append(document.createElement('span'));
+  if(proximo) nav.append(botaoNavegacao('Próximo →',proximo,'primary'));
+  card.append(nav);
+}
+
+function montarFluxo(){
+  if($('stepper')) return;
+  const wrap=document.querySelector('.wrap');
+  if(!wrap) return;
+  const cards=Array.from(wrap.children).filter(el=>el.classList.contains('card'));
+  if(cards.length<5) return;
+  const [cabecalho,instituicao,instalacao,responsaveis,checklist]=cards;
+  cabecalho.classList.add('hero-card');
+
+  const stepper=document.createElement('div');
+  stepper.id='stepper';
+  stepper.className='card flow-card';
+  stepper.innerHTML=`<div class="steps" aria-label="Etapas do formulário">
+    ${Object.keys(TITULOS_ETAPAS).map((n,i)=>`${i?'<span class="step-line" aria-hidden="true"></span>':''}<button type="button" class="step-dot" data-step="${n}" aria-label="Etapa ${n}: ${TITULOS_ETAPAS[n]}">${n}</button>`).join('')}
+  </div><div class="step-meta">Etapa <b id="curNum">1</b> de 5 · <span id="curTitle"></span></div>`;
+  cabecalho.after(stepper);
+  stepper.querySelectorAll('.step-dot').forEach(b=>{ b.onclick=()=>irEtapa(Number(b.dataset.step)); });
+
+  prepararEtapa(instituicao,1,TITULOS_ETAPAS[1]);
+  prepararEtapa(instalacao,2,TITULOS_ETAPAS[2]);
+  prepararEtapa(responsaveis,3,TITULOS_ETAPAS[3]);
+  prepararEtapa(checklist,4,TITULOS_ETAPAS[4]);
+  adicionarNavegacao(instituicao,null,()=>irEtapa(2));
+  adicionarNavegacao(instalacao,()=>irEtapa(1),()=>irEtapa(3));
+  adicionarNavegacao(responsaveis,()=>irEtapa(2),()=>irEtapa(4));
+
+  const itens=$('itens');
+  const abas=document.createElement('div');
+  abas.id='secTabs';
+  abas.className='section-tabs';
+  abas.setAttribute('role','tablist');
+  const rotulo=document.createElement('div');
+  rotulo.id='secLabel';
+  rotulo.className='section-label';
+  itens.before(abas,rotulo);
+
+  const navChecklist=document.createElement('div');
+  navChecklist.className='nav checklist-nav';
+  navChecklist.append(botaoNavegacao('← Anterior',anteriorChecklist));
+  const progresso=document.createElement('span');
+  progresso.id='secProgress';
+  progresso.className='hint section-progress';
+  navChecklist.append(progresso,botaoNavegacao('Próximo →',proximoChecklist,'primary'));
+  itens.after(navChecklist);
+
+  const resumo=document.createElement('div');
+  resumo.className='card';
+  prepararEtapa(resumo,5,TITULOS_ETAPAS[5]);
+  const pills=checklist.querySelector('.pills');
+  const verdict=$('verdict');
+  const exportNav=Array.from(checklist.querySelectorAll('.nav')).find(n=>n.querySelector('#btnPdf'));
+  const pendentes=document.createElement('span');
+  pendentes.className='pill p-pend';
+  pendentes.innerHTML='Pendências: <b id="cPend">0</b>';
+  pills.append(pendentes);
+  resumo.append(pills,verdict);
+  const abrirPendencias=botaoNavegacao('Ver pendências',verPendencias,'pending-button');
+  abrirPendencias.id='btnPend';
+  resumo.append(abrirPendencias);
+  exportNav.classList.add('summary-nav');
+  exportNav.prepend(botaoNavegacao('← Anterior',()=>irEtapa(4)));
+  resumo.append(exportNav);
+  const foot=wrap.querySelector('.foot');
+  wrap.insertBefore(resumo,foot||null);
+}
+
 function render(){
-  const alvo = $('itens'); alvo.innerHTML='';
-  let cat='';
-  CFG.itens.forEach(it=>{
-    if (it.g !== cat){ cat = it.g; const h=document.createElement('div'); h.className='cat'; h.textContent=cat; alvo.appendChild(h); }
+  const alvo=$('itens'); alvo.innerHTML='';
+  const categorias=categoriasAtivas();
+  if(categorias.indexOf(categoriaAtiva)===-1) categoriaAtiva=categorias[0]||'';
+  const tabs=$('secTabs');
+  if(tabs){
+    tabs.innerHTML=categorias.map((cat,i)=>`<button type="button" class="section-tab${cat===categoriaAtiva?' active':''}" role="tab" aria-selected="${cat===categoriaAtiva}" data-index="${i}">${i+1}. ${esc(cat)}</button>`).join('');
+    tabs.querySelectorAll('.section-tab').forEach(b=>{ b.onclick=()=>irCategoria(Number(b.dataset.index)); });
+  }
+  if($('secLabel')) $('secLabel').innerHTML=categoriaAtiva?`Seção <b>${categorias.indexOf(categoriaAtiva)+1}</b> de <b>${categorias.length}</b> — ${esc(categoriaAtiva)}`:'Nenhum critério aplicável para os filtros atuais.';
+  if($('secProgress')) $('secProgress').textContent=categoriaAtiva?`Seção ${categorias.indexOf(categoriaAtiva)+1} de ${categorias.length}`:'';
+  ativos().filter(it=>it.g===categoriaAtiva).forEach(it=>{
     const d=document.createElement('div');
-    d.className='crit'+(visivel(it)?'':' off');
+    d.className='crit';
     d.id='c-'+it.id;
     const tags = `<span class="tag ${it.c==='OB'?'t-ob':'t-r'}">${it.c==='OB'?'Obrigatório':'Recomendado'}</span>`
       + (it.fin.length?`<span class="tag t-f">${it.fin.join(' / ')}</span>`:'')
@@ -62,6 +186,44 @@ function render(){
   resumo();
 }
 
+function irCategoria(indice){
+  const categorias=categoriasAtivas();
+  categoriaAtiva=categorias[indice]||categorias[0]||'';
+  render();
+  const checklist=document.querySelector('.step[data-step="4"]');
+  if(checklist) checklist.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function proximoChecklist(){
+  const categorias=categoriasAtivas();
+  const indice=categorias.indexOf(categoriaAtiva);
+  if(indice<categorias.length-1) irCategoria(indice+1);
+  else irEtapa(5);
+}
+
+function anteriorChecklist(){
+  const categorias=categoriasAtivas();
+  const indice=categorias.indexOf(categoriaAtiva);
+  if(indice>0) irCategoria(indice-1);
+  else irEtapa(3);
+}
+
+function irEtapa(numero){
+  etapa=Math.max(1,Math.min(5,numero));
+  document.querySelectorAll('.step').forEach(card=>card.classList.toggle('active',Number(card.dataset.step)===etapa));
+  document.querySelectorAll('.step-dot').forEach(dot=>{
+    const n=Number(dot.dataset.step);
+    dot.classList.toggle('active',n===etapa);
+    dot.classList.toggle('done',n<etapa);
+    dot.setAttribute('aria-current',n===etapa?'step':'false');
+  });
+  if($('curNum')) $('curNum').textContent=etapa;
+  if($('curTitle')) $('curTitle').textContent=TITULOS_ETAPAS[etapa];
+  if(etapa===4) render();
+  if(etapa===5) resumo();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
 function setStatus(id,v){ st[id]=st[id]||{s:'—',o:''}; st[id].s=v; aplicar(id); resumo(); }
 
 function aplicar(id){
@@ -73,7 +235,30 @@ function aplicar(id){
   o.placeholder = req ? 'Justificativa obrigatória' : 'Observação (opcional)';
 }
 
-function ativos(){ return CFG.itens.filter(visivel); }
+function pendentes(){
+  return ativos().filter(it=>{
+    const atual=st[it.id]||{s:'—',o:''};
+    const semResposta=!atual.s||atual.s==='—';
+    const semJustificativa=EXIGE_JUST.indexOf(atual.s)>-1 && !(atual.o||'').trim();
+    return semResposta||semJustificativa;
+  });
+}
+
+function verPendencias(){
+  const primeira=pendentes()[0];
+  if(!primeira) return;
+  categoriaAtiva=primeira.g;
+  irEtapa(4);
+  window.setTimeout(()=>{
+    const card=$('c-'+primeira.id);
+    if(!card) return;
+    card.classList.add('attention');
+    card.scrollIntoView({behavior:'smooth',block:'center'});
+    const controle=card.querySelector((st[primeira.id]||{}).s==='—'?'.status':'.obs');
+    if(controle) controle.focus();
+    window.setTimeout(()=>card.classList.remove('attention'),3500);
+  },80);
+}
 
 function resumo(){
   const its=ativos();
@@ -83,6 +268,9 @@ function resumo(){
   $('cTot').textContent=its.length; $('cOk').textContent=g('Atende');
   $('cNo').textContent=g('Não atende'); $('cNa').textContent=g('Não se aplica');
   if($('cIf')) $('cIf').textContent=g('Informação insuficiente');
+  const listaPendentes=pendentes();
+  if($('cPend')) $('cPend').textContent=listaPendentes.length;
+  if($('btnPend')) $('btnPend').disabled=listaPendentes.length===0;
   const obNo=ob.filter(i=>(st[i.id]||{}).s==='Não atende').length;
   const obNa=ob.filter(i=>(st[i.id]||{}).s==='Não se aplica').length;
   const obPend=ob.filter(i=>!(st[i.id]||{}).s||(st[i.id]||{}).s==='—').length;
@@ -97,7 +285,7 @@ function resumo(){
     v.textContent=`CONFORME COM RESSALVA — ${obNa} item(ns) obrigatório(s) assinalado(s) como Não se aplica, com justificativa, a ser avaliada pela CEUA.`; }
   else { v.style.background='#dcfce7'; v.style.color='#166534';
     v.textContent='CONFORME — todos os itens obrigatórios aplicáveis foram atendidos.'; }
-  return {semJust:semJust.length};
+  return {semJust:semJust.length,pendentes:listaPendentes.length};
 }
 
 function dados(){
@@ -157,10 +345,12 @@ function exportarXLSX(){
 }
 
 window.addEventListener('DOMContentLoaded',()=>{
+  montarFluxo();
   $('purpose').onchange=render;
   if($('subsel')) $('subsel').onchange=render;
   $('btnPdf').onclick=exportarPDF;
   $('btnXls').onclick=exportarXLSX;
   render();
+  irEtapa(1);
 });
 })();
