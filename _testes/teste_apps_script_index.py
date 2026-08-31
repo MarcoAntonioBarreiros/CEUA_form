@@ -64,17 +64,26 @@ def test_index() -> None:
 
 def test_engine_static() -> str:
     source = ENGINE.read_text(encoding="utf-8")
-    active_forms = [path for path in (ROOT / "ciuca").glob("*.html") if path.name != "index.html"]
-    active_source = "\n".join(path.read_text(encoding="utf-8") for path in active_forms)
+    coordinator_forms = [
+        path for path in (ROOT / "ciuca").glob("*.html")
+        if path.name != "index.html" and not path.name.startswith("parecerista-")
+    ]
+    reviewer_forms = list((ROOT / "ciuca").glob("parecerista-*.html"))
+    coordinator_source = "\n".join(path.read_text(encoding="utf-8") for path in coordinator_forms)
+    reviewer_source = "\n".join(path.read_text(encoding="utf-8") for path in reviewer_forms)
     expected_url = "https://script.google.com/macros/s/AKfycbw9PB2XNSFrX42tQfgnnfXzlW3J8VFweVydGTJzdMSeL3fTwe472lu9qpughGQsu4UQ4A/exec"
     check(expected_url in source, "CIUCA_APPS_SCRIPT_URL do fluxo original foi preservada")
     check("const SEI_DESTINO = 'UFPR / R / PL / CEUA'" in source, "destino SEI do fluxo original foi preservado")
     check("Registrar dados no Google Sheet e gerar PDF para SEI" in source,
           "botão único de registro no Google Sheet e PDF para SEI está presente")
-    check(active_source.count('id="btnRegistrarPdf"') == 20,
-          "todos os formulários ativos possuem somente o botão integrado")
-    check(not any(term in active_source for term in ["Exportar Excel", "btnXls", "xlsx.full.min.js", 'id="btnPdf"', ">Exportar PDF<"]),
-          "não há exportação Excel nem PDF independente nos formulários ativos")
+    check(coordinator_source.count('id="btnRegistrarPdf"') == 10,
+          "os dez formulários de coordenador possuem o botão integrado")
+    check(not any(term in coordinator_source for term in ["Exportar Excel", "btnXls", "xlsx.full.min.js", 'id="btnPdf"', ">Exportar PDF<"]),
+          "coordenadores não possuem exportação Excel nem PDF independente")
+    check(all('src="assets/parecerista-engine.js"' in path.read_text(encoding="utf-8") for path in reviewer_forms),
+          "pareceristas usam o fluxo técnico próprio")
+    check('src="assets/engine.js"' not in reviewer_source,
+          "pareceristas não executam o fluxo Apps Script do coordenador")
     check(source.index("arquivo=montarPDF()") < source.index("const registrado=await registrarDados(fetchImpl)") <
           source.index("arquivo.doc.save(arquivo.nome)"),
           "PDF é preparado antes do registro e baixado somente após o Apps Script")

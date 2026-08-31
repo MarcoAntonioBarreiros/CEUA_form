@@ -5,95 +5,16 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700;800;900&display=swap">
 <link rel="stylesheet" href="assets/form.css">
+<link rel="stylesheet" href="assets/parecerista.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head><body>
-<div class="wrap">
-
-<div class="card"><div class="top">
-  <div style="display:flex;gap:12px;align-items:center">
-    <div class="logo">CEUA</div>
-    <div><div class="eyebrow">UFPR Setor Palotina</div>
-      <div class="title">Parecer — Suínos</div>
-      <div class="sub">RN 66/2023 · 18 critérios</div></div>
-  </div>
-  <div class="badge">Parecer do relator</div>
-</div></div>
-
-<div class="card">
-  <h2>1. Instituição</h2>
-  <div class="grid g3">
-    <div><label class="lbl">Instituição</label><input class="fi" id="inst"></div>
-    <div><label class="lbl">CNPJ</label><input class="fi" id="cnpj"></div>
-    <div><label class="lbl">CEUA vinculada</label><input class="fi" id="ceua"></div>
-    <div style="grid-column:span 2"><label class="lbl">Endereço</label><input class="fi" id="addr"></div>
-    <div><label class="lbl">Município / UF</label><input class="fi" id="city"></div>
-    <div style="grid-column:span 3"><label class="lbl">E-mail institucional da instalação</label><input class="fi" id="mail"></div>
-  </div>
-</div>
-
-<div class="card">
-  <h2>2. Instalação</h2>
-  <p class="hint">A finalidade filtra os critérios que a norma restringe a determinado tipo de instalação.</p>
-  <div class="grid g3">
-    <div style="grid-column:span 2"><label class="lbl">Nome / identificação</label><input class="fi" id="unit"></div>
-    <div><label class="lbl">Finalidade</label><select class="fi" id="purpose">
-      <option>Produção/criação</option><option>Manutenção</option><option>Utilização</option>
-      <option>Produção/criação + Manutenção</option><option>Produção/criação + Utilização</option>
-      <option>Manutenção + Utilização</option><option>Produção/criação + Manutenção + Utilização</option></select></div>
-    <div><label class="lbl">Situação</label><select class="fi" id="situation">
-      <option>Em funcionamento</option><option>Nova / em implantação</option><option>Em adequação</option></select></div>
-    
-    <div style="grid-column:span 3"><label class="lbl">Espécie(s) / grupo abrangido(s)</label><input class="fi" id="animalDetail"></div>
-    <div><label class="lbl">Campus</label><input class="fi" id="campus"></div>
-    <div><label class="lbl">Prédio</label><input class="fi" id="building"></div>
-    <div><label class="lbl">Sala / setor</label><input class="fi" id="room"></div>
-    <div><label class="lbl">Área (m²)</label><input class="fi" id="area"></div>
-    <div><label class="lbl">Capacidade</label><input class="fi" id="cap"></div>
-  </div>
-</div>
-
-<div class="card">
-  <h2>3. Coordenador e Responsável Técnico</h2>
-  <div class="grid g4">
-    <div style="grid-column:span 2"><label class="lbl">Coordenador da instalação</label><input class="fi" id="coord"></div>
-    <div><label class="lbl">CPF</label><input class="fi" id="coordCpf"></div>
-    <div><label class="lbl">E-mail</label><input class="fi" id="coordMail"></div>
-    <div style="grid-column:span 2"><label class="lbl">Responsável Técnico (médico-veterinário)</label><input class="fi" id="rt"></div>
-    <div><label class="lbl">CPF do RT</label><input class="fi" id="rtCpf"></div>
-    <div><label class="lbl">E-mail do RT</label><input class="fi" id="rtMail"></div>
-    <div><label class="lbl">CRMV</label><input class="fi" id="crmv"></div>
-    <div><label class="lbl">UF do CRMV</label><input class="fi" id="crmvUf"></div>
-  </div>
-</div>
-
-<div class="card">
-  <h2>4. Critérios</h2>
-  <div class="info"><b>Obrigatório</b> é o que a Portaria MCTI 9.037/2025, art. 3º, exige para licenciar.
-  <b>Recomendado</b> não bloqueia a licença. <b>Não se aplica</b> é permitido, inclusive em item obrigatório
-  materialmente inaplicável, e exige justificativa — sem ela, a exportação fica bloqueada.
-  Cada critério mostra a Resolução e o dispositivo de onde vem.</div>
-  <div class="pills">
-    <span class="pill p-d">Critérios ativos: <b id="cTot">0</b></span>
-    <span class="pill p-ok">Atende: <b id="cOk">0</b></span>
-    <span class="pill p-no">Não atende: <b id="cNo">0</b></span>
-    <span class="pill p-if">Informação insuficiente: <b id="cIf">0</b></span>
-    <span class="pill p-na">Não se aplica: <b id="cNa">0</b></span>
-  </div>
-  <div id="verdict" class="verdict">EM PREENCHIMENTO</div>
-  <div id="itens"></div>
-  <div class="nav">
-    <button class="btn primary" id="btnRegistrarPdf">Registrar dados no Google Sheet e gerar PDF para SEI</button>
-  </div>
-</div>
-
-<div class="foot">Gerado a partir da planilha de critérios das RNs CONCEA. O texto oficial vigente prevalece.</div>
-</div>
+<div class="wrap"><div class="card"><p>Carregando ficha técnica do parecerista…</p></div></div>
 
 <script>
 const CFG = { grupo:'Suínos', slug:'suinos', rn:'RN 66/2023', modo:'parecerista',
   itens: [{"rn": "RN 66/2023", "d": "art. 2º, I, \"a\"", "g": "Infraestrutura", "c": "OB", "fin": ["criação"], "sub": "", "cond": "", "t": "área para recepção de animais em instalação de criação", "n": "", "id": "rn-66-2023-art-2o-i-a"}, {"rn": "RN 66/2023", "d": "art. 2º, I, \"b\"", "g": "Infraestrutura", "c": "OB", "fin": ["criação"], "sub": "", "cond": "", "t": "área de quarentena em instalação de criação", "n": "", "id": "rn-66-2023-art-2o-i-b"}, {"rn": "RN 66/2023", "d": "art. 2º, I, \"c\"", "g": "Infraestrutura", "c": "OB", "fin": [], "sub": "", "cond": "", "t": "área específica para eutanásia", "n": "", "id": "rn-66-2023-art-2o-i-c"}, {"rn": "RN 66/2023", "d": "art. 2º, I, \"d\"", "g": "Infraestrutura", "c": "OB", "fin": [], "sub": "", "cond": "", "t": "local para descarte de carcaças de acordo com as especificações do Guia Brasileiro do CONCEA", "n": "", "id": "rn-66-2023-art-2o-i-d"}, {"rn": "RN 66/2023", "d": "art. 2º, I, \"e\"", "g": "Infraestrutura", "c": "OB", "fin": [], "sub": "", "cond": "", "t": "depósito exclusivo para ração e forragem", "n": "", "id": "rn-66-2023-art-2o-i-e"}, {"rn": "RN 66/2023", "d": "art. 2º, I, \"f\"", "g": "Infraestrutura", "c": "OB", "fin": [], "sub": "", "cond": "", "t": "ração e forragem armazenadas sem contato com o piso ou paredes", "n": "", "id": "rn-66-2023-art-2o-i-f"}, {"rn": "RN 66/2023", "d": "art. 2º, I, \"g\"", "g": "Infraestrutura", "c": "OB", "fin": [], "sub": "", "cond": "", "t": "depósito de resíduos isolado das demais áreas", "n": "", "id": "rn-66-2023-art-2o-i-g"}, {"rn": "RN 66/2023", "d": "art. 2º, I, \"h\"", "g": "Infraestrutura", "c": "OB", "fin": [], "sub": "", "cond": "", "t": "depósito de produtos químicos e medicamentos", "n": "", "id": "rn-66-2023-art-2o-i-h"}, {"rn": "RN 66/2023", "d": "art. 2º, I, \"i\"", "g": "Infraestrutura", "c": "OB", "fin": [], "sub": "", "cond": "", "t": "instalações que promovam a segurança e o bem-estar dos animais, de acordo com as especificações do Guia Brasileiro do CONCEA", "n": "", "id": "rn-66-2023-art-2o-i-i"}, {"rn": "RN 66/2023", "d": "art. 2º, I, \"j\"", "g": "Infraestrutura", "c": "OB", "fin": [], "sub": "", "cond": "", "t": "instalações para confinamento, semiconfinamento e manejo geral com piso de material antiderrapante", "n": "", "id": "rn-66-2023-art-2o-i-j"}, {"rn": "RN 66/2023", "d": "art. 2º, I, \"k\"", "g": "Infraestrutura", "c": "OB", "fin": [], "sub": "", "cond": "", "t": "paredes, pisos e tetos de materiais que possibilitem a higienização e desinfecção", "n": "", "id": "rn-66-2023-art-2o-i-k"}, {"rn": "RN 66/2023", "d": "art. 2º, I, \"l\"", "g": "Infraestrutura", "c": "OB", "fin": [], "sub": "", "cond": "exceto casos autorizados pela CEUA ou condições clínicas", "t": "contato físico ou visual entre indivíduos da mesma espécie, exceto em casos autorizados pela CEUA ou devido a condições clínicas", "n": "", "id": "rn-66-2023-art-2o-i-l"}, {"rn": "RN 66/2023", "d": "art. 2º, I, \"m\"", "g": "Infraestrutura", "c": "OB", "fin": [], "sub": "", "cond": "", "t": "dimensionamento dos alojamentos das espécies de acordo com as especificações do Guia Brasileiro do CONCEA", "n": "", "id": "rn-66-2023-art-2o-i-m"}, {"rn": "RN 66/2023", "d": "art. 2º, I, \"n\"", "g": "Infraestrutura", "c": "OB", "fin": [], "sub": "", "cond": "suínos geneticamente modificados", "t": "áreas de alojamento e manejo de suínos geneticamente modificados separadas fisicamente das áreas de alojamento dos outros animais, com acesso restrito", "n": "", "id": "rn-66-2023-art-2o-i-n"}, {"rn": "RN 66/2023", "d": "art. 3º, I", "g": "Infraestrutura", "c": "R", "fin": [], "sub": "", "cond": "", "t": "área administrativa", "n": "", "id": "rn-66-2023-art-3o-i"}, {"rn": "RN 66/2023", "d": "art. 2º, II, \"a\"", "g": "Procedimentos", "c": "OB", "fin": [], "sub": "", "cond": "exceto se justificado", "t": "enriquecimento ambiental, exceto se justificado", "n": "", "id": "rn-66-2023-art-2o-ii-a"}, {"rn": "RN 66/2023", "d": "art. 2º, II, \"b\"", "g": "Procedimentos", "c": "OB", "fin": [], "sub": "", "cond": "", "t": "gerenciamento de resíduos sólidos de acordo com a legislação vigente", "n": "", "id": "rn-66-2023-art-2o-ii-b"}, {"rn": "RN 66/2023", "d": "art. 3º, II", "g": "Procedimentos", "c": "R", "fin": [], "sub": "", "cond": "", "t": "Procedimentos Operacionais Padrão (POPs)", "n": "", "id": "rn-66-2023-art-3o-ii"}] };
 </script>
-<script src="assets/defaults.js"></script>
 <script src="assets/parecerista-parametros.js"></script>
-<script src="assets/engine.js"></script>
+<script src="assets/parecerista-config.js"></script>
+<script src="assets/parecerista-engine.js"></script>
 </body></html>
