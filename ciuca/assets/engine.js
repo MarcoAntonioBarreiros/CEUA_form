@@ -348,7 +348,7 @@ function dados(){
     instalacao,
     responsaveis:{'Coordenador da instalação':g('coord'),'CPF':g('coordCpf'),'E-mail':g('coordMail'),
       'Responsável Técnico':g('rt'),'CPF do RT':g('rtCpf'),'CRMV':g('crmv'),'UF do CRMV':g('crmvUf'),'E-mail do RT':g('rtMail')},
-    itens: ativos().map(i=>({rn:i.rn,dispositivo:i.d,classificacao:i.c==='OB'?'Obrigatório':'Recomendado',
+    itens: ativos().map(i=>({rn:i.rn,dispositivo:i.d,categoria:i.g,classificacao:i.c==='OB'?'Obrigatório':'Recomendado',
       finalidade:i.fin.join(' / ')||'todas',subgrupo:i.sub||'',condicao:i.cond||'',criterio:i.t,
       status:(st[i.id]||{}).s||'—',justificativa:(st[i.id]||{}).o||''}))
   };
@@ -473,29 +473,71 @@ function bloqueado(){
 
 function montarPDF(){
   if(!window.jspdf||typeof window.jspdf.jsPDF!=='function') throw new Error('a biblioteca jsPDF 2.5.1 não foi carregada pelo navegador');
-  const d=dados(), {jsPDF}=window.jspdf, doc=new jsPDF({unit:'pt',format:'a4'});
-  let y=44; const M=40, W=515;
-  const linha=(t,sz,bold,cor)=>{ doc.setFont('helvetica',bold?'bold':'normal'); doc.setFontSize(sz);
-    doc.setTextColor(cor||'#0F2F32');
-    doc.splitTextToSize(t,W).forEach(l=>{ if(y>790){doc.addPage();y=44;} doc.text(l,M,y); y+=sz+3; }); };
-  linha(`CEUA UFPR Palotina — Instalação animal: ${d.meta.grupo}`,13,true);
-  linha(`${d.meta.rn} · ${MODO==='parecerista'?'Parecer técnico':'Cadastro do coordenador'} · ${d.meta.emitido}`,8,false,'#64748b'); y+=6;
-  [['Instituição',d.instituicao],['Instalação',d.instalacao],['Responsáveis',d.responsaveis]].forEach(([t,o])=>{
-    linha(t,10,true); Object.entries(o).forEach(([k,v])=>linha(`${k}: ${v||'—'}`,8.5)); y+=6; });
-  linha('Critérios avaliados',10,true);
+  const d=dados(), {jsPDF}=window.jspdf, doc=new jsPDF('p','mm','a4');
+  const ML=14, MR=196, CW=182;
+  let y=16;
+  const ckpg=h=>{ if(y+h>282){ doc.addPage(); y=16; } };
+  const sec=t=>{
+    ckpg(10); doc.setFillColor(22,69,73); doc.rect(ML,y-4,CW,6,'F');
+    doc.setTextColor(255,255,255); doc.setFont('helvetica','bold'); doc.setFontSize(8);
+    doc.text(t,ML+2,y); y+=7;
+  };
+  const kv=(k,val)=>{
+    ckpg(7); doc.setTextColor(100,116,139); doc.setFont('helvetica','bold'); doc.setFontSize(7.4);
+    const kl=doc.splitTextToSize(`${k}:`,50); doc.text(kl,ML,y);
+    doc.setTextColor(30,41,59); doc.setFont('helvetica','normal');
+    const vl=doc.splitTextToSize(String(val||'—'),128); doc.text(vl,ML+52,y);
+    y+=Math.max(5,Math.max(kl.length,vl.length)*4);
+  };
+  doc.setFillColor(22,69,73); doc.rect(0,0,210,12,'F');
+  doc.setTextColor(255,255,255); doc.setFont('helvetica','bold'); doc.setFontSize(10);
+  doc.text('UFPR · CEUA Palotina — Cadastro de Instalação Animal (CIUCA)',ML,7);
+  doc.setFontSize(7); doc.setFont('helvetica','normal');
+  doc.text(`${d.meta.grupo} · ${d.meta.rn} · ${MODO==='parecerista'?'Parecer técnico':'Cadastro do coordenador'}`,ML,10.5);
+  y=18;
+  sec('1. IDENTIFICAÇÃO INSTITUCIONAL E VÍNCULO CIUCA');
+  Object.entries(d.instituicao).forEach(([k,val])=>kv(k,val));
+  sec('2. DADOS DA INSTALAÇÃO');
+  Object.entries(d.instalacao).forEach(([k,val])=>kv(k,val));
+  sec('3. COORDENADOR E RESPONSÁVEL TÉCNICO');
+  Object.entries(d.responsaveis).forEach(([k,val])=>kv(k,val));
+  sec('4. CHECKLIST');
+  kv('Critérios ativos',String(d.itens.length));
+  let categoria='';
   d.itens.forEach(i=>{
-    const cor = i.status==='Atende'?'#166534' : i.status==='Não atende'?'#991b1b' : i.status==='—'?'#94a3b8':'#92400e';
-    linha(`${i.rn} · ${i.dispositivo} — ${i.classificacao}`,7.5,true,'#2A7B88');
-    linha(i.criterio,8.5);
-    linha(`Situação: ${i.status}` + (i.justificativa?`  |  Justificativa: ${i.justificativa}`:''),8.5,false,cor);
-    y+=3;
+    if(i.categoria!==categoria){
+      categoria=i.categoria; ckpg(8); doc.setFillColor(225,244,246); doc.rect(ML,y-3,CW,5,'F');
+      doc.setTextColor(22,69,73); doc.setFont('helvetica','bold'); doc.setFontSize(7);
+      doc.text(String(categoria||'Critérios').toUpperCase().slice(0,90),ML+1,y); y+=6;
+    }
+    const referencia=`${i.rn} · ${i.dispositivo}`;
+    const criterio=doc.splitTextToSize(i.criterio,CW-10);
+    const justificativa=i.justificativa?doc.splitTextToSize(`Justificativa/observação: ${i.justificativa}`,CW-10):[];
+    ckpg(7+criterio.length*3.5+justificativa.length*3.5);
+    doc.setTextColor(42,123,136); doc.setFont('helvetica','bold'); doc.setFontSize(7);
+    doc.text(referencia,ML+2,y);
+    doc.setTextColor(100,116,139);
+    doc.text(`${i.classificacao} · ${i.status==='—'?'não avaliado':i.status}`,MR-2,y,{align:'right'}); y+=4;
+    doc.setTextColor(30,41,59); doc.setFont('helvetica','normal'); doc.text(criterio,ML+2,y); y+=criterio.length*3.5+1.5;
+    if(justificativa.length){
+      doc.setTextColor(146,64,14); doc.setFont('helvetica','italic'); doc.text(justificativa,ML+2,y);
+      y+=justificativa.length*3.5+1.5;
+    }
   });
-  y+=6; linha($('verdict').textContent,9,true);
-  y+=8; linha('Tramitação no SEI',10,true);
-  linha(`Destino SEI: ${SEI_DESTINO}`,8.5);
-  linha('Anexar este PDF assinado pelo coordenador da instalação e pelo responsável técnico, com despacho solicitando avaliação da CEUA e encaminhamento para cadastro ou regularização no CIUCA.',8.5);
-  y+=12; linha('Assinatura do coordenador da instalação: __________________________________________',8.5,true);
-  y+=8; linha('Assinatura do responsável técnico: ______________________________________________',8.5,true);
+  const respondidos=d.itens.filter(i=>i.status!=='—').length;
+  const obrigatorios=d.itens.filter(i=>i.classificacao==='Obrigatório');
+  const recomendados=d.itens.filter(i=>i.classificacao==='Recomendado');
+  sec('RESUMO');
+  kv('Critérios respondidos',`${respondidos} de ${d.itens.length}`);
+  kv('Obrigatórios atendidos',`${obrigatorios.filter(i=>i.status==='Atende').length} de ${obrigatorios.length}`);
+  kv('Recomendados atendidos',`${recomendados.filter(i=>i.status==='Atende').length} de ${recomendados.length}`);
+  kv('Situação geral',$('verdict').textContent);
+  sec('TRAMITAÇÃO NO SEI');
+  kv('Destino SEI',SEI_DESTINO);
+  kv('Orientação','Abrir processo SEI e encaminhar para UFPR / R / PL / CEUA com este PDF assinado pelo coordenador da instalação e pelo responsável técnico, acompanhado de despacho solicitando avaliação da CEUA e encaminhamento para cadastro ou regularização no CIUCA.');
+  y+=8; ckpg(28); doc.setTextColor(30,41,59); doc.setFont('helvetica','bold'); doc.setFontSize(8);
+  doc.text('ASSINATURA DO COORDENADOR DA INSTALAÇÃO:',ML,y); doc.line(ML+65,y+1,MR,y+1); y+=12;
+  doc.text('ASSINATURA DO RESPONSÁVEL TÉCNICO:',ML,y); doc.line(ML+58,y+1,MR,y+1);
   return {doc,nome:`CIUCA_${d.meta.slug}_${MODO}_${new Date().toISOString().slice(0,10)}.pdf`};
 }
 

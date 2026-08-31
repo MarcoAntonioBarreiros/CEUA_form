@@ -85,7 +85,7 @@ def test_engine_static() -> str:
           "if(estado.pendentes)" not in source,
           "campos iniciais e obrigatórios são validados sem bloquear recomendações em branco")
     check("instalacao['Espécie / subgrupo selecionado']=g('subsel')" in source and
-          "Object.entries(o).forEach(([k,v])=>linha(`${k}: ${v||'—'}`,8.5))" in source,
+          "Object.entries(d.instalacao).forEach(([k,val])=>kv(k,val))" in source,
           "PDF inclui o subgrupo selecionado e todos os dados iniciais")
     check("catch(erro)" in source and "showStatus('error','Erro ao registrar dados:" in source,
           "falha de rede possui tratamento e mensagem controlada")
@@ -110,6 +110,7 @@ def test_engine_runtime(source: str) -> None:
 const vm=require('vm');
 const events=[];
 const pdfText=[];
+let pdfRects=0;
 const elements={{
   purpose:{{value:'Utilização',classList:{{toggle:()=>{{}}}},setAttribute:()=>{{}}}}, cTot:{{}}, cOk:{{}}, cNo:{{}}, cNa:{{}}, cPend:{{}}, btnPend:{{}},
   verdict:{{textContent:'EM PREENCHIMENTO',style:{{}}}}, statusBox:{{textContent:'',style:{{}}}}
@@ -124,7 +125,7 @@ const document={{
   readyState:'loading'
 }};
 class FakePDF{{
-  setFont(){{}} setFontSize(){{}} setTextColor(){{}} addPage(){{}} text(t){{pdfText.push(String(t))}}
+  setFont(){{}} setFontSize(){{}} setTextColor(){{}} setFillColor(){{}} addPage(){{}} line(){{}} rect(){{pdfRects++}} text(t){{pdfText.push(String(t))}}
   splitTextToSize(t){{return [String(t)]}}
   save(){{events.push('pdf')}}
 }}
@@ -146,6 +147,7 @@ vm.runInContext({json.dumps(exposed)},context);
   const ok=await context.__ciucaTest.registrarEpdf({{type:'click'}});
   if(!ok || events.join(',')!=='fetch,pdf') throw new Error('sequência esperada fetch,pdf; obtida '+events.join(','));
   if(!pdfText.some(t=>t.includes('Coordenador Teste')) || !pdfText.some(t=>t.includes('RT Teste')) || !pdfText.some(t=>t.includes('Cães'))) throw new Error('PDF não contém coordenador, RT e espécie selecionada');
+  if(!pdfText.some(t=>t.includes('UFPR · CEUA Palotina')) || pdfRects<2) throw new Error('PDF não preservou a identidade visual do formulário original');
   elements.coord.value='';
   const before=events.length;
   const missing=await context.__ciucaTest.registrarDados(async()=>{{events.push('envio-indevido')}});
