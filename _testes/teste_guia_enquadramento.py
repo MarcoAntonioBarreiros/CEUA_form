@@ -107,7 +107,7 @@ def main():
     assert "gTaxonChanged(); gIr(1);" in guide, "seleção do táxon deve abrir o diagnóstico"
     assert "gTaxonChanged(); gIr(2);" not in guide, "seleção do táxon não pode pular o diagnóstico"
 
-    iframe_pos = index.find('src="guia-enquadramento.html"')
+    iframe_pos = index.find('src="guia-enquadramento.html?v=2"')
     forms_pos = index.find("Formulários de cadastro / levantamento")
     assert iframe_pos >= 0, "Guia não incorporado no índice"
     assert forms_pos >= 0 and iframe_pos < forms_pos, "Guia deve vir antes dos formulários"
