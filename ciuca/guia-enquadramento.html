@@ -533,7 +533,7 @@ function gIr(i){
   gTAXONS.forEach(tx=>{
     const m=gMAT[tx], b=document.createElement('button');
     b.className='g-chip'+(m.onda===2?' amb':''); b.textContent=tx;
-    b.onclick=()=>{ gRESUMO.taxon=tx; document.getElementById('gTx').value=tx; gTaxonChanged(); gIr(2); };
+    b.onclick=()=>{ gRESUMO.taxon=tx; document.getElementById('gTx').value=tx; gTaxonChanged(); gIr(1); };
     document.getElementById(m.onda===1?'gChips1':'gChips2').appendChild(b);
   });
 })();

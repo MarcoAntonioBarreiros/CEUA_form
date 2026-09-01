@@ -104,6 +104,8 @@ def main():
     assert "function gItemAtivo" in guide
     assert "gSubWrap" in guide
     assert "gMk1.style" not in guide
+    assert "gTaxonChanged(); gIr(1);" in guide, "seleção do táxon deve abrir o diagnóstico"
+    assert "gTaxonChanged(); gIr(2);" not in guide, "seleção do táxon não pode pular o diagnóstico"
 
     iframe_pos = index.find('src="guia-enquadramento.html"')
     forms_pos = index.find("Formulários de cadastro / levantamento")
@@ -117,6 +119,7 @@ def main():
     print("Ressalvas de laboratório <12h e HV/ambulatório — PASSA")
     print("Propriedades externas e material biológico sem animais vivos — PASSA")
     print("Fluxo local CEUA/UFPR e distinção tutor/produtor versus UFPR — PASSA")
+    print("Seleção do táxon abre o diagnóstico antes da matriz — PASSA")
 
 
 if __name__ == "__main__":
