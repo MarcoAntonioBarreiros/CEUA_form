@@ -361,7 +361,7 @@
       </div>
 
     </div>
-    <div class="g-nav"><button class="g-btn" onclick="gIr(0)">Voltar</button><button class="g-btn pri" onclick="gIr(2)">Continuar</button></div>
+    <div class="g-nav"><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="g-btn" onclick="gIr(0)">Voltar</button><button class="g-btn" onclick="gQuizReset()">Refazer diagnóstico</button></div><button class="g-btn pri" onclick="gIr(2)">Continuar</button></div>
   </div>
 </div>
 
@@ -507,6 +507,7 @@ function gMontarSteps(){
 }
 function gIr(i){
   gPasso = Math.max(0, Math.min(gPassos.length-1, i));
+  if(gPasso===1) gQuizReset();
   gPassos.forEach((p,k)=>p.classList.toggle('on', k===gPasso));
   gMontarSteps();
   if (gPasso === gPassos.length-1) gResumo();
@@ -541,10 +542,21 @@ function gIr(i){
 /* ---------- quiz ---------- */
 const gTELAS=['gq1','gq2','gq3','gq3b','gq4','gq5'];
 const gRES=[...document.querySelectorAll('#guia-ceua .g-res')].map(e=>e.id);
+const gFIN_RESULTADO={
+  'gr-criacao':'criação',
+  'gr-manutencao':'manutenção',
+  'gr-experimentacao':'experimentação',
+  'gr-labroed':'experimentação',
+  'gr-laboutro':'experimentação',
+  'gr-terc-fora':'experimentação',
+  'gr-terc-dentro':'experimentação',
+  'gr-hv':'experimentação'
+};
 function gGo(id){
   [...gTELAS,...gRES].forEach(x=>{const e=document.getElementById(x); if(e) e.style.display='none';});
   const alvo=document.getElementById(id); if(alvo) alvo.style.display='block';
   if(id.startsWith('gr-')){
+    gAplicarFinalidade(gFIN_RESULTADO[id] || 'todas');
     gRESUMO.enquadramento = {
       titulo: alvo.querySelector('h4').textContent,
       tag: alvo.querySelector('.g-tag').textContent,
@@ -553,7 +565,7 @@ function gGo(id){
     };
   }
 }
-function gQuizReset(){ gGo('gq1'); gRESUMO.enquadramento=null; }
+function gQuizReset(){ gGo('gq1'); gRESUMO.enquadramento=null; gAplicarFinalidade('todas'); }
 
 /* ---------- matriz ---------- */
 const gSel=document.getElementById('gTx');
@@ -573,10 +585,13 @@ function gItemAtivo(x){
   if(gSel.value!=='Cães e gatos') return true;
   return !x.sub || x.sub===gRESUMO.sub || (gRESUMO.sub==='Cães e gatos' && (x.sub==='Cães' || x.sub==='Gatos'));
 }
-function gSetF(b){
+function gAplicarFinalidade(fin){
   document.querySelectorAll('#gSeg button').forEach(x=>x.classList.remove('on'));
-  b.classList.add('on'); gRESUMO.fin=b.dataset.f; gRender();
+  const b=document.querySelector(`#gSeg button[data-f="${fin}"]`);
+  if(b) b.classList.add('on');
+  gRESUMO.fin=fin; gRender();
 }
+function gSetF(b){ gAplicarFinalidade(b.dataset.f); }
 function gRender(){
   const tx=gSel.value; gRESUMO.taxon=tx;
   const m=gMAT[tx], grid=document.getElementById('gGrid');

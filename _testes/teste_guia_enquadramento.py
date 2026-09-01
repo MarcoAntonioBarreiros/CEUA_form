@@ -106,8 +106,14 @@ def main():
     assert "gMk1.style" not in guide
     assert "gTaxonChanged(); gIr(1);" in guide, "seleção do táxon deve abrir o diagnóstico"
     assert "gTaxonChanged(); gIr(2);" not in guide, "seleção do táxon não pode pular o diagnóstico"
+    assert "if(gPasso===1) gQuizReset();" in guide, "retorno ao passo 2 deve liberar novo diagnóstico"
+    assert "Refazer diagnóstico" in guide
+    assert "'gr-criacao':'criação'" in guide
+    assert "'gr-manutencao':'manutenção'" in guide
+    assert "'gr-experimentacao':'experimentação'" in guide
+    assert "gAplicarFinalidade(gFIN_RESULTADO[id] || 'todas')" in guide
 
-    iframe_pos = index.find('src="guia-enquadramento.html?v=2"')
+    iframe_pos = index.find('src="guia-enquadramento.html?v=3"')
     forms_pos = index.find("Formulários de cadastro / levantamento")
     assert iframe_pos >= 0, "Guia não incorporado no índice"
     assert forms_pos >= 0 and iframe_pos < forms_pos, "Guia deve vir antes dos formulários"
@@ -120,6 +126,7 @@ def main():
     print("Propriedades externas e material biológico sem animais vivos — PASSA")
     print("Fluxo local CEUA/UFPR e distinção tutor/produtor versus UFPR — PASSA")
     print("Seleção do táxon abre o diagnóstico antes da matriz — PASSA")
+    print("Diagnóstico pode ser refeito e define a finalidade da matriz — PASSA")
 
 
 if __name__ == "__main__":
