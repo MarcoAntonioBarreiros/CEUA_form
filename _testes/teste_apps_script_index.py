@@ -50,16 +50,18 @@ def test_index() -> None:
     parser = LinkParser()
     parser.feed(INDEX.read_text(encoding="utf-8"))
     hrefs = [href for href, _ in parser.links]
+    form_hrefs = [href for href in hrefs if href != "guia-enquadramento.html"]
     old = {
         "peixes-i.html",
         "peixes-ii.html",
         "parecerista-peixes-i.html",
         "parecerista-peixes-ii.html",
     }
-    check(len(hrefs) == 20, "index contém 10 formulários de coordenador e 10 de parecerista")
-    check(hrefs.count("peixes.html") == 1, "Peixes aparece uma única vez entre os formulários de coordenador")
-    check(hrefs.count("parecerista-peixes.html") == 1, "Peixes aparece uma única vez entre os formulários de parecerista")
-    check(not old.intersection(hrefs), "index não contém links ativos para Peixes I/II")
+    check(len(form_hrefs) == 20, "index contém 10 formulários de coordenador e 10 de parecerista")
+    check(hrefs.count("guia-enquadramento.html") == 1, "index contém um único link para o guia")
+    check(form_hrefs.count("peixes.html") == 1, "Peixes aparece uma única vez entre os formulários de coordenador")
+    check(form_hrefs.count("parecerista-peixes.html") == 1, "Peixes aparece uma única vez entre os formulários de parecerista")
+    check(not old.intersection(form_hrefs), "index não contém links ativos para Peixes I/II")
     check(all((INDEX.parent / href).is_file() for href in hrefs), "todos os links locais do index são válidos")
 
 

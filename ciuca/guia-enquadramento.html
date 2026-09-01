@@ -1,0 +1,665 @@
+<!doctype html>
+<html lang="pt-br"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Enquadramento e licenciamento de instalações animais — CEUA UFPR Palotina</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700;800;900&display=swap">
+<style>
+/* ===== tudo escopado em #guia-ceua para poder ser colado numa página existente ===== */
+#guia-ceua{--tl:#2A7B88;--tl2:#1D5B64;--ink:#0F2F32;--ln:#D1E9ED;--bg:#E8F4F6;
+  font-family:'DM Sans',Arial,sans-serif;color:var(--ink);line-height:1.5;font-size:16px}
+#guia-ceua *{box-sizing:border-box}
+#guia-ceua .g-wrap{max-width:1000px;margin:0 auto;padding:8px}
+#guia-ceua .g-card{background:#fff;border:1px solid var(--ln);border-radius:16px;
+  box-shadow:0 2px 14px rgba(42,123,136,.07);padding:22px;margin:14px 0}
+#guia-ceua h2{font-size:1.25rem;font-weight:800;margin:0 0 4px;letter-spacing:-.01em}
+#guia-ceua h3{font-size:1rem;font-weight:800;margin:0 0 6px}
+#guia-ceua p{margin:0 0 12px}
+#guia-ceua .g-eyebrow{font-size:.63rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--tl);margin-bottom:4px}
+#guia-ceua .g-hint{font-size:.85rem;color:#64748b;margin-bottom:16px}
+#guia-ceua .g-small{font-size:.8rem;color:#64748b}
+#guia-ceua .g-hidden{display:none}
+#guia-ceua a{color:var(--tl2);font-weight:700}
+
+/* topo */
+#guia-ceua .g-top{display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+#guia-ceua .g-logo{width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,var(--tl),var(--tl2));
+  color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:.75rem}
+#guia-ceua .g-title{font-size:1.1rem;font-weight:800}
+#guia-ceua .g-sub{font-size:.76rem;color:#64748b}
+
+/* passos */
+#guia-ceua .g-steps{display:flex;align-items:center;justify-content:center;margin:6px 0 2px;flex-wrap:nowrap;overflow-x:auto;padding:4px 0}
+#guia-ceua .g-dot{width:34px;height:34px;flex:0 0 34px;border-radius:50%;border:2px solid var(--ln);background:#fff;
+  color:#94a3b8;display:flex;align-items:center;justify-content:center;font-weight:800;cursor:pointer;font-size:.85rem}
+#guia-ceua .g-dot.on{background:linear-gradient(135deg,var(--tl),var(--tl2));border-color:var(--tl);color:#fff}
+#guia-ceua .g-dot.done{background:#4EAAB8;border-color:#4EAAB8;color:#fff}
+#guia-ceua .g-line{height:2px;background:var(--ln);flex:1;min-width:6px;max-width:70px}
+#guia-ceua .g-stepname{text-align:center;font-weight:800;color:var(--tl2);font-size:.85rem;margin-top:6px}
+#guia-ceua .g-step{display:none}
+#guia-ceua .g-step.on{display:block}
+#guia-ceua .g-nav{display:flex;justify-content:space-between;gap:10px;margin-top:18px;flex-wrap:wrap}
+#guia-ceua .g-btn{padding:11px 20px;border-radius:10px;font-weight:800;cursor:pointer;border:1.5px solid var(--ln);
+  background:#fff;color:var(--tl2);font-family:inherit;font-size:.87rem}
+#guia-ceua .g-btn.pri{background:linear-gradient(135deg,var(--tl),var(--tl2));border:0;color:#fff}
+#guia-ceua .g-btn:disabled{opacity:.4;cursor:default}
+
+/* prazos */
+#guia-ceua .g-track{position:relative;height:8px;background:var(--ln);border-radius:6px;margin:54px 0 0}
+#guia-ceua .g-fill{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,var(--tl2),var(--tl));border-radius:6px}
+#guia-ceua .g-mk{position:absolute;top:-6px;width:20px;height:20px;border-radius:50%;background:#fff;border:4px solid var(--tl);transform:translateX(-10px)}
+#guia-ceua .g-mk.late{border-color:#B4801A}
+#guia-ceua .g-mk.now{width:14px;height:14px;top:-3px;border:3px solid #0F2F32;transform:translateX(-7px)}
+#guia-ceua .g-lbl{position:absolute;transform:translateX(-50%);text-align:center;white-space:nowrap;font-size:.78rem;bottom:26px}
+#guia-ceua .g-lbl b{display:block;font-size:.92rem;color:var(--tl2)}
+#guia-ceua .g-lbl.late b{color:#B4801A}
+#guia-ceua .g-lbl.now{bottom:auto;top:20px;font-size:.7rem;font-weight:800;color:#0F2F32}
+#guia-ceua .g-lbl.now::before{content:"";position:absolute;left:50%;top:-12px;width:1px;height:10px;background:#0F2F32}
+#guia-ceua .g-dl2{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:62px}
+#guia-ceua .g-days{font-size:1.6rem;font-weight:800;color:var(--tl2);line-height:1.1}
+#guia-ceua .g-dlcol.late .g-days{color:#B4801A}
+#guia-ceua .g-chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+#guia-ceua .g-chip{background:var(--bg);border:1px solid var(--ln);border-radius:7px;padding:5px 11px;
+  font-size:.78rem;cursor:pointer;font-family:inherit;color:var(--ink)}
+#guia-ceua .g-chip:hover{background:#D9EDF0;border-color:var(--tl)}
+#guia-ceua .g-chip.amb{background:#FDF3E0;border-color:#E8CE95}
+
+/* quiz */
+#guia-ceua .g-quiz{background:#123C40;border-radius:14px;padding:24px;color:#fff}
+#guia-ceua .g-q{font-size:1rem;color:#CFE7EB;margin-bottom:16px}
+#guia-ceua .g-qstep{font-size:.7rem;font-weight:800;color:#6FB3BD;margin-bottom:8px;letter-spacing:.08em;text-transform:uppercase}
+#guia-ceua .g-opts{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(215px,1fr))}
+#guia-ceua .g-opt{background:#1B5257;border:1px solid #2F757E;border-radius:10px;padding:14px 15px;text-align:left;
+  cursor:pointer;color:#fff;font:inherit;transition:background .15s}
+#guia-ceua .g-opt:hover{background:var(--tl)}
+#guia-ceua .g-opt b{display:block;font-size:.88rem;margin-bottom:3px}
+#guia-ceua .g-opt span{font-size:.76rem;color:#B4D8DD}
+#guia-ceua .g-res{background:#0C2B2E;border:1px solid #2F757E;border-radius:10px;padding:20px}
+#guia-ceua .g-res h4{font-size:1.05rem;margin:0 0 9px}
+#guia-ceua .g-res p,#guia-ceua .g-res li{font-size:.87rem;color:#C6E1E5}
+#guia-ceua .g-res ul{margin:0 0 12px;padding-left:19px}
+#guia-ceua .g-res .g-cite{font-size:.74rem;color:#7FB2BA;border-top:1px solid #2F757E;padding-top:11px;margin-top:14px}
+#guia-ceua .g-tag{display:inline-block;font-size:.7rem;font-weight:800;padding:4px 11px;border-radius:6px;margin-bottom:11px}
+#guia-ceua .g-tag.go{background:#9FD3B4;color:#0E3D28}
+#guia-ceua .g-tag.no{background:#A9D4DB;color:#123C40}
+#guia-ceua .g-tag.warn{background:#E8CE95;color:#5A3E08}
+
+/* matriz */
+#guia-ceua .g-ctrl{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end;margin-bottom:16px}
+#guia-ceua .g-lb{display:block;font-size:.66rem;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:#94a3b8;margin-bottom:4px}
+#guia-ceua select{font:inherit;font-size:.87rem;padding:9px 12px;border:1.5px solid var(--ln);border-radius:9px;background:#fff;color:var(--ink);min-width:220px}
+#guia-ceua .g-seg{display:inline-flex;background:#fff;border:1.5px solid var(--ln);border-radius:9px;overflow:hidden}
+#guia-ceua .g-seg button{font:inherit;font-size:.8rem;padding:9px 14px;border:0;background:none;cursor:pointer;color:#3C6B70;border-right:1px solid var(--ln)}
+#guia-ceua .g-seg button:last-child{border-right:0}
+#guia-ceua .g-seg button.on{background:var(--tl);color:#fff;font-weight:800}
+#guia-ceua .g-tally{margin-left:auto;font-size:.83rem;color:#64748b;padding-bottom:9px}
+#guia-ceua .g-tally b{color:var(--tl2)}
+#guia-ceua .g-grp h5{font-size:.72rem;font-weight:800;color:var(--tl);margin:16px 0 8px;padding-bottom:5px;border-bottom:1px solid var(--ln);text-transform:uppercase;letter-spacing:.05em}
+#guia-ceua .g-blocks{display:grid;gap:8px;grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
+#guia-ceua .g-bl{border-radius:10px;padding:11px 13px;font-size:.81rem;line-height:1.38;cursor:help;border:1.5px solid transparent}
+#guia-ceua .g-bl.ob{background:var(--tl);color:#fff;border-color:var(--tl)}
+#guia-ceua .g-bl.re{background:#fff;color:#B4801A;border-color:#E8CE95;border-style:dashed}
+#guia-ceua .g-bl .k{display:block;font-size:.62rem;font-weight:800;opacity:.85;margin-bottom:3px;letter-spacing:.03em}
+#guia-ceua .g-bl.cond{box-shadow:inset 0 0 0 2px #A78BFA}
+#guia-ceua .g-bl.faded{opacity:.22;pointer-events:none}
+#guia-ceua .g-legend{display:flex;gap:16px;flex-wrap:wrap;font-size:.79rem;color:#64748b;margin-bottom:14px;align-items:center}
+#guia-ceua .g-sw{display:inline-block;width:13px;height:13px;border-radius:4px;vertical-align:-2px;margin-right:6px}
+#guia-ceua .g-sw.ob{background:var(--tl)}
+#guia-ceua .g-sw.re{background:#fff;border:1.5px dashed #E8CE95}
+#guia-ceua .g-sw.cd{background:#fff;box-shadow:inset 0 0 0 2px #A78BFA}
+
+/* abas dos tipos */
+#guia-ceua .g-tabs{display:flex;gap:4px;border-bottom:1px solid var(--ln);overflow-x:auto}
+#guia-ceua .g-tabs button{font:inherit;font-size:.83rem;font-weight:800;padding:11px 16px;border:0;background:none;
+  cursor:pointer;color:#64748b;border-bottom:3px solid transparent;white-space:nowrap}
+#guia-ceua .g-tabs button.on{color:var(--tl2);border-bottom-color:var(--tl)}
+#guia-ceua .g-pane{padding:20px 2px 2px}
+#guia-ceua .g-pane.off{display:none}
+#guia-ceua .g-role{font-size:.72rem;font-weight:800;color:var(--tl);margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em}
+#guia-ceua .g-duo{display:grid;gap:12px;grid-template-columns:1fr 1fr;margin-top:14px}
+#guia-ceua .g-mini{background:var(--bg);border:1px solid var(--ln);border-radius:10px;padding:13px 15px;font-size:.83rem}
+#guia-ceua .g-mini b{display:block;color:var(--tl2);margin-bottom:3px;font-size:.79rem}
+
+/* cadeia */
+#guia-ceua .g-chain{display:grid;gap:9px}
+#guia-ceua .g-st{display:flex;gap:13px;background:#fff;border:1px solid var(--ln);border-left:4px solid var(--tl);
+  border-radius:0 10px 10px 0;padding:13px 16px;align-items:flex-start}
+#guia-ceua .g-st .n{flex:0 0 25px;height:25px;border-radius:50%;background:var(--bg);color:var(--tl2);
+  display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.78rem}
+#guia-ceua .g-st b{font-size:.87rem}
+#guia-ceua .g-st p{font-size:.82rem;margin:2px 0 0;color:#64748b}
+
+/* avisos */
+#guia-ceua .g-note{border-radius:10px;padding:14px 16px;font-size:.85rem;margin:14px 0;line-height:1.5}
+#guia-ceua .g-note > b:first-child{display:block;margin-bottom:5px}
+#guia-ceua .g-note.warn{background:#FDF6E7;border:1px solid #E8C88A;color:#6B4A0C}
+#guia-ceua .g-note.stop{background:#FDECEC;border:1px solid #F0B4B4;color:#A03434}
+#guia-ceua .g-note.info{background:var(--bg);border:1px solid var(--ln);color:var(--ink)}
+#guia-ceua .g-note.ok{background:#E6F4EC;border:1px solid #A6D5BA;color:#1D6B4A}
+#guia-ceua .g-note.cond{background:#F5F3FF;border:1px solid #DDD6FE;color:#5b21b6}
+
+/* resumo */
+#guia-ceua .g-sum{border:2px solid var(--tl);border-radius:14px;padding:22px;background:linear-gradient(160deg,#F4FAFB,#fff)}
+#guia-ceua .g-sumrow{display:flex;gap:14px;padding:12px 0;border-bottom:1px solid var(--ln);align-items:flex-start;flex-wrap:wrap}
+#guia-ceua .g-sumrow:last-child{border-bottom:0}
+#guia-ceua .g-sumk{flex:0 0 190px;font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:#94a3b8;padding-top:2px}
+#guia-ceua .g-sumv{flex:1;min-width:220px;font-size:.92rem}
+#guia-ceua .g-sumv b{color:var(--tl2)}
+#guia-ceua .g-todo{margin:0;padding-left:20px;font-size:.88rem}
+#guia-ceua .g-todo li{margin-bottom:7px}
+#guia-ceua .g-big{font-size:1.5rem;font-weight:800;color:var(--tl2);line-height:1.15}
+
+@media(max-width:760px){
+  #guia-ceua .g-dl2,#guia-ceua .g-duo{grid-template-columns:1fr}
+  #guia-ceua .g-track{margin-top:66px}
+  #guia-ceua .g-tally{margin-left:0;width:100%;padding-bottom:0}
+  #guia-ceua select{width:100%}
+  #guia-ceua .g-sumk{flex:0 0 100%}
+}
+@media print{
+  #guia-ceua .g-steps,#guia-ceua .g-nav,#guia-ceua .g-stepname{display:none}
+  #guia-ceua .g-step{display:block!important}
+}
+</style></head>
+<body style="margin:0;background:#E8F4F6">
+
+<div id="guia-ceua"><div class="g-wrap">
+
+<div class="g-card">
+  <div class="g-top">
+    <div style="display:flex;gap:12px;align-items:center">
+      <div class="g-logo">CEUA</div>
+      <div><div class="g-eyebrow">Guia da CEUA/UFPR — Setor Palotina</div>
+        <div class="g-title">Qual caminho usar antes de preencher o formulário?</div>
+        <div class="g-sub">Identifique o uso, quem responde pelo animal e onde a atividade acontece.</div></div>
+    </div>
+  </div>
+  <div class="g-steps" id="gSteps"></div>
+  <div class="g-stepname" id="gStepName"></div>
+</div>
+
+<!-- ============ 1 PRAZOS ============ -->
+<div class="g-step on" data-nome="Prazos">
+  <div class="g-card">
+    <div class="g-eyebrow">Portaria MCTI 9.037/2025, art. 6º, parágrafo único, com a redação da 9.299/2025</div>
+    <h2>Quanto tempo resta</h2>
+    <p class="g-hint">O prazo depende do grupo taxonômico. Clique em um grupo para escolhê-lo — ele será usado nos passos seguintes e no resumo.</p>
+    <div class="g-track">
+      <div class="g-fill" id="gFill"></div>
+      <div class="g-mk" id="gMk1"></div><div class="g-lbl" id="gLb1"><b>17 set 2026</b><span class="g-small">7 grupos</span></div>
+      <div class="g-mk late" id="gMk2"></div><div class="g-lbl late" id="gLb2"><b>3 mai 2028</b><span class="g-small">4 grupos</span></div>
+      <div class="g-mk now" id="gMkN"></div><div class="g-lbl now" id="gLbN">hoje</div>
+    </div>
+    <div class="g-dl2">
+      <div class="g-dlcol"><h3>Primeira data</h3>
+        <div class="g-days" id="gD1">—</div>
+        <div class="g-small">dias até 17 de setembro de 2026</div>
+        <div class="g-chips" id="gChips1"></div></div>
+      <div class="g-dlcol late"><h3>Segunda data</h3>
+        <div class="g-days" id="gD2">—</div>
+        <div class="g-small">dias até 3 de maio de 2028</div>
+        <div class="g-chips" id="gChips2"></div></div>
+    </div>
+    <div class="g-note info" style="margin-top:20px">
+      <b>Primatas não humanos estão na primeira onda</b>
+      Constam expressamente do texto da Portaria e costumam ser omitidos em listagens de terceiros.
+      Peixes é grupo único: o art. 2º da RN 61/2023 vale para todos, e apenas alguns itens têm o recorte
+      "para peixes de laboratório". A divisão em Anexo I e II é dos Anexos, não da norma.
+    </div>
+    <div class="g-note ok">
+      <b>A obra não fica pronta a tempo? O prazo continua, mas há saída.</b>
+      O CONCEA admite o licenciamento mediante plano de adequação para requisitos específicos do formulário
+      no CIUCA. Registre a solicitação mesmo com a adequação em andamento.
+    </div>
+    <div class="g-nav"><span></span><button class="g-btn pri" onclick="gIr(1)">Continuar</button></div>
+  </div>
+</div>
+
+<!-- ============ 2 DIAGNÓSTICO ============ -->
+<div class="g-step" data-nome="Diagnóstico">
+  <div class="g-card">
+    <div class="g-eyebrow">Ferramenta de enquadramento</div>
+    <h2>Qual é a situação do seu espaço?</h2>
+    <p class="g-hint">O caminho considera o grupo taxonômico, porque a dispensa de licença para salas de procedimento vale só para roedores.</p>
+    <div class="g-quiz">
+      <div id="gq1">
+        <div class="g-qstep">Pergunta 1</div>
+        <p class="g-q">Qual situação descreve o uso do espaço?</p>
+        <div class="g-opts">
+          <button class="g-opt" onclick="gGo('gr-criacao')"><b>Reprodução de animais</b><span>Acasalamento, matrizes, ninhadas.</span></button>
+          <button class="g-opt" onclick="gGo('gr-manutencao')"><b>Alojamento sem reprodução nem ensaio</b><span>Guarda dos animais até a utilização.</span></button>
+          <button class="g-opt" onclick="gGo('gq2')"><b>Procedimento ou aula prática</b><span>Protocolo de pesquisa ou de ensino.</span></button>
+          <button class="g-opt" onclick="gGo('gq4')"><b>Hospital Veterinário ou unidade de produção da UFPR</b><span>Atendimento, aula, pesquisa ou coleta de dados em espaço operado pela UFPR.</span></button>
+          <button class="g-opt" onclick="gGo('gr-terc-fora')"><b>Atividade em propriedade particular</b><span>O animal permanece com o tutor ou produtor e a UFPR não opera o espaço.</span></button>
+          <button class="g-opt" onclick="gGo('gr-material')"><b>Só cadáveres, peças ou amostras biológicas</b><span>Nenhum animal vivo entra ou permanece no espaço.</span></button>
+        </div>
+      </div>
+      <div id="gq2" style="display:none">
+        <div class="g-qstep">Pergunta 2</div><p class="g-q">Quem mantém a responsabilidade cotidiana pelos animais?</p>
+        <div class="g-opts">
+          <button class="g-opt" onclick="gGo('gq3')"><b>A UFPR</b><span>Animais produzidos, adquiridos, alojados ou mantidos pela instituição.</span></button>
+          <button class="g-opt" onclick="gGo('gq5')"><b>O tutor ou produtor</b><span>Animais de terceiros que retornam ao responsável ao fim da atividade.</span></button>
+        </div>
+      </div>
+      <div id="gq3" style="display:none">
+        <div class="g-qstep">Pergunta 3</div><p class="g-q">Quanto tempo o animal permanece nesse espaço?</p>
+        <div class="g-opts">
+          <button class="g-opt" onclick="gGo('gr-experimentacao')"><b>Mais de 12 horas, ou pernoita</b><span>Há estrutura de alojamento no local.</span></button>
+          <button class="g-opt" onclick="gGo('gq3b')"><b>Menos de 12 horas, sem alojamento</b><span>Entra, faz o procedimento e volta no mesmo dia.</span></button>
+        </div>
+      </div>
+      <div id="gq3b" style="display:none">
+        <div class="g-qstep">Pergunta 4</div><p class="g-q">Qual grupo taxonômico é usado?</p>
+        <div class="g-opts">
+          <button class="g-opt" onclick="gGo('gr-labroed')"><b>Roedores</b><span>Camundongo, rato, cobaia, hamster.</span></button>
+          <button class="g-opt" onclick="gGo('gr-laboutro')"><b>Qualquer outro grupo</b><span>Lagomorfos, cães, gatos, primatas, peixes, anfíbios, serpentes, equídeos, ruminantes, suínos, aves.</span></button>
+        </div>
+      </div>
+      <div id="gq4" style="display:none">
+        <div class="g-qstep">Pergunta 2</div><p class="g-q">Esse espaço da UFPR realiza atividade de ensino ou pesquisa com animais?</p>
+        <div class="g-opts">
+          <button class="g-opt" onclick="gGo('gr-hv')"><b>Sim</b><span>Há aula, projeto ou coleta de dados no local.</span></button>
+          <button class="g-opt" onclick="gGo('gr-hvnao')"><b>Não, apenas serviço ou produção</b><span>Não há aula, projeto nem coleta de dados no espaço.</span></button>
+        </div>
+      </div>
+      <div id="gq5" style="display:none">
+        <div class="g-qstep">Pergunta 3</div><p class="g-q">Onde o animal do tutor ou produtor é usado na atividade?</p>
+        <div class="g-opts">
+          <button class="g-opt" onclick="gGo('gr-terc-fora')"><b>Na propriedade do tutor ou produtor</b><span>O animal permanece sob responsabilidade do proprietário e a UFPR não opera o espaço.</span></button>
+          <button class="g-opt" onclick="gGo('gr-terc-dentro')"><b>No Hospital Veterinário ou outro espaço da UFPR</b><span>A atividade ocorre em uma instalação operada pela instituição.</span></button>
+        </div>
+      </div>
+      
+      <div id="gr-criacao" class="g-res" style="display:none">
+        <span class="g-tag go">Biotério de criação</span>
+        <h4>Instalação animal — precisa de licença por táxon</h4>
+        <p>Solicite o licenciamento no CIUCA. As exigências específicas de criação variam conforme o táxon e aparecem na matriz somente quando essa finalidade é selecionada.</p>
+        <ul><li>selecione o grupo taxonômico e a finalidade “Criação” no passo seguinte</li>
+        <li>não aplique a outro táxon um requisito que aparece apenas na resolução de um grupo específico</li></ul>
+        <p class="g-cite">Portaria MCTI 9.037/2025, arts. 2º a 4º · Resolução Normativa do táxon correspondente</p>
+      </div>
+      <div id="gr-manutencao" class="g-res" style="display:none">
+        <span class="g-tag go">Biotério de manutenção</span>
+        <h4>Instalação animal — precisa de licença por táxon</h4>
+        <p>Solicite o licenciamento no CIUCA. Manutenção é a permanência dos animais aguardando sua entrada em protocolos de ensino ou pesquisa.</p>
+        <ul><li>selecione o grupo taxonômico e a finalidade “Manutenção” no passo seguinte</li>
+        <li>os requisitos de recepção, quarentena, eutanásia e alojamento devem ser conferidos na resolução do táxon</li></ul>
+        <p class="g-cite">Portaria MCTI 9.037/2025, arts. 2º a 4º · Glossário CONCEA/UFPR · Resolução Normativa do táxon correspondente</p>
+      </div>
+      <div id="gr-experimentacao" class="g-res" style="display:none">
+        <span class="g-tag go">Biotério de utilização</span>
+        <h4>Instalação animal — precisa de licença por táxon</h4>
+        <p>O espaço que utiliza e mantém animais vivos para ensino ou pesquisa deve ser licenciado para o táxon correspondente.</p>
+        <ul><li>o limite de 12 horas pertence à exceção específica de laboratório de experimentação com roedores descrita na Nota Informativa de 09/07/2026</li>
+        <li>esse limite não cria dispensa geral para outros táxons</li></ul>
+        <p class="g-cite">Portaria MCTI 9.037/2025, art. 2º · Nota Informativa CONCEA — Laboratórios de Experimentação, itens 1 a 4</p>
+      </div>
+      <div id="gr-labroed" class="g-res" style="display:none">
+        <span class="g-tag no">Laboratório de experimentação</span>
+        <h4>Não é licenciado separadamente</h4>
+        <p>Cadastre o espaço no CIUCA como local vinculado à experimentação animal, no <b>item 2.1.1</b> do cadastro de instalações. Três condições precisam estar presentes ao mesmo tempo:</p>
+        <ul><li>sala de procedimentos fisicamente separada de uma instalação animal já licenciada</li>
+        <li>duração menor que 12 horas e sem possibilidade de alojamento — a norma descreve o espaço, não uma promessa de conduta</li>
+        <li>justificativa de especificidade técnica: infraestrutura ou equipamentos que impedem fazer o procedimento dentro da instalação animal. Conveniência não serve</li></ul>
+        <p class="g-cite">Nota Informativa CONCEA — Laboratórios de Experimentação, itens 2, 3 e 4 · 09/07/2026</p>
+      </div>
+      <div id="gr-laboutro" class="g-res" style="display:none">
+        <span class="g-tag warn">Sem norma escrita</span>
+        <h4>A dispensa não alcança o seu caso</h4>
+        <p>A Nota Informativa de 09/07/2026 trata de roedores e remete apenas à RN 57/2022. Para os demais grupos não existe documento do CONCEA que dispense de licença uma sala de procedimentos separada da instalação animal.</p>
+        <ul><li>realize o procedimento dentro de uma instalação já licenciada para aquele táxon</li>
+        <li>traga o caso à CEUA: cabe consulta formal ao CONCEA</li></ul>
+        <p class="g-cite">Nota Informativa CONCEA de 09/07/2026, itens 1 e 3 · RN 51/2021, art. 7º, §2º</p>
+      </div>
+      <div id="gr-terc-fora" class="g-res" style="display:none">
+        <span class="g-tag no">Estudo em propriedade particular</span>
+        <h4>Não há instalação da UFPR a licenciar nesse local</h4>
+        <p>Quando os animais domésticos permanecem sob responsabilidade de seus proprietários, fora de instalações operadas pela UFPR, não há instalação animal da instituição a licenciar. A atividade continua sujeita a obrigações próprias:</p>
+        <ul><li>aprovação prévia pela CEUA da instituição do pesquisador principal</li>
+        <li>Termo de Consentimento do responsável, com minuta aprovada pela CEUA, assinado antes de qualquer procedimento</li>
+        <li>supervisão por médico veterinário com registro ativo no CRMV</li>
+        <li>notificação de eventos adversos à CEUA, em até 24 horas nos casos graves</li>
+        <li>relatório consolidado ao final e guarda dos documentos por cinco anos</li></ul>
+        <p><strong>Se houver alojamento, manutenção ou operação do espaço pela UFPR, esta conclusão não se aplica:</strong> consulte a CEUA/UNIBIO e refaça o enquadramento como instalação.</p>
+        <p class="g-cite">RN CONCEA 22/2015, itens 1, 3.29, 6 e 8</p>
+      </div>
+      <div id="gr-terc-dentro" class="g-res" style="display:none">
+        <span class="g-tag go">Animal de tutor ou produtor em espaço da UFPR</span>
+        <h4>A propriedade do animal não afasta o licenciamento do espaço</h4>
+        <p>Quando um animal de tutor ou produtor é usado em ensino ou pesquisa no Hospital Veterinário ou em outro espaço operado pela UFPR, a propriedade do animal não dispensa o licenciamento da instalação.</p>
+        <ul><li>preencha o checklist do táxon correspondente</li>
+        <li>assinale “não se aplica” apenas nos itens em que isso for realmente cabível, um a um, com justificativa baseada na espécie e nas características da instalação</li>
+        <li>não presuma que todos os itens de alojamento estejam dispensados apenas porque o animal retorna ao responsável</li>
+        <li>submeta previamente a atividade de ensino ou pesquisa à CEUA e consulte a Comissão em situações não cobertas expressamente pelas notas do CONCEA</li></ul>
+        <p class="g-cite">Portaria MCTI 9.037/2025, arts. 2º e 3º · Nota Informativa CONCEA — instalações médico-veterinárias e unidades de produção animal</p>
+      </div>
+      <div id="gr-hv" class="g-res" style="display:none">
+        <span class="g-tag go">Hospital Veterinário ou unidade de produção da UFPR</span>
+        <h4>Precisa de licença — com uma facilidade importante</h4>
+        <p>No contexto do Setor Palotina, o Hospital Veterinário e as unidades de produção operadas pela UFPR, quando realizam ensino ou pesquisa com animais, devem ser licenciados.</p>
+        <ul><li>preencha o checklist do táxon correspondente</li>
+        <li>marque "não se aplica" nos itens cabíveis, com justificativa em caixa de texto ou documento anexo, apontando as particularidades da espécie e da instalação</li>
+        <li>não é preciso simular infraestrutura de biotério de roedor</li></ul>
+        <p class="g-cite">Nota Informativa CONCEA de 29/04/2026, atualizada em 05/06/2026</p>
+      </div>
+      <div id="gr-hvnao" class="g-res" style="display:none">
+        <span class="g-tag no">Fora do escopo</span>
+        <h4>Não requer licenciamento pelo CONCEA</h4>
+        <p>Espaços da UFPR que não desenvolvem nenhuma atividade de ensino ou pesquisa com animais não estão sob o escopo desse licenciamento.</p>
+        <ul><li>declare essa condição por escrito à CEUA</li>
+        <li>no dia em que um projeto ou disciplina passar a usar o espaço, o enquadramento muda</li></ul>
+        <p class="g-cite">Nota Informativa CONCEA de 29/04/2026</p>
+      </div>
+      <div id="gr-material" class="g-res" style="display:none">
+        <span class="g-tag no">Não é instalação animal</span>
+        <h4>Não requer licenciamento para essa finalidade</h4>
+        <p>Laboratório que trabalha apenas com amostras, cadáveres ou peças anatômicas não abriga animais vivos e não é instalação animal.</p>
+        <ul><li>se o material veio de atividade de ensino ou pesquisa, obtenha evidência formal da autorização da CEUA que aprovou a atividade de origem</li>
+        <li>para material de outra origem, mantenha documentação que comprove inequivocamente a procedência</li>
+        <li>se em algum momento entrar animal vivo no espaço, refaça este diagnóstico</li></ul>
+        <p class="g-cite">RN 30/2016 (DBCA), item 6.1.10 · Portaria MCTI 9.037/2025, art. 2º</p>
+      </div>
+
+    </div>
+    <div class="g-nav"><button class="g-btn" onclick="gIr(0)">Voltar</button><button class="g-btn pri" onclick="gIr(2)">Continuar</button></div>
+  </div>
+</div>
+
+<!-- ============ 3 MATRIZ ============ -->
+<div class="g-step" data-nome="Exigências">
+  <div class="g-card">
+    <div class="g-eyebrow">Portaria MCTI 9.037/2025, art. 3º — licencia quem atende, no mínimo, os obrigatórios</div>
+    <h2>O que a norma exige de você</h2>
+    <p class="g-hint">Blocos cheios são obrigatórios; tracejados são recomendados e não bloqueiam a licença. Borda roxa marca item que a própria norma condiciona. Passe o mouse ou toque para ver o dispositivo.</p>
+    <div class="g-ctrl">
+      <div><label class="g-lb" for="gTx">Grupo taxonômico</label><select id="gTx" onchange="gTaxonChanged()"></select></div>
+      <div id="gSubWrap" class="g-hidden"><label class="g-lb" for="gSub">Espécie no espaço</label><select id="gSub" onchange="gSubChanged()"><option>Cães</option><option>Gatos</option><option>Cães e gatos</option></select></div>
+      <div><label class="g-lb">Finalidade</label>
+        <div class="g-seg" id="gSeg">
+          <button class="on" data-f="todas" onclick="gSetF(this)">Todas</button>
+          <button data-f="criação" onclick="gSetF(this)">Criação</button>
+          <button data-f="manutenção" onclick="gSetF(this)">Manutenção</button>
+          <button data-f="experimentação" onclick="gSetF(this)">Utilização</button>
+        </div></div>
+      <div class="g-tally" id="gTally"></div>
+    </div>
+    <div class="g-legend">
+      <span><span class="g-sw ob"></span>Obrigatório</span>
+      <span><span class="g-sw re"></span>Recomendado</span>
+      <span><span class="g-sw cd"></span>Condicionado pela norma</span>
+      <span id="gRnLbl" style="color:#1D5B64;font-weight:800"></span>
+    </div>
+    <div id="gGrid"></div>
+    <div class="g-note cond" id="gCondNote" style="display:none"></div>
+    <div class="g-nav"><button class="g-btn" onclick="gIr(1)">Voltar</button><button class="g-btn pri" onclick="gIr(3)">Continuar</button></div>
+  </div>
+</div>
+
+<!-- ============ 4 TIPOS ============ -->
+<div class="g-step" data-nome="Casos específicos">
+  <div class="g-card">
+    <div class="g-eyebrow">Definições em vigor</div>
+    <h2>Dois casos que geram dúvida no Setor Palotina</h2>
+    <p class="g-hint">Esta é uma orientação da CEUA/UFPR para os espaços usados pelo Setor. O laboratório de experimentação com roedores pode ficar sem licença própria quando cumpre todos os requisitos da Nota; o Hospital Veterinário e as unidades de produção operadas pela UFPR continuam sujeitos ao formulário quando realizam ensino ou pesquisa.</p>
+    <div class="g-tabs" id="gTabs">
+      <button class="on" data-p="gp4" onclick="gTab(this)">Laboratório &lt;12 h</button>
+      <button data-p="gp5" onclick="gTab(this)">HV e unidades da UFPR</button>
+    </div>
+    <div class="g-pane" id="gp4">
+      <div class="g-role">Sem licença própria · item 2.1.1 do CIUCA</div><h3>Laboratório de experimentação</h3>
+      <p>Categoria criada pela Nota Informativa de 09/07/2026, que alcança <b>somente roedores</b> e remete apenas à RN 57/2022. Sala de procedimentos fisicamente separada de uma instalação animal licenciada, para procedimentos com duração menor que 12 horas e sem possibilidade de alojamento.</p>
+      <div class="g-duo">
+        <div class="g-mini"><b>O teste é técnico</b>A elegibilidade se funda na complexidade da infraestrutura e na natureza dos equipamentos, que impedem realizar o procedimento dentro da instalação animal. Conveniência do pesquisador não qualifica.</div>
+        <div class="g-mini"><b>É provisório</b>A Nota registra que o termo carece de regulamentação complementar e que haverá adequações quando ela sair.</div>
+      </div>
+      <div class="g-note warn"><b>Alcance restrito a roedores</b>A RN 57/2022 rege roedores e lagomorfos, mas a Nota delimita seu objeto aos roedores. Para os demais grupos não há dispensa escrita.</div>
+    </div>
+    <div class="g-pane off" id="gp5">
+      <div class="g-role">Licença exigida quando há ensino ou pesquisa</div><h3>Hospital Veterinário e unidades de produção da UFPR</h3>
+      <p>No fluxo da CEUA do Setor Palotina, esta orientação se aplica ao Hospital Veterinário e às unidades de produção operadas pela UFPR. Quando esses espaços realizam ensino ou pesquisa com animais, devem ser licenciados.</p>
+      <div class="g-duo">
+        <div class="g-mini"><b>A saída prática</b>O item "não se aplica" pode ser assinalado pelo coordenador, com justificativa, considerando as particularidades da espécie e da instalação.</div>
+        <div class="g-mini"><b>Sem ensino ou pesquisa</b>O espaço da UFPR que não realiza aula, projeto nem coleta de dados com animais não é alcançado por esse licenciamento.</div>
+      </div>
+      <div class="g-note info"><b>Não confunda com propriedade particular</b>Se o animal permanece com o tutor ou produtor e a UFPR não opera o local, use o caminho “Atividade em propriedade particular” do diagnóstico.</div>
+    </div>
+    <div class="g-nav"><button class="g-btn" onclick="gIr(2)">Voltar</button><button class="g-btn pri" onclick="gIr(4)">Continuar</button></div>
+  </div>
+</div>
+
+<!-- ============ 5 LICENCIAMENTO ============ -->
+<div class="g-step" data-nome="Licenciamento">
+  <div class="g-card">
+    <div class="g-eyebrow">Portaria MCTI 9.037/2025, art. 4º</div>
+    <h2>Como a licença sai — e quem responde por ela</h2>
+    <p class="g-hint">Cinco etapas encadeadas no CIUCA. Cada assinatura só é liberada depois da anterior.</p>
+    <div class="g-chain">
+      <div class="g-st"><div class="n">1</div><div><b>Coordenador da instalação</b><p>Preenche a solicitação indicando os critérios obrigatórios e recomendados atendidos, assina e encaminha ao Responsável Técnico.</p></div></div>
+      <div class="g-st"><div class="n">2</div><div><b>Responsável Técnico</b><p>Como corresponsável, confere cada critério e, estando de acordo, assina e encaminha à CEUA.</p></div></div>
+      <div class="g-st"><div class="n">3</div><div><b>CEUA</b><p>Certifica a veracidade das informações, podendo visitar a instalação. Assina e encaminha ao Dirigente Máximo ou Responsável Legal.</p></div></div>
+      <div class="g-st"><div class="n">4</div><div><b>Dirigente Máximo ou Responsável Legal</b><p>Na UFPR, o Pró-reitor de Pesquisa e Inovação, após análise da UNIBIO. Assina e solicita a emissão.</p></div></div>
+      <div class="g-st"><div class="n">5</div><div><b>Emissão</b><p>O CIUCA emite uma licença para cada táxon em cada instalação. Deve ser afixada em local visível.</p></div></div>
+    </div>
+    <div class="g-note warn"><b>Responsabilidade solidária — seis figuras</b>
+      Coordenador da instalação, Responsável Técnico, Coordenador da CEUA, a CEUA, o Dirigente Máximo e o Responsável Legal respondem solidariamente pela obrigação de verificação e ateste da veracidade das informações prestadas. O objeto é o ateste — não a responsabilidade genérica pela instalação.</div>
+    <div class="g-note stop"><b>Duas obrigações que continuam depois da licença</b>
+      A vigência do licenciamento acompanha a do CIAEP: renovado o credenciamento institucional, a licença precisa ser solicitada de novo, para cada instalação e cada táxon.<br><br>
+      Se a instalação deixar de atender a um item obrigatório, o coordenador deve solicitar o cancelamento da licença pelo CIUCA e interromper as atividades no local.</div>
+    <div class="g-nav"><button class="g-btn" onclick="gIr(3)">Voltar</button><button class="g-btn pri" onclick="gIr(5)">Ver o resumo</button></div>
+  </div>
+</div>
+
+<!-- ============ 6 RESUMO ============ -->
+<div class="g-step" data-nome="Resumo">
+  <div class="g-card">
+    <div class="g-eyebrow">Resumo</div>
+    <h2>A sua situação</h2>
+    <p class="g-hint">Compilado a partir do que você escolheu nos passos anteriores. Imprima ou leve à CEUA.</p>
+    <div class="g-sum" id="gSum"></div>
+    <div class="g-nav">
+      <button class="g-btn" onclick="gIr(4)">Voltar</button>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="g-btn" onclick="gReiniciar()">Recomeçar</button>
+        <button class="g-btn pri" onclick="window.print()">Imprimir</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="g-card" style="font-size:.8rem">
+  <div class="g-eyebrow">Fontes oficiais conferidas</div>
+  <p style="margin:0;display:flex;gap:12px;flex-wrap:wrap">
+    <a href="https://www.gov.br/mcti/pt-br/composicao/conselhos/concea/arquivos/arquivo/portaria-9-037_2025-licenciamento_ciuca-concea-1.pdf" target="_blank" rel="noopener">Portaria MCTI 9.037/2025</a>
+    <a href="https://www.gov.br/mcti/pt-br/composicao/conselhos/concea/arquivos/portaria-mcti-no-9-299-de-12-de-agosto-de-2025-portaria-mcti-no-9-299-de-12-de-agosto-de-2025-dou-imprensa-nacional.pdf" target="_blank" rel="noopener">Portaria MCTI 9.299/2025</a>
+    <a href="https://www.gov.br/mcti/pt-br/composicao/colegiados/concea/nota-informativa" target="_blank" rel="noopener">Nota — laboratórios de experimentação</a>
+    <a href="https://www.gov.br/mcti/pt-br/composicao/colegiados/concea/licenciamento-de-instalacoes-medico-veterinarias-e-unidades-de-producao-animal-nota-informativa" target="_blank" rel="noopener">Nota — instalações médico-veterinárias</a>
+    <a href="https://ufpr.br/prpi/unibio-instalacoes-animais/" target="_blank" rel="noopener">UNIBIO/UFPR — instalações animais</a>
+  </p>
+</div>
+<div style="text-align:center;color:#64748b;font-size:.75rem;padding:14px 0">
+  Ferramenta orientativa da CEUA/UFPR — Setor Palotina, baseada nas normas do CONCEA. Não substitui a análise da Comissão nem o texto oficial vigente. Cada critério conserva seu dispositivo normativo.
+</div>
+
+</div></div>
+
+<script>
+const gMAT = {"Roedores e lagomorfos": {"rn": "RN 57/2022", "onda": 1, "i": [{"d": "art. 2º, I, \"a\"", "c": "OB", "g": "Infraestrutura", "fin": ["criação"], "sub": "", "cond": "", "t": "instalações de criação de animais separadas dos biotérios com outras finalidades", "n": ""}, {"d": "art. 2º, I, \"b\"", "c": "OB", "g": "Infraestrutura", "fin": ["criação"], "sub": "", "cond": "em caso de edificação que abrigue biotérios com diferentes finalidades", "t": "instalações de criação de animais com áreas físicas e rotinas com barreiras exclusivas, delimitadas e separadas dos biotérios de manutenção e de utilização, em caso de edificação que abrigue biotérios com diferentes finalidades", "n": ""}, {"d": "art. 2º, I, \"c\"", "c": "OB", "g": "Infraestrutura", "fin": ["criação"], "sub": "", "cond": "", "t": "área destinadas à recepção e quarentena, em biotérios de criação, para ingresso de animais", "n": ""}, {"d": "art. 2º, I, \"d\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "áreas destinadas à higienização (lavagem, desinfecção ou esterilização de materiais) fisicamente separadas das salas de animais", "n": ""}, {"d": "art. 2º, I, \"e\"", "c": "OB", "g": "Infraestrutura", "fin": ["criação"], "sub": "", "cond": "", "t": "sanitários localizados fora de áreas controladas, em biotérios de criação", "n": ""}, {"d": "art. 2º, I, \"f\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "salas de animais separadas por espécie", "n": ""}, {"d": "art. 2º, I, \"g\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "vestiários", "n": ""}, {"d": "art. 2º, I, \"h\"", "c": "OB", "g": "Infraestrutura", "fin": ["criação", "manutenção"], "sub": "", "cond": "", "t": "sala destinada a eutanásia, separada das salas de animais, em biotérios de criação e manutenção", "n": ""}, {"d": "art. 2º, I, \"i\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "local para estocagem de alimentos e forração, que atenda às recomendações dos fabricantes e que mantenha os materiais sem contato com o piso ou paredes", "n": ""}, {"d": "art. 2º, I, \"j\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "área exclusiva para depósitos de resíduos", "n": ""}, {"d": "art. 2º, I, \"k\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "freezer para acondicionar carcaças de animais", "n": ""}, {"d": "art. 2º, I, \"l\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "paredes, pisos e tetos lisos, livres de rejuntes e reentrâncias, e construídos com materiais que possibilitem higienização e desinfecção", "n": ""}, {"d": "art. 2º, I, \"m\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "ausência de janelas com acesso direto para as salas de animais de laboratório", "n": ""}, {"d": "art. 2º, I, \"n\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "na ausência de grupo gerador próprio", "t": "sistema de monitoramento remoto da ambiência das salas dos animais, na ausência de grupo gerador próprio", "n": ""}, {"d": "art. 2º, I, \"o\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "sistema de iluminação com fotoperíodo regulável nas áreas controladas e salas de animais", "n": ""}, {"d": "art. 2º, I, \"p\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "salas de animais com ventilação, exaustão temperatura e umidade, controladas conforme as características das espécies mantidas no recinto", "n": ""}, {"d": "art. 2º, I, \"q\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "barreiras sanitárias de bioexclusão e biocontenção preconizadas pelo nível de biossegurança da instalação", "n": ""}, {"d": "art. 2º, II, \"a\"", "c": "OB", "g": "Procedimentos", "fin": ["manutenção", "experimentação"], "sub": "", "cond": "exceto animais com estado sanitário conhecido e compatível com o biotério de destino", "t": "ingresso de animais, em biotérios de manutenção e experimentação, por meio de recepção em área de quarentena, exceto com relação aos animais com estado sanitário conhecido e compatível com o biotério de destino, que poderão ser introduzidos diretamente na sala de animais", "n": ""}, {"d": "art. 2º, II, \"b\"", "c": "OB", "g": "Procedimentos", "fin": [], "sub": "", "cond": "", "t": "monitoramento com registro das condições ambientais das salas de animais", "n": ""}, {"d": "art. 2º, II, \"c\"", "c": "OB", "g": "Procedimentos", "fin": [], "sub": "", "cond": "", "t": "uso de equipamentos de proteção individual preconizados pelo nível de biossegurança da instalação", "n": ""}, {"d": "art. 2º, II, \"d\"", "c": "OB", "g": "Procedimentos", "fin": ["criação"], "sub": "", "cond": "", "t": "disponibilização de Manual de Procedimentos Operacionais Padrão (POPs) em biotérios de criação", "n": ""}, {"d": "art. 2º, II, \"e\"", "c": "OB", "g": "Procedimentos", "fin": [], "sub": "", "cond": "exceto casos autorizados pela CEUA ou recomendações clínicas", "t": "alojamento de animais em pares ou grupos, exceto em casos autorizados pela CEUA ou em virtude de recomendações clínicas", "n": ""}, {"d": "art. 2º, II, \"f\"", "c": "OB", "g": "Procedimentos", "fin": [], "sub": "", "cond": "", "t": "realização de procedimentos experimentais em local diferente das salas de manutenção e criação de animais", "n": ""}, {"d": "art. 2º, II, \"g\"", "c": "OB", "g": "Procedimentos", "fin": [], "sub": "", "cond": "", "t": "adoção de práticas de enriquecimento ambiental", "n": ""}, {"d": "art. 3º, I", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "área administrativa", "n": ""}, {"d": "art. 3º, II", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "área de recepção de pessoal (usuários e visitantes)", "n": ""}, {"d": "art. 3º, III", "c": "R", "g": "Infraestrutura", "fin": ["experimentação"], "sub": "", "cond": "", "t": "sala destinada a eutanásia, separada das salas de procedimentos, em biotérios de experimentação", "n": ""}, {"d": "art. 3º, IV", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "local para armazenamento de produtos químicos e medicamentos", "n": ""}, {"d": "art. 3º, V", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "grupo gerador próprio para fornecimento emergencial de energia elétrica", "n": ""}, {"d": "art. 3º, parágrafo único", "c": "R", "g": "Procedimentos", "fin": [], "sub": "", "cond": "", "t": "é recomendada a realização de controle genético e sanitário", "n": ""}]}, "Cães e gatos": {"rn": "RN 59/2023", "onda": 1, "i": [{"d": "art. 2º, I, \"a\"", "c": "OB", "g": "Infraestrutura", "fin": ["criação"], "sub": "", "cond": "", "t": "instalações de criação de animais separadas das instalações com outras finalidades", "n": ""}, {"d": "art. 2º, I, \"b\"", "c": "OB", "g": "Infraestrutura", "fin": ["criação"], "sub": "", "cond": "em caso de edificação que abrigue biotérios com diferentes finalidades", "t": "instalações de criação de animais com áreas físicas e rotinas com barreiras exclusivas, delimitadas e separadas das instalações de manutenção e de utilização, em caso de edificação que abrigue biotérios com diferentes finalidades", "n": ""}, {"d": "art. 2º, I, \"c\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "Cães e gatos", "cond": "", "t": "áreas de alojamento de cães e gatos isoladas acústica e visualmente uma da outra", "n": ""}, {"d": "art. 2º, I, \"d\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "ambientes específicos apropriados para os procedimentos experimentais executados na instalação", "n": ""}, {"d": "art. 2º, I, \"e\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "áreas de higienização separadas das salas de animais", "n": ""}, {"d": "art. 2º, I, \"f\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "sanitários separados das áreas controladas ou de criação", "n": "DIVERGÊNCIA: o Anexo restringe às instalações de criação. Prevalece o artigo."}, {"d": "art. 2º, I, \"g\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "alojamentos dimensionados de acordo com as especificidades dos animais", "n": ""}, {"d": "art. 2º, I, \"h\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "área para eutanásia separada do alojamento dos animais", "n": ""}, {"d": "art. 2º, I, \"i\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "área exclusiva para depósitos de resíduos", "n": ""}, {"d": "art. 2º, I, \"j\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "área exclusiva para depósitos de materiais", "n": ""}, {"d": "art. 2º, I, \"k\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "freezer para acondicionamento de carcaças", "n": ""}, {"d": "art. 2º, I, \"l\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "paredes, pisos e tetos das instalações revestidos por materiais que possibilitem higienização e desinfecção", "n": ""}, {"d": "art. 2º, I, \"m\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "controle de temperatura e umidade nas instalações animais", "n": ""}, {"d": "art. 2º, I, \"n\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "em instalações fechadas", "t": "controle de trocas de ar e da iluminação com ciclo claro escuro, em instalações fechadas, seguindo especificações do Guia Brasileiro do CONCEA", "n": ""}, {"d": "art. 2º, I, \"o\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "área dedicada para quarentena", "n": ""}, {"d": "art. 2º, I, \"p\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "Cães", "cond": "", "t": "recinto primário com parte do espaço coberto em instalações específicas para cães", "n": ""}, {"d": "art. 2º, I, \"q\"", "c": "OB", "g": "Infraestrutura", "fin": ["criação"], "sub": "Cães", "cond": "", "t": "instalações de criação de cães com áreas definidas para recreação e descanso noturno dos animais", "n": ""}, {"d": "art. 2º, I, \"r\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "Gatos", "cond": "", "t": "instalações para gatos organizadas em zonas principais e periféricas", "n": ""}, {"d": "art. 2º, I, \"s\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "Gatos", "cond": "", "t": "baias de acasalamento isoladas de outros animais em instalações para gatos", "n": ""}, {"d": "art. 2º, I, \"t\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "barreiras sanitárias de bioexclusão e biocontenção preconizadas pelo nível de biossegurança da instalação", "n": ""}, {"d": "art. 2º, II, \"a\"", "c": "OB", "g": "Procedimentos", "fin": [], "sub": "", "cond": "", "t": "equipamentos de proteção individual preconizados pelo nível de biossegurança da instalação", "n": ""}, {"d": "art. 2º, II, \"b\"", "c": "OB", "g": "Procedimentos", "fin": [], "sub": "", "cond": "", "t": "enriquecimento ambiental", "n": ""}, {"d": "art. 2º, II, \"c\"", "c": "OB", "g": "Procedimentos", "fin": [], "sub": "Cães", "cond": "exceto casos autorizados pela CEUA ou condições clínicas", "t": "alojamento em pares ou grupos, em instalações para cães, exceto em casos autorizados pela CEUA ou devido a condições clínicas", "n": ""}, {"d": "art. 2º, II, \"d\"", "c": "OB", "g": "Procedimentos", "fin": [], "sub": "Cães", "cond": "", "t": "contato visual entre os animais nas instalações para cães", "n": ""}, {"d": "art. 3º, I", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "área administrativa", "n": ""}, {"d": "art. 3º, II", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "área de recepção de animais e avaliação (triagem)", "n": ""}, {"d": "art. 3º, III", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "sala de procedimentos clínicos", "n": ""}, {"d": "art. 3º, IV", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "sala de descanso e copa", "n": ""}, {"d": "art. 3º, V", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "corredores com as dimensões de acordo com especificações do Guia Brasileiro do CONCEA", "n": ""}, {"d": "art. 3º, VI", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "lavanderia própria", "n": ""}, {"d": "art. 3º, VII", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "local para armazenamento de produtos químicos e medicamentos", "n": ""}, {"d": "art. 3º, VIII", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "grupo gerador próprio para fornecimento emergencial de energia elétrica", "n": ""}, {"d": "art. 3º, IX", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "luminárias e interruptores vedados ou aterrados", "n": ""}, {"d": "art. 3º, X", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "controle de ruídos e vibrações", "n": ""}, {"d": "art. 3º, XI", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "vestiário", "n": ""}, {"d": "art. 3º, XII", "c": "R", "g": "Infraestrutura", "fin": ["criação"], "sub": "", "cond": "", "t": "controle dos parâmetros ambientais, genéticos, sanitários e de bem-estar, em instalações de criação", "n": ""}, {"d": "art. 3º, XIII", "c": "R", "g": "Procedimentos", "fin": ["criação"], "sub": "", "cond": "", "t": "manual de Procedimentos Operacionais Padrão (POPs), em instalações de criação", "n": ""}]}, "Primatas não humanos": {"rn": "RN 60/2023", "onda": 1, "i": [{"d": "art. 2º, I, \"a\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "área administrativa", "n": "Único táxon em que a área administrativa é obrigatória."}, {"d": "art. 2º, I, \"b\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "sanitários fora de áreas controladas e das instalações animais", "n": ""}, {"d": "art. 2º, I, \"c\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "cozinha em área limpa conforme especificações do Guia Brasileiro do CONCEA", "n": ""}, {"d": "art. 2º, I, \"d\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "barreiras contra contaminantes ou pragas na área externa da instalação", "n": ""}, {"d": "art. 2º, I, \"e\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "área de Quarentena", "n": ""}, {"d": "art. 2º, I, \"f\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "área de Eutanásia separada das demais áreas", "n": ""}, {"d": "art. 2º, I, \"g\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "área de higienização", "n": ""}, {"d": "art. 2º, I, \"h\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "depósito exclusivo para alimentos não perecíveis e perecíveis", "n": ""}, {"d": "art. 2º, I, \"i\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "depósito exclusivo para resíduos biológicos", "n": ""}, {"d": "art. 2º, I, \"j\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "instalações animais de alvenaria e concreto com ambientes seguros, que evitem fugas", "n": ""}, {"d": "art. 2º, I, \"k\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "paredes, pisos e tetos lisos, livres de rejuntes e reentrâncias em materiais que possibilitem higienização e desinfecção", "n": ""}, {"d": "art. 2º, I, \"l\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "recintos com telas que contenham a espécie alojada e que possuam grades metálicas, conforme especificações do Guia Brasileiro do CONCEA", "n": ""}, {"d": "art. 2º, I, \"m\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "gaiolas que forneçam abrigo (refúgio) e dispostas de maneira que não haja agressões entre os animais", "n": ""}, {"d": "art. 2º, I, \"n\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "recintos de animais com ventilação, exaustão, temperatura e umidade controladas, conforme as características das espécies", "n": ""}, {"d": "art. 2º, I, \"o\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "sistema de iluminação com fotoperíodo regulável nas áreas controladas e nos recintos de animais", "n": ""}, {"d": "art. 2º, I, \"p\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "controle de ruídos", "n": ""}, {"d": "art. 2º, I, \"q\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "pisos que permitam a drenagem com ralos sifonados mantidos fechados", "n": ""}, {"d": "art. 2º, I, \"r\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "recintos ventilados e isolados", "n": ""}, {"d": "art. 2º, I, \"s\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "recinto com poleiros, barreiras visuais, refúgios, provisão de alimentos, água e abrigo, que evitem monopolização de recursos por animais dominantes", "n": ""}, {"d": "art. 2º, I, \"t\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "abrigos construídos com uma abertura suficiente para que os animais possam entrar com filhotes nas costas", "n": ""}, {"d": "art. 2º, I, \"u\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "recintos com espaço suficiente para que os animais possam realizar suas necessidades fisiológicas e comportamentais", "n": ""}, {"d": "art. 2º, I, \"v\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "dimensões dos alojamentos das espécies de acordo com especificações do Guia Brasileiro do CONCEA", "n": ""}, {"d": "art. 2º, I, \"w\"", "c": "OB", "g": "Infraestrutura", "fin": ["criação", "manutenção"], "sub": "", "cond": "", "t": "alojamentos dos ambientes de criação ou de manutenção compostos por recintos complexos e estimulantes", "n": ""}, {"d": "art. 2º, I, \"x\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "barreiras sanitárias de bioexclusão e biocontenção preconizadas pelo nível de biossegurança da instalação", "n": ""}, {"d": "art. 2º, II, \"a\"", "c": "OB", "g": "Procedimentos", "fin": [], "sub": "", "cond": "", "t": "recintos mantidos secos e limpos", "n": ""}, {"d": "art. 2º, II, \"b\"", "c": "OB", "g": "Procedimentos", "fin": [], "sub": "", "cond": "exceto casos autorizados pela CEUA ou condições clínicas", "t": "alojamento em pares ou grupos, exceto em casos autorizados pela CEUA ou devido a condições clínicas", "n": ""}, {"d": "art. 2º, II, \"c\"", "c": "OB", "g": "Procedimentos", "fin": [], "sub": "", "cond": "exceto se justificado", "t": "enriquecimento ambiental, exceto se justificado", "n": ""}, {"d": "art. 2º, II, \"d\"", "c": "OB", "g": "Procedimentos", "fin": [], "sub": "", "cond": "", "t": "registro das vacinas e medicações utilizadas nos animais", "n": ""}, {"d": "art. 2º, II, \"e\"", "c": "OB", "g": "Procedimentos", "fin": [], "sub": "", "cond": "", "t": "gerenciamento de resíduos sólidos de acordo com a legislação vigente", "n": ""}, {"d": "art. 2º, II, \"f\"", "c": "OB", "g": "Procedimentos", "fin": [], "sub": "", "cond": "", "t": "manual de Procedimentos Operacionais Padrão (POPs)", "n": ""}, {"d": "art. 2º, II, \"g\"", "c": "OB", "g": "Procedimentos", "fin": [], "sub": "", "cond": "", "t": "uso de equipamentos de proteção individual preconizados pelo nível de biossegurança da instalação", "n": ""}, {"d": "art. 3º, I", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "sala de arquivos e sala de reuniões", "n": ""}, {"d": "art. 3º, II", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "calçadas circundantes dos recintos, conforme especificações do Guia Brasileiro do CONCEA", "n": ""}, {"d": "art. 3º, III", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "depósito de equipamentos e materiais", "n": ""}, {"d": "art. 3º, IV", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "alojamentos externos distantes de centros urbanos, em área arborizada", "n": ""}, {"d": "art. 3º, V", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "portas das salas de materiais laváveis e resistentes e dotadas de visores", "n": ""}]}, "Peixes": {"rn": "RN 61/2023", "onda": 1, "i": [{"d": "art. 2º, I, \"a\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "alojamento em tanques escavados, tanques de lona, aquários ou caixas ou tanques rede, de acordo com especificações do Guia Brasileiro do CONCEA", "n": ""}, {"d": "art. 2º, I, \"b\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "tanque para quarentena", "n": ""}, {"d": "art. 2º, I, \"c\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "depósito de alimentos que atendam às recomendações dos fabricantes", "n": ""}, {"d": "art. 2º, I, \"d\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "freezer para acondicionar carcaças", "n": ""}, {"d": "art. 2º, I, \"e\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "barreiras sanitárias de bioexclusão e biocontenção preconizadas pelo nível de biossegurança da instalação", "n": "OMITIDO no Anexo II"}, {"d": "art. 2º, I, \"f\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "controle de iluminação", "n": ""}, {"d": "art. 2º, I, \"g\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "controle de temperatura", "n": ""}, {"d": "art. 2º, I, \"h\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "Peixes de laboratório", "cond": "", "t": "sistema de abastecimento de água e reservatório de armazenamento para peixes de laboratório", "n": ""}, {"d": "art. 2º, I, \"i\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "bomba de renovação e abastecimento de água dos aquários", "n": ""}, {"d": "art. 2º, I, \"j\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "controle de efluentes dos alojamentos", "n": ""}, {"d": "art. 2º, I, \"k\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "condições de alojamento conforme as especificações do Guia Brasileiro do CONCEA", "n": ""}, {"d": "art. 2º, I, \"l\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "controle de filtragem, pH, oxigênio dissolvido, salinidade e níveis de amônia e nitrito da água dos tanques e aquários de manutenção de acordo com especificações do CONCEA", "n": "O Anexo I traz 'amônia e dureza'; o artigo não menciona dureza. Prevalece o artigo."}, {"d": "art. 2º, II, \"a\"", "c": "OB", "g": "Procedimentos", "fin": [], "sub": "", "cond": "", "t": "captura dos animais de acordo com a legislação", "n": ""}, {"d": "art. 2º, II, \"b\"", "c": "OB", "g": "Procedimentos", "fin": [], "sub": "", "cond": "", "t": "controle de densidade na estocagem de acordo com a espécie", "n": ""}, {"d": "art. 2º, II, \"c\"", "c": "OB", "g": "Procedimentos", "fin": [], "sub": "Peixes de laboratório", "cond": "", "t": "controle de patógenos nos aquários de peixes de laboratório", "n": "OMITIDO no Anexo II"}, {"d": "art. 2º, II, \"d\"", "c": "OB", "g": "Procedimentos", "fin": [], "sub": "", "cond": "", "t": "alimentação de acordo com a fase de desenvolvimento dos animais e hábito alimentar da espécie", "n": ""}, {"d": "art. 2º, II, \"e\"", "c": "OB", "g": "Procedimentos", "fin": [], "sub": "", "cond": "", "t": "enriquecimento ambiental", "n": ""}, {"d": "art. 2º, II, \"f\"", "c": "OB", "g": "Procedimentos", "fin": [], "sub": "", "cond": "", "t": "gerenciamento de resíduos sólidos de acordo com a legislação vigente", "n": ""}, {"d": "art. 2º, II, \"g\"", "c": "OB", "g": "Procedimentos", "fin": [], "sub": "", "cond": "", "t": "equipamentos de proteção individual que atendam ao nível de biossegurança da instalação", "n": "OMITIDO no Anexo II"}, {"d": "art. 3º, I", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "área administrativa", "n": ""}, {"d": "art. 3º, II", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "área de recepção de pessoal", "n": ""}, {"d": "art. 3º, III", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "área para recepção de animais", "n": ""}, {"d": "art. 3º, IV", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "vestiário", "n": ""}, {"d": "art. 3º, V", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "depósito de produtos químicos e medicamentos", "n": ""}, {"d": "art. 3º, VI", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "manual de Procedimentos Operacionais Padrão (POPs)", "n": ""}, {"d": "art. 3º, VII", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "Peixes de laboratório", "cond": "", "t": "área de quarentena para peixes de laboratório", "n": ""}, {"d": "art. 3º, VIII", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "Peixes de laboratório", "cond": "", "t": "área de higienização separada fisicamente das salas de animais para peixes de laboratório", "n": ""}, {"d": "art. 3º, IX", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "Peixes de laboratório", "cond": "", "t": "sanitários fora das áreas controladas para peixes de laboratório", "n": ""}, {"d": "art. 3º, X", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "controle de nitrato na água dos tanques de manutenção", "n": ""}]}, "Anfíbios": {"rn": "RN 62/2023", "onda": 1, "i": [{"d": "art. 2º, I, \"a\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "alojamentos com dimensões e características de acordo com as especificações do Guia Brasileiro do CONCEA", "n": ""}, {"d": "art. 2º, I, \"b\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "controle de iluminação, umidade e temperatura", "n": ""}, {"d": "art. 2º, II", "c": "OB", "g": "Procedimentos", "fin": [], "sub": "", "cond": "", "t": "enriquecimento ambiental", "n": ""}, {"d": "art. 3º, I", "c": "R", "g": "Procedimentos", "fin": [], "sub": "", "cond": "", "t": "registro da frequência da alimentação dos animais", "n": "DIVERGÊNCIA: o Anexo classifica como Obrigatório. Prevalece o artigo."}, {"d": "art. 3º, II", "c": "R", "g": "Procedimentos", "fin": [], "sub": "", "cond": "", "t": "registro de higienização dos recintos dos animais", "n": ""}, {"d": "art. 3º, III", "c": "R", "g": "Procedimentos", "fin": [], "sub": "", "cond": "", "t": "manual de Procedimentos Operacionais Padrão (POPs)", "n": ""}]}, "Serpentes": {"rn": "RN 62/2023", "onda": 1, "i": [{"d": "art. 4º, I, \"a\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "alojamentos que promovam o bem-estar, com controle de temperatura, umidade, ciclos de luz e trocas de ar e com dimensões e características de acordo com as especificações do Guia Brasileiro do CONCEA", "n": ""}, {"d": "art. 4º, I, \"b\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "fonte de água corrente ou reposição diária no interior da gaiola", "n": ""}, {"d": "art. 4º, I, \"c\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "em serpentários abertos", "t": "fonte de calor artificial em serpentários abertos", "n": ""}, {"d": "art. 4º, I, \"d\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "recintos dos animais abrigados da luz solar", "n": ""}, {"d": "art. 4º, I, \"e\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "serpentário aberto ou semiaberto", "t": "serpentário aberto ou semiaberto com espécies típicas da região da instalação ou de locais com características climáticas semelhantes", "n": ""}, {"d": "art. 4º, I, \"f\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "ambientes que reproduzem o habitat natural da espécie", "n": ""}, {"d": "art. 4º, II, \"a\"", "c": "OB", "g": "Procedimentos", "fin": [], "sub": "", "cond": "", "t": "registro de alimentação dos animais", "n": ""}, {"d": "art. 4º, II, \"b\"", "c": "OB", "g": "Procedimentos", "fin": [], "sub": "", "cond": "", "t": "identificação dos animais", "n": ""}, {"d": "art. 4º, II, \"c\"", "c": "OB", "g": "Procedimentos", "fin": [], "sub": "", "cond": "", "t": "inspeção e registro diários das condições físicas e de bem-estar dos animais", "n": ""}, {"d": "art. 4º, II, \"d\"", "c": "OB", "g": "Procedimentos", "fin": [], "sub": "", "cond": "", "t": "gerenciamento de resíduos sólidos de acordo com a legislação vigente", "n": ""}, {"d": "art. 4º, II, \"e\"", "c": "OB", "g": "Procedimentos", "fin": [], "sub": "", "cond": "", "t": "níveis de biossegurança das áreas da instalação de acordo com o risco biológico das atividades realizadas", "n": ""}, {"d": "art. 5º, I", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "área de quarentena", "n": ""}, {"d": "art. 5º, II", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "ambulatório e centro cirúrgico", "n": ""}, {"d": "art. 5º, III", "c": "R", "g": "Procedimentos", "fin": [], "sub": "", "cond": "", "t": "enriquecimento ambiental", "n": ""}, {"d": "art. 5º, IV", "c": "R", "g": "Procedimentos", "fin": [], "sub": "", "cond": "", "t": "manual de Procedimentos Operacionais Padrão (POPs)", "n": ""}, {"d": "art. 5º, V", "c": "R", "g": "Procedimentos", "fin": [], "sub": "", "cond": "", "t": "registro de higienização dos recintos dos animais", "n": ""}, {"d": "art. 5º, VI", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "depósito para materiais", "n": ""}, {"d": "art. 5º, VII", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "área de higienização separada da área de manutenção de animais", "n": ""}]}, "Equídeos": {"rn": "RN 65/2023", "onda": 1, "i": [{"d": "art. 2º, I, \"a\"", "c": "OB", "g": "Infraestrutura", "fin": ["criação"], "sub": "", "cond": "", "t": "instalações de criação com áreas de recepção de animais e quarentena", "n": ""}, {"d": "art. 2º, I, \"b\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "área de eutanásia, separada das demais instalações", "n": ""}, {"d": "art. 2º, I, \"c\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "depósitos exclusivos de ração, forragem e cama, armazenados sem contato com o piso ou paredes", "n": ""}, {"d": "art. 2º, I, \"d\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "depósito de produtos químicos e medicamentos", "n": ""}, {"d": "art. 2º, I, \"e\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "instalações que promovam a segurança e o bem-estar dos animais em confinamento, nos quais os animais expressem posturas típicas da espécie e tenham acesso a alimento e água, de acordo com as especificações do Guia Brasileiro do CONCEA", "n": ""}, {"d": "art. 2º, I, \"f\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "exceto casos autorizados pela CEUA ou condições clínicas", "t": "instalações que permitam contato físico ou visual com indivíduos da mesma espécie, exceto em casos autorizados pela CEUA ou devido a condições clínicas", "n": ""}, {"d": "art. 2º, I, \"g\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "instalações de confinamento ventiladas, com iluminação natural e piso de material antiderrapante, que permita a higienização", "n": ""}, {"d": "art. 2º, I, \"h\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "piquetes com sombreamento e locais de fornecimento de alimento, sal mineral (suplementos) e água", "n": ""}, {"d": "art. 2º, I, \"i\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "piquetes com cercas de materiais que evitem risco de ferimentos", "n": ""}, {"d": "art. 2º, I, \"j\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "local para acondicionamento de carcaças", "n": ""}, {"d": "art. 2º, II, \"a\"", "c": "OB", "g": "Procedimentos", "fin": [], "sub": "", "cond": "", "t": "gerenciamento de resíduos sólidos de acordo com a legislação vigente", "n": ""}, {"d": "art. 2º, II, \"b\"", "c": "OB", "g": "Procedimentos", "fin": [], "sub": "", "cond": "", "t": "controle de plantas tóxicas", "n": ""}, {"d": "art. 2º, II, \"c\"", "c": "OB", "g": "Procedimentos", "fin": [], "sub": "", "cond": "", "t": "adequação de sistema de transporte (veículos, gaiolas e contenção física e química de animais) que ofereça transporte seguro dos animais e previna a exposição de pessoas", "n": ""}, {"d": "art. 3º, I", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "área administrativa", "n": ""}, {"d": "art. 3º, II", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "sistema de produção separado por barreira física (vegetal)", "n": ""}, {"d": "art. 3º, III", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "instalações que permitam a limpeza e desinfecção", "n": ""}, {"d": "art. 3º, IV", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "depósito de resíduos isolado das demais áreas", "n": ""}, {"d": "art. 3º, V", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "área de manejo com divisões em compartimentos separados por porteiras para permitir o manejo e apartação dos animais", "n": ""}, {"d": "art. 3º, VI", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "área de manejo com cobertura total ou parcial para proteção dos animais e corredor do tipo seringa para direcionamento dos animais", "n": ""}, {"d": "art. 3º, VII", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "terreno dos piquetes com condições de drenagem, de acordo com especificações do Guia Brasileiro do CONCEA", "n": ""}, {"d": "art. 3º, VIII", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "lotação animal de acordo com a disponibilidade de água, alimento, forragem e cama", "n": ""}, {"d": "art. 3º, IX", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "manual de Procedimentos Operacionais Padrão (POPs)", "n": ""}]}, "Pequenos ruminantes": {"rn": "RN 63/2023", "onda": 2, "i": [{"d": "art. 2º, I, \"a\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "local para descarte de carcaças, de acordo com as especificações do Guia Brasileiro do CONCEA", "n": ""}, {"d": "art. 2º, I, \"b\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "área de eutanásia separada das demais instalações", "n": ""}, {"d": "art. 2º, I, \"c\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "dimensionamento dos alojamentos de acordo com as especificidades dos animais", "n": ""}, {"d": "art. 2º, I, \"d\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "paredes internas do curral, do brete e do tronco de contenção, lisas e livres de saliências ou elementos pontiagudos", "n": ""}, {"d": "art. 2º, I, \"e\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "depósitos exclusivos para ração, forragem e cama", "n": ""}, {"d": "art. 2º, I, \"f\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "armazenamento de ração sem contato com o piso ou paredes", "n": ""}, {"d": "art. 2º, I, \"g\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "depósitos exclusivos de produtos químicos e medicamentos", "n": ""}, {"d": "art. 2º, I, \"h\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "depósitos exclusivos de resíduos isolados das demais áreas", "n": ""}, {"d": "art. 2º, I, \"i\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "áreas com sombreamento e cochos para fornecimento de alimento, sal mineral (suplementos) e água", "n": ""}, {"d": "art. 2º, I, \"j\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "cercas de materiais que evitem risco de ferimentos", "n": ""}, {"d": "art. 2º, I, \"k\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "baias hospitalares compatíveis e de acordo com as especificações do Guia Brasileiro do CONCEA", "n": ""}, {"d": "art. 2º, I, \"l\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "animais geneticamente modificados", "t": "áreas de alojamento de animais geneticamente modificados fisicamente separadas de outras áreas e com acesso restrito", "n": ""}, {"d": "art. 2º, I, \"m\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "quando existentes", "t": "gaiolas metabólicas (quando existentes) adequadas à espécie e de uso exclusivo durante a realização dos estudos metabólicos", "n": ""}, {"d": "art. 2º, I, \"n\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "quando existentes", "t": "câmaras climáticas e respirométricas (quando existentes) equipadas com sistemas de exaustão, renovação e recirculação de ar", "n": ""}, {"d": "art. 2º, II, \"a\"", "c": "OB", "g": "Procedimentos", "fin": [], "sub": "", "cond": "", "t": "controle de plantas tóxicas", "n": ""}, {"d": "art. 2º, II, \"b\"", "c": "OB", "g": "Procedimentos", "fin": [], "sub": "", "cond": "", "t": "plano de gerenciamento de resíduos sólidos de acordo com a legislação vigente", "n": ""}, {"d": "art. 3º, I", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "área administrativa", "n": ""}, {"d": "art. 3º, II", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "áreas destinadas à recepção", "n": ""}, {"d": "art. 3º, III", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "área de quarentena de acordo com as especificações do Guia Brasileiro do CONCEA", "n": ""}, {"d": "art. 3º, IV", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "paredes, pisos e tetos de materiais que permitam a limpeza e desinfecção", "n": ""}, {"d": "art. 3º, V", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "sempre que necessário", "t": "instalações com áreas destinadas a funções específicas, sempre que necessário, de acordo com as especificações do Guia Brasileiro do CONCEA", "n": ""}, {"d": "art. 3º, VI", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "instalações amplas arejadas e com proteção para intempéries", "n": ""}, {"d": "art. 3º, VII", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "curral de manejo compartimentado e separado por porteiras", "n": ""}, {"d": "art. 3º, VIII", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "curral com cobertura total ou parcial", "n": ""}, {"d": "art. 3º, IX", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "corredor do tipo seringa", "n": ""}, {"d": "art. 3º, X", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "baias destinadas aos reprodutores em local afastado do aprisco do rebanho geral", "n": ""}, {"d": "art. 3º, XI", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "câmara fria ou freezer para acondicionamento de carcaças", "n": ""}, {"d": "art. 3º, XII", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "terreno dos piquetes com drenagem de acordo com as especificações do Guia Brasileiro do CONCEA", "n": "A RN numera dois incisos como XII (erro de numeração na fonte)."}, {"d": "art. 3º, XII (bis)", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "área cirúrgica em ambiente fechado dotada de brete de contenção", "n": "A RN numera dois incisos como XII (erro de numeração na fonte)."}, {"d": "art. 3º, XIII", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "lotação animal de acordo com a disponibilidade de água e pastagem", "n": ""}, {"d": "art. 3º, XIV", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "Procedimentos Operacionais Padrão (POPs)", "n": ""}]}, "Grandes ruminantes (bovinos e bubalinos)": {"rn": "RN 64/2023", "onda": 2, "i": [{"d": "art. 2º, I, \"a\"", "c": "OB", "g": "Infraestrutura", "fin": ["criação"], "sub": "", "cond": "", "t": "equipamentos de uso exclusivo na instalação de criação", "n": ""}, {"d": "art. 2º, I, \"b\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "local para descarte de carcaças, de acordo com as especificações do Guia Brasileiro do CONCEA", "n": ""}, {"d": "art. 2º, I, \"c\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "sempre que necessário", "t": "instalações com áreas destinadas a funções específicas, sempre que necessário", "n": ""}, {"d": "art. 2º, I, \"d\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "dimensionamento dos alojamentos de acordo com as especificidades dos animais", "n": ""}, {"d": "art. 2º, I, \"e\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "instalações de confinamento, semiconfinamento e manejo geral de acordo com as especificações do Guia Brasileiro do CONCEA", "n": ""}, {"d": "art. 2º, I, \"f\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "ventilação nas áreas de confinamento", "n": ""}, {"d": "art. 2º, I, \"g\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "onde ocorra reprodução", "t": "instalações onde ocorra reprodução com altura e piso propícios à monta", "n": ""}, {"d": "art. 2º, I, \"h\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "paredes internas do curral, do brete e do tronco de contenção lisas e livres de saliências ou elementos pontiagudos", "n": ""}, {"d": "art. 2º, I, \"i\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "depósitos exclusivos para ração, forragem e cama", "n": ""}, {"d": "art. 2º, I, \"j\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "ração armazenada sem contato com o piso ou paredes", "n": ""}, {"d": "art. 2º, I, \"k\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "depósito de produtos químicos e medicamentos", "n": ""}, {"d": "art. 2º, I, \"l\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "depósito de resíduos isolado das demais áreas", "n": ""}, {"d": "art. 2º, I, \"m\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "áreas com sombreamento e cochos para fornecimento de alimento, sal mineral (suplementos) e água", "n": ""}, {"d": "art. 2º, I, \"n\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "cercas de materiais que evitem risco de ferimentos", "n": ""}, {"d": "art. 2º, I, \"o\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "terreno dos piquetes com drenagem de acordo com especificações do Guia Brasileiro do CONCEA", "n": ""}, {"d": "art. 2º, I, \"p\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "área cirúrgica localizada em ambiente fechado e própria para este fim, dotada de brete de contenção, de acordo com as especificações do Guia Brasileiro do CONCEA", "n": "O Anexo lista o mesmo item duas vezes, uma como Recomendado e outra como Obrigatório. Prevalece o artigo: Obrigatório."}, {"d": "art. 2º, I, \"q\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "piquetes hospitalares sombreados com cercas de arame liso, bebedouro e cocho coberto", "n": ""}, {"d": "art. 2º, I, \"r\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "animais geneticamente modificados", "t": "áreas de alojamento de animais geneticamente modificados fisicamente separadas de outras áreas e com acesso restrito", "n": ""}, {"d": "art. 2º, I, \"s\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "quando existentes", "t": "gaiolas metabólicas (quando existentes) adequadas à espécie e de uso exclusivo durante a realização dos estudos metabólicos", "n": ""}, {"d": "art. 2º, I, \"t\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "quando existentes", "t": "câmaras climáticas e respirométricas (quando existentes) equipadas com sistemas de exaustão, renovação e recirculação de ar", "n": ""}, {"d": "art. 2º, II, \"a\"", "c": "OB", "g": "Procedimentos", "fin": [], "sub": "", "cond": "", "t": "lotação animal de acordo com a disponibilidade de água e pastagem", "n": ""}, {"d": "art. 2º, II, \"b\"", "c": "OB", "g": "Procedimentos", "fin": [], "sub": "", "cond": "", "t": "controle de plantas tóxicas", "n": ""}, {"d": "art. 2º, II, \"c\"", "c": "OB", "g": "Procedimentos", "fin": [], "sub": "", "cond": "", "t": "plano de gerenciamento de resíduos sólidos de acordo com a legislação vigente", "n": ""}, {"d": "art. 3º, I", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "área administrativa", "n": ""}, {"d": "art. 3º, II", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "áreas destinadas à recepção", "n": ""}, {"d": "art. 3º, III", "c": "R", "g": "Infraestrutura", "fin": ["criação"], "sub": "", "cond": "", "t": "instalação de criação isolada por barreira física (vegetal)", "n": ""}, {"d": "art. 3º, IV", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "área de quarentena de acordo com as especificações do Guia Brasileiro do CONCEA", "n": ""}, {"d": "art. 3º, V", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "paredes, pisos e tetos de materiais que permitam limpeza e desinfecção", "n": ""}, {"d": "art. 3º, VI", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "instalações amplas, arejadas e com proteção para intempéries", "n": ""}, {"d": "art. 3º, VII", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "iluminação de acordo com as especificações do Guia Brasileiro do CONCEA", "n": ""}, {"d": "art. 3º, VIII", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "curral de manejo compartimentado e separado por porteiras", "n": ""}, {"d": "art. 3º, IX", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "cobertura total ou parcial", "n": ""}, {"d": "art. 3º, X", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "corredor do tipo seringa", "n": ""}, {"d": "art. 3º, XI", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "baias destinadas aos reprodutores em local afastado do aprisco do rebanho geral", "n": ""}, {"d": "art. 3º, XII", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "câmara fria ou freezer para acondicionamento de carcaças", "n": ""}, {"d": "art. 3º, XIII", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "instalações que permitam contato visual entre os animais", "n": ""}, {"d": "art. 3º, XIV", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "alojamento em grupos, salvo exceções previstas pelo CONCEA", "n": ""}, {"d": "art. 3º, XV", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "área de manejo com divisões em compartimentos separados por porteiras", "n": ""}, {"d": "art. 3º, XVI", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "área de manejo com cobertura total ou parcial e corredor do tipo seringa", "n": ""}, {"d": "art. 3º, XVII", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "tronco de contenção próprio para a espécie", "n": ""}, {"d": "art. 3º, XVIII", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "paredes laterais fechadas, especialmente do brete e tronco", "n": ""}, {"d": "art. 3º, XIX", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "baias destinadas aos touros seguindo especificações do Guia Brasileiro do CONCEA", "n": ""}, {"d": "art. 3º, XX", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "Procedimentos Operacionais Padrão (POPs)", "n": ""}]}, "Suínos": {"rn": "RN 66/2023", "onda": 2, "i": [{"d": "art. 2º, I, \"a\"", "c": "OB", "g": "Infraestrutura", "fin": ["criação"], "sub": "", "cond": "", "t": "área para recepção de animais em instalação de criação", "n": ""}, {"d": "art. 2º, I, \"b\"", "c": "OB", "g": "Infraestrutura", "fin": ["criação"], "sub": "", "cond": "", "t": "área de quarentena em instalação de criação", "n": ""}, {"d": "art. 2º, I, \"c\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "área específica para eutanásia", "n": ""}, {"d": "art. 2º, I, \"d\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "local para descarte de carcaças de acordo com as especificações do Guia Brasileiro do CONCEA", "n": ""}, {"d": "art. 2º, I, \"e\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "depósito exclusivo para ração e forragem", "n": ""}, {"d": "art. 2º, I, \"f\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "ração e forragem armazenadas sem contato com o piso ou paredes", "n": ""}, {"d": "art. 2º, I, \"g\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "depósito de resíduos isolado das demais áreas", "n": ""}, {"d": "art. 2º, I, \"h\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "depósito de produtos químicos e medicamentos", "n": ""}, {"d": "art. 2º, I, \"i\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "instalações que promovam a segurança e o bem-estar dos animais, de acordo com as especificações do Guia Brasileiro do CONCEA", "n": ""}, {"d": "art. 2º, I, \"j\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "instalações para confinamento, semiconfinamento e manejo geral com piso de material antiderrapante", "n": ""}, {"d": "art. 2º, I, \"k\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "paredes, pisos e tetos de materiais que possibilitem a higienização e desinfecção", "n": ""}, {"d": "art. 2º, I, \"l\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "exceto casos autorizados pela CEUA ou condições clínicas", "t": "contato físico ou visual entre indivíduos da mesma espécie, exceto em casos autorizados pela CEUA ou devido a condições clínicas", "n": ""}, {"d": "art. 2º, I, \"m\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "dimensionamento dos alojamentos das espécies de acordo com as especificações do Guia Brasileiro do CONCEA", "n": ""}, {"d": "art. 2º, I, \"n\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "suínos geneticamente modificados", "t": "áreas de alojamento e manejo de suínos geneticamente modificados separadas fisicamente das áreas de alojamento dos outros animais, com acesso restrito", "n": ""}, {"d": "art. 2º, II, \"a\"", "c": "OB", "g": "Procedimentos", "fin": [], "sub": "", "cond": "exceto se justificado", "t": "enriquecimento ambiental, exceto se justificado", "n": ""}, {"d": "art. 2º, II, \"b\"", "c": "OB", "g": "Procedimentos", "fin": [], "sub": "", "cond": "", "t": "gerenciamento de resíduos sólidos de acordo com a legislação vigente", "n": ""}, {"d": "art. 3º, I", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "área administrativa", "n": ""}, {"d": "art. 3º, II", "c": "R", "g": "Procedimentos", "fin": [], "sub": "", "cond": "", "t": "Procedimentos Operacionais Padrão (POPs)", "n": ""}]}, "Aves": {"rn": "RN 67/2023", "onda": 2, "i": [{"d": "art. 2º, I, \"a\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "depósitos exclusivos para estocagem de ração, forragem e cama", "n": ""}, {"d": "art. 2º, I, \"b\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "armazenamento de ração, forragem e cama sem contato com o piso ou paredes", "n": ""}, {"d": "art. 2º, I, \"c\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "depósito de resíduos isolado das demais áreas", "n": ""}, {"d": "art. 2º, I, \"d\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "depósito de produtos químicos e medicamentos", "n": ""}, {"d": "art. 2º, I, \"e\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "paredes, pisos e tetos de materiais que possibilitem a higienização e desinfecção", "n": ""}, {"d": "art. 2º, I, \"f\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "instalações que promovam a segurança e o bem-estar dos animais, de acordo com as especificações do Guia Brasileiro do CONCEA", "n": ""}, {"d": "art. 2º, I, \"g\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "dimensionamento dos alojamentos das espécies de acordo com as especificações do Guia Brasileiro do CONCEA", "n": ""}, {"d": "art. 2º, I, \"h\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "local para descarte de carcaças", "n": ""}, {"d": "art. 2º, I, \"i\"", "c": "OB", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "área para Eutanásia separada das demais áreas", "n": ""}, {"d": "art. 2º, II, \"a\"", "c": "OB", "g": "Procedimentos", "fin": [], "sub": "", "cond": "exceto se justificado", "t": "enriquecimento ambiental, exceto se justificado", "n": ""}, {"d": "art. 2º, II, \"b\"", "c": "OB", "g": "Procedimentos", "fin": [], "sub": "", "cond": "", "t": "sistema de transporte de acordo com as especificações do Guia Brasileiro do CONCEA", "n": ""}, {"d": "art. 2º, II, \"c\"", "c": "OB", "g": "Procedimentos", "fin": [], "sub": "", "cond": "", "t": "gerenciamento de resíduos sólidos de acordo com a legislação vigente", "n": ""}, {"d": "art. 2º, II, \"d\"", "c": "OB", "g": "Procedimentos", "fin": [], "sub": "", "cond": "", "t": "plano de desinfecção das instalações", "n": ""}, {"d": "art. 3º, I", "c": "R", "g": "Infraestrutura", "fin": [], "sub": "", "cond": "", "t": "área administrativa", "n": ""}, {"d": "art. 3º, II", "c": "R", "g": "Procedimentos", "fin": [], "sub": "", "cond": "", "t": "manual de Procedimentos Operacionais Padrão (POPs)", "n": ""}]}};
+const gORD = ["Ambientes físicos","Áreas de apoio","Áreas de serviço","Depósitos","Alojamento",
+              "Piquetes","Manejo","Detalhes construtivos","Ambiente","Biossegurança","Procedimentos",
+              "Infraestrutura"];
+const gTAXONS = ["Roedores e lagomorfos", "Cães e gatos", "Primatas não humanos", "Peixes", "Anfíbios", "Serpentes", "Equídeos", "Pequenos ruminantes", "Grandes ruminantes (bovinos e bubalinos)", "Suínos", "Aves"];
+const gRESUMO = { taxon:null, sub:null, fin:"todas", enquadramento:null };
+let gPasso = 0;
+
+/* ---------- passos ---------- */
+const gPassos = [...document.querySelectorAll('#guia-ceua .g-step')];
+function gMontarSteps(){
+  const c = document.getElementById('gSteps'); c.innerHTML='';
+  gPassos.forEach((p,i)=>{
+    if(i) { const l=document.createElement('div'); l.className='g-line'; c.appendChild(l); }
+    const d=document.createElement('button');
+    d.className='g-dot'+(i===gPasso?' on':(i<gPasso?' done':''));
+    d.textContent=i+1; d.title=p.dataset.nome; d.onclick=()=>gIr(i);
+    c.appendChild(d);
+  });
+  document.getElementById('gStepName').textContent =
+    `Passo ${gPasso+1} de ${gPassos.length} — ${gPassos[gPasso].dataset.nome}`;
+}
+function gIr(i){
+  gPasso = Math.max(0, Math.min(gPassos.length-1, i));
+  gPassos.forEach((p,k)=>p.classList.toggle('on', k===gPasso));
+  gMontarSteps();
+  if (gPasso === gPassos.length-1) gResumo();
+  document.getElementById('guia-ceua').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+/* ---------- prazos ---------- */
+(function(){
+  const ini=new Date(2025,2,17), d1=new Date(2026,8,17), d2=new Date(2028,4,3), hoje=new Date();
+  hoje.setHours(0,0,0,0);
+  const tot=d2-ini, pos=t=>Math.max(0,Math.min(100,(t-ini)/tot*100));
+  const p1=pos(d1), pn=pos(hoje);
+  const mk1=document.getElementById('gMk1'), lb1=document.getElementById('gLb1');
+  const mk2=document.getElementById('gMk2'), lb2=document.getElementById('gLb2');
+  const mkN=document.getElementById('gMkN'), lbN=document.getElementById('gLbN');
+  const fill=document.getElementById('gFill'), d1Out=document.getElementById('gD1'), d2Out=document.getElementById('gD2');
+  mk1.style.left=p1+'%'; lb1.style.left=p1+'%';
+  mk2.style.left='100%'; lb2.style.left='100%'; lb2.style.transform='translateX(-88%)';
+  mkN.style.left=pn+'%'; lbN.style.left=pn+'%'; fill.style.width=pn+'%';
+  const dia=864e5;
+  const n1=Math.ceil((d1-hoje)/dia), n2=Math.ceil((d2-hoje)/dia);
+  d1Out.textContent = n1>0? n1 : 'prazo vencido';
+  d2Out.textContent = n2>0? n2 : 'prazo vencido';
+  gTAXONS.forEach(tx=>{
+    const m=gMAT[tx], b=document.createElement('button');
+    b.className='g-chip'+(m.onda===2?' amb':''); b.textContent=tx;
+    b.onclick=()=>{ gRESUMO.taxon=tx; document.getElementById('gTx').value=tx; gTaxonChanged(); gIr(2); };
+    document.getElementById(m.onda===1?'gChips1':'gChips2').appendChild(b);
+  });
+})();
+
+/* ---------- quiz ---------- */
+const gTELAS=['gq1','gq2','gq3','gq3b','gq4','gq5'];
+const gRES=[...document.querySelectorAll('#guia-ceua .g-res')].map(e=>e.id);
+function gGo(id){
+  [...gTELAS,...gRES].forEach(x=>{const e=document.getElementById(x); if(e) e.style.display='none';});
+  const alvo=document.getElementById(id); if(alvo) alvo.style.display='block';
+  if(id.startsWith('gr-')){
+    gRESUMO.enquadramento = {
+      titulo: alvo.querySelector('h4').textContent,
+      tag: alvo.querySelector('.g-tag').textContent,
+      cite: alvo.querySelector('.g-cite') ? alvo.querySelector('.g-cite').textContent : '',
+      acoes: [...alvo.querySelectorAll('li')].map(li=>li.textContent)
+    };
+  }
+}
+function gQuizReset(){ gGo('gq1'); gRESUMO.enquadramento=null; }
+
+/* ---------- matriz ---------- */
+const gSel=document.getElementById('gTx');
+const gSub=document.getElementById('gSub');
+const gSubWrap=document.getElementById('gSubWrap');
+gTAXONS.forEach(tx=>{const o=document.createElement('option'); o.value=tx; o.textContent=tx; gSel.appendChild(o);});
+function gTaxonChanged(){
+  const caesGatos=gSel.value==='Cães e gatos';
+  gSubWrap.classList.toggle('g-hidden', !caesGatos);
+  gRESUMO.sub=caesGatos?gSub.value:null;
+  gRender();
+}
+function gSubChanged(){ gRESUMO.sub=gSub.value; gRender(); }
+function gItemAtivo(x){
+  const finalidade=gRESUMO.fin==='todas' || !x.fin.length || x.fin.indexOf(gRESUMO.fin)>-1;
+  if(!finalidade) return false;
+  if(gSel.value!=='Cães e gatos') return true;
+  return !x.sub || x.sub===gRESUMO.sub || (gRESUMO.sub==='Cães e gatos' && (x.sub==='Cães' || x.sub==='Gatos'));
+}
+function gSetF(b){
+  document.querySelectorAll('#gSeg button').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on'); gRESUMO.fin=b.dataset.f; gRender();
+}
+function gRender(){
+  const tx=gSel.value; gRESUMO.taxon=tx;
+  const m=gMAT[tx], grid=document.getElementById('gGrid');
+  document.getElementById('gRnLbl').textContent=m.rn;
+  grid.innerHTML=''; let ob=0, re=0, cond=0;
+  gORD.forEach(g=>{
+    const its=m.i.filter(x=>x.g===g); if(!its.length) return;
+    const box=document.createElement('div'); box.className='g-grp';
+    box.innerHTML='<h5>'+g+'</h5>';
+    const bs=document.createElement('div'); bs.className='g-blocks';
+    its.forEach(x=>{
+      const on = gItemAtivo(x);
+      if(on){ x.c==='OB'?ob++:re++; if(x.cond) cond++; }
+      const d=document.createElement('div');
+      d.className='g-bl '+(x.c==='OB'?'ob':'re')+(x.cond?' cond':'')+(on?'':' faded');
+      d.innerHTML='<span class="k">'+(x.c==='OB'?'OBRIGATÓRIO':'RECOMENDADO')+'</span>'+x.t;
+      d.title = m.rn+' · '+x.d + (x.cond?'\nCondição na norma: '+x.cond:'') + (x.n?'\n'+x.n:'');
+      bs.appendChild(d);
+    });
+    box.appendChild(bs); grid.appendChild(box);
+  });
+  document.getElementById('gTally').innerHTML='<b>'+ob+'</b> obrigatórios · <b>'+re+'</b> recomendados';
+  const cn=document.getElementById('gCondNote');
+  const listaCond=m.i.filter(x=>x.cond && gItemAtivo(x));
+  if(listaCond.length){ cn.style.display='block';
+    cn.innerHTML='<b>Estes você pode marcar como "não se aplica" se a condição não existir na sua instalação</b>'
+      + '<ul style="margin:6px 0 0;padding-left:20px">'
+      + listaCond.map(x=>'<li style="margin-bottom:4px">'+x.t+' — <b style="font-weight:700">'+x.cond+'</b> <span style="opacity:.7">('+x.d+')</span></li>').join('')
+      + '</ul>'; }
+  else cn.style.display='none';
+}
+
+/* ---------- abas ---------- */
+function gTab(b){
+  document.querySelectorAll('#gTabs button').forEach(x=>x.classList.remove('on')); b.classList.add('on');
+  ['gp4','gp5'].forEach(p=>document.getElementById(p).classList.add('off'));
+  document.getElementById(b.dataset.p).classList.remove('off');
+}
+
+/* ---------- resumo ---------- */
+function gResumo(){
+  const tx=gRESUMO.taxon, m=tx?gMAT[tx]:null;
+  const fin={'todas':'não informada','criação':'Produção/criação','manutenção':'Manutenção','experimentação':'Utilização'}[gRESUMO.fin];
+  let ob=0,re=0,cond=0;
+  if(m) m.i.forEach(x=>{
+    const on = gItemAtivo(x);
+    if(on){ x.c==='OB'?ob++:re++; if(x.cond) cond++; }
+  });
+  const prazo = m ? (m.onda===1?'17 de setembro de 2026':'3 de maio de 2028') : null;
+  const dias = m ? Math.ceil(((m.onda===1?new Date(2026,8,17):new Date(2028,4,3))-new Date())/864e5) : null;
+  const e=gRESUMO.enquadramento;
+  let h='';
+  h+=`<div class="g-sumrow"><div class="g-sumk">Enquadramento</div><div class="g-sumv">`
+   + (e?`<b>${e.titulo}</b><div class="g-small" style="margin-top:3px">${e.tag}</div>`
+       :`<span style="color:#B4801A">Não percorrido. Volte ao passo 2 e responda o diagnóstico.</span>`)
+   + `</div></div>`;
+  h+=`<div class="g-sumrow"><div class="g-sumk">Grupo taxonômico</div><div class="g-sumv">`
+   + (m?`<b>${tx}</b>${gRESUMO.sub?' · '+gRESUMO.sub:''} — ${m.rn}`:`<span style="color:#B4801A">Não selecionado.</span>`)+`</div></div>`;
+  h+=`<div class="g-sumrow"><div class="g-sumk">Finalidade</div><div class="g-sumv">${fin}</div></div>`;
+  if(m){
+    h+=`<div class="g-sumrow"><div class="g-sumk">Prazo</div><div class="g-sumv">`
+     + `<span class="g-big">${dias>0?dias+' dias':'prazo vencido'}</span>`
+     + `<div class="g-small">até ${prazo}</div></div></div>`;
+    h+=`<div class="g-sumrow"><div class="g-sumk">Critérios aplicáveis</div><div class="g-sumv">`
+     + `<b>${ob}</b> obrigatórios · ${re} recomendados`
+     + (cond?` · <span style="color:#5b21b6">${cond} condicionados pela norma</span>`:'')
+     + `<div class="g-small" style="margin-top:4px">Só os obrigatórios bloqueiam o licenciamento (Portaria 9.037/2025, art. 3º).</div></div></div>`;
+  }
+  if(e && e.acoes.length){
+    h+=`<div class="g-sumrow"><div class="g-sumk">O que fazer</div><div class="g-sumv"><ul class="g-todo">`
+     + e.acoes.map(a=>`<li>${a}</li>`).join('') + `</ul></div></div>`;
+  }
+  h+=`<div class="g-sumrow"><div class="g-sumk">Próximo passo</div><div class="g-sumv">`
+   + (m?`Abra o formulário de <b>${tx}</b> na página da CEUA e preencha o checklist. Onde a norma põe condição e ela não se verifica, marque "não se aplica" com justificativa.`
+       :`Selecione o grupo taxonômico no passo 3 para saber qual formulário usar.`)
+   + `</div></div>`;
+  if(e && e.cite) h+=`<div class="g-sumrow"><div class="g-sumk">Base normativa</div><div class="g-sumv g-small">${e.cite}</div></div>`;
+  document.getElementById('gSum').innerHTML=h;
+}
+function gReiniciar(){ gQuizReset(); gRESUMO.taxon=null; gRESUMO.sub=null; gRESUMO.fin='todas';
+  document.querySelectorAll('#gSeg button').forEach((x,i)=>x.classList.toggle('on', i===0));
+  gSel.selectedIndex=0; gSub.selectedIndex=0; gTaxonChanged(); gIr(0); }
+
+gMontarSteps(); gTaxonChanged();
+</script>
+</body></html>
