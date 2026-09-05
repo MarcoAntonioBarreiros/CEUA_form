@@ -100,14 +100,19 @@ def test_engine_static() -> str:
     check("instalacao['Espécie / subgrupo selecionado']=g('subsel')" in source and
           "Object.entries(d.instalacao).forEach(([k,val])=>kv(k,val))" in source,
           "PDF inclui o subgrupo selecionado e todos os dados iniciais")
+    check(coordinator_source.count('id="nb"') == 10 and
+          all(coordinator_source.count(f'<option>{nivel}</option>') == 10 for nivel in ('NB-1', 'NB-2', 'NB-3')),
+          "os dez formulários de coordenador possuem o campo NB-1, NB-2 e NB-3")
     check("catch(erro)" in source and "showStatus('error','Erro ao registrar dados:" in source,
           "falha de rede possui tratamento e mensagem controlada")
 
     payload_match = re.search(r"function payloadAppsScript\(\)\{(.*?)\n\}\n\nfunction showStatus", source, re.S)
     check(payload_match is not None, "payload do Apps Script está definido isoladamente")
     payload_source = payload_match.group(1)
-    forbidden = ["localizacao_tipo", "nivel_biosseguranca", "NB-1", "NB-2", "NB-3", "Misto", "N/A"]
+    forbidden = ["localizacao_tipo", "Misto", "N/A"]
     check(not any(term in payload_source for term in forbidden), "payload não referencia campos ou valores removidos")
+    check("nivel_biosseguranca:g('nb')" in payload_source,
+          "payload registra o nível de biossegurança selecionado")
     check("g1:d.instituicao" in payload_source and "g2:d.instalacao" in payload_source and
           "g3:d.responsaveis" in payload_source and "instituicao:g('inst')" in payload_source,
           "payload mantém as chaves compatíveis do Apps Script original")
@@ -128,7 +133,7 @@ const elements={{
   purpose:{{value:'Utilização',classList:{{toggle:()=>{{}}}},setAttribute:()=>{{}}}}, cTot:{{}}, cOk:{{}}, cNo:{{}}, cNa:{{}}, cPend:{{}}, btnPend:{{}},
   verdict:{{textContent:'EM PREENCHIMENTO',style:{{}}}}, statusBox:{{textContent:'',style:{{}}}}
 }};
-const fieldIds=['inst','cnpj','ceua','addr','city','mail','unit','situation','subsel','animalDetail','campus','building','room','area','cap','coord','coordCpf','coordMail','rt','rtCpf','rtMail','crmv','crmvUf'];
+const fieldIds=['inst','cnpj','ceua','addr','city','mail','unit','situation','nb','subsel','animalDetail','campus','building','room','area','cap','coord','coordCpf','coordMail','rt','rtCpf','rtMail','crmv','crmvUf'];
 for(const id of fieldIds) elements[id]={{value:'preenchido',classList:{{toggle:()=>{{}}}},setAttribute:()=>{{}},focus:()=>{{}},scrollIntoView:()=>{{}}}};
 elements.coord.value='Coordenador Teste'; elements.rt.value='RT Teste'; elements.subsel.value='Cães';
 const document={{

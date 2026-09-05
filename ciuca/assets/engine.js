@@ -346,7 +346,7 @@ function resumo(){
 
 function dados(){
   const g=id=>($(id)?$(id).value:'');
-  const instalacao={'Nome / identificação':g('unit'),'Finalidade':g('purpose'),'Situação':g('situation'),
+  const instalacao={'Nome / identificação':g('unit'),'Finalidade':g('purpose'),'Situação':g('situation'),'Nível de biossegurança':g('nb'),
     'Espécie(s) / grupo abrangido(s)':g('animalDetail'),'Campus':g('campus'),'Prédio':g('building'),
     'Sala / setor':g('room'),'Área (m²)':g('area'),'Capacidade':g('cap')};
   if($('subsel')) instalacao['Espécie / subgrupo selecionado']=g('subsel');
@@ -397,6 +397,7 @@ function payloadAppsScript(){
     nome_instalacao:g('unit'),
     finalidade:g('purpose'),
     situacao:g('situation'),
+    nivel_biosseguranca:g('nb'),
     animal_grupo:g('subsel'),
     animal_detalhamento:g('animalDetail'),
     campus:g('campus'),
