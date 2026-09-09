@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Formulário CEUA 2025 — UFPR Palotina</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+<script>
+tailwind.config={theme:{extend:{colors:{
+  tl:{50:'#E8F4F6',100:'#D1E9ED',200:'#A3D3DB',400:'#4EAAB8',500:'#2A7B88',600:'#1D5B64',700:'#164549',800:'#0F2F32'}
+},fontFamily:{sans:['DM Sans','sans-serif']}}}}
+</script>
+<style>
+body{font-family:'DM Sans',sans-serif;background:linear-gradient(160deg,#E8F4F6 0%,#f8fbfc 40%,#E8F4F6 100%);min-height:100vh}
+.step-content{display:none;animation:slideUp .35s ease}.step-content.active{display:block}
+@keyframes slideUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.fi{width:100%;padding:.7rem .85rem;border:1.5px solid #D1E9ED;border-radius:.55rem;background:#FAFCFC;transition:all .2s;font-size:.88rem}
+.fi:focus{outline:none;border-color:#2A7B88;box-shadow:0 0 0 3px rgba(42,123,136,.12);background:#fff}
+textarea.fi{resize:vertical;min-height:72px}
+.card{background:#fff;border-radius:1rem;box-shadow:0 2px 16px rgba(42,123,136,.06);border:1px solid #E8F4F6}
+.stag{background:linear-gradient(135deg,#2A7B88,#1D5B64);color:#fff;padding:.3rem .85rem;border-radius:.35rem;font-size:.65rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;display:inline-block}
+.cbc{padding:.45rem .65rem;border-radius:.45rem;transition:all .15s;cursor:pointer;display:flex;align-items:flex-start;gap:.45rem;font-size:.88rem}
+.cbc:hover{background:#E8F4F6}
+.cbc input[type=checkbox],.cbc input[type=radio]{accent-color:#2A7B88;margin-top:3px;width:15px;height:15px;flex-shrink:0}
+.cbc.sub{margin-left:1.4rem;font-size:.82rem;color:#555}
+.dyn{animation:slideUp .25s ease}
+.nb{padding:.65rem 1.8rem;border-radius:.6rem;font-weight:600;font-size:.88rem;transition:all .2s;cursor:pointer}
+.nb:disabled{opacity:.4;cursor:not-allowed}
+.sd{width:2.3rem;height:2.3rem;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.75rem;transition:all .3s;border:2px solid #D1E9ED;color:#999}
+.sd.on{background:linear-gradient(135deg,#2A7B88,#1D5B64);color:#fff;border-color:#2A7B88;box-shadow:0 2px 8px rgba(42,123,136,.3)}
+.sd.ok{background:#4EAAB8;color:#fff;border-color:#4EAAB8}
+.yn select{padding:.4rem .55rem;border:1.5px solid #D1E9ED;border-radius:.45rem;font-size:.82rem;background:#FAFCFC}
+.lbl{display:block;font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:#94a3b8;margin-bottom:2px}
+</style>
+</head>
+<body class="p-3 md:p-6">
+<div class="max-w-5xl mx-auto">
+
+<!-- ══════ HEADER ══════ -->
+<header class="flex flex-col md:flex-row items-center justify-between mb-5 gap-3 card p-5">
+  <div class="flex items-center gap-4">
+    <div class="w-14 h-14 rounded-lg flex items-center justify-center text-white font-bold text-lg" style="background:linear-gradient(135deg,#2A7B88,#1D5B64)">UFPR</div>
+    <div>
+      <p class="text-[.6rem] font-semibold text-tl-600 tracking-widest uppercase">Ministério da Educação · Universidade Federal do Paraná</p>
+      <h1 class="text-lg font-bold text-tl-800 leading-tight">Comissão de Ética no Uso de Animais — CEUA</h1>
+      <p class="text-[.65rem] text-slate-400">Setor Palotina · Rua Pioneiro, 2153 · 85950-000 · Palotina – PR</p>
+    </div>
+  </div>
+  <span class="text-[.6rem] font-bold bg-tl-50 text-tl-700 px-3 py-1 rounded-full border border-tl-200">Versão 2.0 · 19.02.2026 · RN 53/2021</span>
+</header>
+
+<!-- ══════ STEPPER ══════ -->
+<div class="mb-5 overflow-x-auto pb-1" id="stepBar">
+<div class="flex items-center justify-between min-w-[760px] px-1">
+  <div class="flex flex-col items-center gap-1 flex-1"><div class="sd on" data-s="1">1</div><span class="text-[.55rem] font-semibold text-tl-700 mt-1">Identificação</span></div>
+  <div class="h-[2px] flex-[.6] bg-tl-100 -mt-3"></div>
+  <div class="flex flex-col items-center gap-1 flex-1"><div class="sd" data-s="2">2</div><span class="text-[.55rem] font-medium text-slate-400 mt-1">Equipe</span></div>
+  <div class="h-[2px] flex-[.6] bg-tl-100 -mt-3"></div>
+  <div class="flex flex-col items-center gap-1 flex-1"><div class="sd" data-s="3">3</div><span class="text-[.55rem] font-medium text-slate-400 mt-1">CIUCA / Projeto</span></div>
+  <div class="h-[2px] flex-[.6] bg-tl-100 -mt-3"></div>
+  <div class="flex flex-col items-center gap-1 flex-1"><div class="sd" data-s="4">4</div><span class="text-[.55rem] font-medium text-slate-400 mt-1">Animais</span></div>
+  <div class="h-[2px] flex-[.6] bg-tl-100 -mt-3"></div>
+  <div class="flex flex-col items-center gap-1 flex-1"><div class="sd" data-s="5">5</div><span class="text-[.55rem] font-medium text-slate-400 mt-1">Procedimentos</span></div>
+  <div class="h-[2px] flex-[.6] bg-tl-100 -mt-3"></div>
+  <div class="flex flex-col items-center gap-1 flex-1"><div class="sd" data-s="6">6</div><span class="text-[.55rem] font-medium text-slate-400 mt-1">Finalização</span></div>
+</div>
+</div>
+
+<form id="F" autocomplete="off">
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!--  STEP 1 — FINALIDADE E TÍTULO  (Seções 1–2)       -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="step-content active" id="s1">
+<div class="card p-6 md:p-8">
+  <div class="flex items-center gap-3 mb-5 border-b border-tl-100 pb-3">
+    <span class="stag">Seções 1 – 2</span>
+    <h2 class="text-xl font-bold text-tl-800">Finalidade e Título da Atividade</h2>
+  </div>
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-5">
+    <div>
+      <label class="lbl">Finalidade</label>
+      <div class="space-y-1">
+        <label class="cbc"><input type="checkbox" name="fin" value="Ensino"> Ensino</label>
+        <label class="cbc"><input type="checkbox" name="fin" value="Pesquisa"> Pesquisa</label>
+        <label class="cbc"><input type="checkbox" name="fin" value="Treinamento"> Treinamento</label>
+      </div>
+    </div>
+    <div><label class="lbl">Início da Atividade</label><input type="date" id="dt_ini" class="fi"></div>
+    <div><label class="lbl">Final da Atividade</label><input type="date" id="dt_fim" class="fi"></div>
+    <div><label class="lbl">Área CAPES</label><input type="text" id="area_capes" class="fi" placeholder="Ex: Ciências Agrárias"></div>
+  </div>
+  <!-- ── Bloco Condicional: Ensino / Treinamento ── -->
+  <div id="blocoEnsino" class="hidden mb-5 dyn">
+    <!-- Nível e Curso -->
+    <div class="p-4 bg-amber-50/60 rounded-xl border border-amber-200 mb-4">
+      <h3 class="font-bold text-amber-800 mb-3 text-sm uppercase tracking-wide flex items-center gap-2">
+        <span class="text-base">📋</span> Dados da Atividade Didática
+      </h3>
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-2">
+        <div><label class="lbl">Nível</label>
+          <select id="nivel_ensino" class="fi">
+            <option value="">Selecione...</option>
+            <option value="Graduação">Graduação</option>
+            <option value="Pós-Graduação Stricto Sensu">Pós-Graduação Stricto Sensu</option>
+            <option value="Pós-Graduação Lato Sensu">Pós-Graduação Lato Sensu</option>
+            <option value="Extensão">Extensão</option>
+          </select>
+        </div>
+        <div><label class="lbl">Nome do Curso</label><input type="text" id="curso_nome" class="fi" placeholder="Ex: Medicina Veterinária"></div>
+        <div><label class="lbl">Disciplina</label><input type="text" id="disciplina_nome" class="fi" placeholder="Nome da disciplina"></div>
+        <div><label class="lbl">Semestre / Período</label><input type="text" id="disciplina_sem" class="fi" placeholder="Ex: 5º período"></div>
+      </div>
+    </div>
+
+    <!-- Árvore de Decisão RN 53 -->
+    <div class="p-4 bg-red-50/50 rounded-xl border-2 border-red-200" id="arvoreRN53">
+      <h3 class="font-bold text-red-800 mb-1 text-sm uppercase tracking-wide flex items-center gap-2">
+        <span class="text-base">⚖️</span> Árvore de Decisão — RN nº 53/2021 (CONCEA)
+      </h3>
+      <p class="text-[.7rem] text-red-600 mb-4 italic">Obrigatório para atividades de ensino com animais. Conforme Anexo da Resolução Normativa nº 53, de 19 de maio de 2021.</p>
+
+      <!-- P1 -->
+      <div class="mb-3 p-3 bg-white rounded-lg border">
+        <label class="font-semibold text-sm text-slate-800 block mb-2">1) A aula prática promove a eutanásia de animais vertebrados em algum momento do protocolo (antes, durante ou após a aula)?</label>
+        <div class="flex gap-4">
+          <label class="cbc"><input type="radio" name="rn53_p1" value="Sim" onchange="avaliarRN53()"> Sim</label>
+          <label class="cbc"><input type="radio" name="rn53_p1" value="Não" onchange="avaliarRN53()"> Não</label>
+        </div>
+      </div>
+
+      <!-- P2 (condicional: aparece se P1=Não) -->
+      <div id="rn53_p2_box" class="hidden mb-3 p-3 bg-white rounded-lg border dyn">
+        <label class="font-semibold text-sm text-slate-800 block mb-2">2) Ocorre distresse que comprometa o bem-estar do animal em decorrência do procedimento didático?</label>
+        <div class="flex gap-4">
+          <label class="cbc"><input type="radio" name="rn53_p2" value="Sim" onchange="avaliarRN53()"> Sim</label>
+          <label class="cbc"><input type="radio" name="rn53_p2" value="Não" onchange="avaliarRN53()"> Não</label>
+        </div>
+      </div>
+
+      <!-- P3 (condicional: aparece se P1=Sim ou P2=Sim) -->
+      <div id="rn53_p3_box" class="hidden mb-3 p-3 bg-white rounded-lg border dyn">
+        <label class="font-semibold text-sm text-slate-800 block mb-2">3) A prática objetiva desenvolver <strong>ambas</strong> as habilidades (psicomotora e competências) conforme as DCN do curso?</label>
+        <div class="flex gap-4">
+          <label class="cbc"><input type="radio" name="rn53_p3" value="Sim" onchange="avaliarRN53()"> Sim</label>
+          <label class="cbc"><input type="radio" name="rn53_p3" value="Não" onchange="avaliarRN53()"> Não</label>
+        </div>
+      </div>
+
+      <!-- Resultado automático -->
+      <div id="rn53_resultado" class="hidden mt-3 p-3 rounded-lg font-semibold text-sm"></div>
+
+      <!-- Campo de habilidades (aparece se P3=Sim) -->
+      <div id="rn53_habilidades_box" class="hidden mt-3 dyn">
+        <label class="lbl">Indicar quais habilidades psicomotoras e competências das DCN serão desenvolvidas:</label>
+        <textarea id="rn53_habilidades" class="fi" rows="3" placeholder="Descrever as habilidades psicomotoras e competências previstas nas Diretrizes Curriculares Nacionais do curso..."></textarea>
+      </div>
+
+      <!-- Exceção §2º -->
+      <div id="rn53_excecao_box" class="hidden mt-3 p-3 bg-blue-50 rounded-lg border border-blue-200 dyn">
+        <label class="cbc"><input type="checkbox" id="rn53_excecao" onchange="avaliarRN53()"> <span class="text-sm">Esta atividade se enquadra nas <strong>exceções do §2º do Art. 1º</strong> (pós-graduação; ou biodiversidade, ecologia, zoologia, conservação, produção, sanidade e inspeção animal com abordagens diagnósticas, terapêuticas, profiláticas e zootécnicas).</span></label>
+        <div class="mt-2"><label class="lbl">Justificar o enquadramento na exceção:</label><textarea id="rn53_excecao_just" class="fi" rows="2"></textarea></div>
+      </div>
+    </div>
+
+    <!-- Métodos Substitutivos (Art. 2º) -->
+    <div class="mt-4 p-4 bg-orange-50/50 rounded-xl border border-orange-200" id="blocoSubstitutivos">
+      <h3 class="font-bold text-orange-800 mb-3 text-sm uppercase tracking-wide flex items-center gap-2">
+        <span class="text-base">🔄</span> Busca por Métodos Substitutivos (Art. 2º, RN 53/2021)
+      </h3>
+      <div class="mb-2">
+        <label class="font-semibold text-sm text-slate-800 block mb-2">Foi realizada busca por métodos substitutivos (vídeos, modelos computacionais, simuladores, manequins, etc.)?</label>
+        <div class="flex gap-4">
+          <label class="cbc"><input type="radio" name="subst_busca" value="Sim"> Sim</label>
+          <label class="cbc"><input type="radio" name="subst_busca" value="Não"> Não</label>
+        </div>
+      </div>
+      <div><label class="lbl">Métodos avaliados e bases consultadas:</label><textarea id="subst_metodos" class="fi" rows="2" placeholder="Listar os métodos alternativos avaliados, bases de dados consultadas (ex: DB-ALM, FRAME, ZEBET)..."></textarea></div>
+      <div class="mt-2"><label class="lbl">Justificativa para a impossibilidade de substituição integral:</label><textarea id="subst_justificativa" class="fi" rows="2" placeholder="Explicar por que os métodos substitutivos são insuficientes para manter a qualidade de aprendizado..."></textarea></div>
+    </div>
+  </div>
+
+  <div class="space-y-3">
+    <div><label class="lbl">Título da Atividade (Português)</label><input type="text" id="titulo_pt" class="fi" placeholder="Título completo..."></div>
+    <div><label class="lbl">Título em Inglês</label><input type="text" id="titulo_en" class="fi" placeholder="English title..."></div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!--  STEP 2 — EQUIPE  (Seções 3–4)                    -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="step-content" id="s2">
+<div class="card p-6 md:p-8">
+  <div class="flex items-center gap-3 mb-5 border-b border-tl-100 pb-3">
+    <span class="stag">Seções 3 – 5</span>
+    <h2 class="text-xl font-bold text-tl-800">Responsável, Capacitação e Colaboradores</h2>
+  </div>
+
+  <!-- Responsável -->
+  <div class="mb-6 p-4 bg-tl-50/50 rounded-xl border border-tl-100">
+    <h3 class="font-bold text-tl-700 mb-3 text-sm uppercase tracking-wide">3. Responsável pelo Projeto</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+      <div><label class="lbl">Nome completo</label><input type="text" id="r_nome" class="fi"></div>
+      <div><label class="lbl">CPF</label><input type="text" id="r_cpf" class="fi"></div>
+      <div><label class="lbl">Instituição</label><input type="text" id="r_inst" class="fi" value="UFPR"></div>
+      <div><label class="lbl">Unidade</label><input type="text" id="r_unid" class="fi" value="Setor Palotina"></div>
+      <div><label class="lbl">Telefone com DDD</label><input type="text" id="r_tel" class="fi"></div>
+      <div><label class="lbl">E-mail institucional</label><input type="text" id="r_email" class="fi"></div>
+      <div><label class="lbl">Vínculo com a UFPR</label><input type="text" id="r_vinc" class="fi"></div>
+      <div><label class="lbl">SIAPE ou Matrícula</label><input type="text" id="r_siape" class="fi"></div>
+    </div>
+  </div>
+
+  <!-- Capacitação -->
+  <div class="mb-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div class="p-4 bg-slate-50 rounded-xl border">
+      <h4 class="font-bold text-sm mb-2 text-slate-700">Treinamento Específico</h4>
+      <label class="cbc"><input type="checkbox" name="cap" value="Diploma Medicina Veterinária"> Diploma Medicina Veterinária</label>
+      <label class="cbc"><input type="checkbox" name="cap" value="Treinamento documentado"> Treinamento documentado</label>
+      <label class="cbc"><input type="checkbox" name="cap" value="Experiência profissional"> Experiência profissional</label>
+      <div class="mt-1 ml-6"><label class="text-[.65rem] text-slate-500">Anos:</label><input type="text" id="cap_anos" class="fi" style="max-width:80px;padding:.35rem .5rem;font-size:.8rem"></div>
+    </div>
+    <div class="p-4 bg-slate-50 rounded-xl border">
+      <h4 class="font-bold text-sm mb-2 text-slate-700">Capacitação em Ética</h4>
+      <label class="cbc"><input type="checkbox" name="etica" value="Ciência de Animais de Laboratório"> Ciência de Animais de Laboratório</label>
+      <label class="cbc"><input type="checkbox" name="etica" value="Treinamento equivalente"> Treinamento equivalente</label>
+      <label class="cbc"><input type="checkbox" name="etica" value="Disciplina acadêmica"> Disciplina acadêmica</label>
+      <label class="cbc"><input type="checkbox" name="etica" value="Experiência profissional"> Experiência profissional</label>
+    </div>
+  </div>
+
+  <!-- Colaboradores -->
+  <div>
+    <div class="flex justify-between items-center mb-3 p-3 bg-tl-50/50 rounded-lg border border-tl-100">
+      <h3 class="font-bold text-tl-700 text-sm uppercase tracking-wide">4. Colaboradores</h3>
+      <button type="button" onclick="addC()" class="nb text-xs bg-tl-500 text-white hover:bg-tl-600" style="padding:.35rem .9rem">+ Adicionar</button>
+    </div>
+    <div id="cBox" class="space-y-2"></div>
+    <p id="cNone" class="text-xs text-slate-400 italic mt-1">Nenhum colaborador adicionado.</p>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!--  STEP 3 — CIUCA + PROJETO  (Seções 4b–7)          -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="step-content" id="s3">
+<div class="card p-6 md:p-8">
+  <div class="flex items-center gap-3 mb-5 border-b border-tl-100 pb-3">
+    <span class="stag">Seções 4b – 7</span>
+    <h2 class="text-xl font-bold text-tl-800">CIUCA, Resumo, Objetivos e Justificativa</h2>
+  </div>
+
+  <!-- CIUCA -->
+  <div class="mb-6 p-4 bg-tl-50/30 rounded-xl border border-tl-100">
+    <h3 class="font-bold text-tl-700 mb-3 text-sm">Finalidade do Projeto — Dados CIUCA</h3>
+    <div class="space-y-0.5 max-h-[360px] overflow-y-auto pr-2 text-[.82rem]" id="ciucaBox">
+      <label class="cbc"><input type="checkbox" name="ci" value="Estudo de biologia fundamental"> Estudo de biologia fundamental</label>
+      <label class="cbc"><input type="checkbox" name="ci" value="Estudo de comportamento animal"> Estudo de comportamento animal</label>
+
+      <label class="cbc"><input type="checkbox" name="ci" value="Pesquisa e Desenvolvimento Humano + veterinário + odontologia"> Pesquisa e Desenvolvimento Humano + veterinário + odontologia</label>
+      <label class="cbc sub"><input type="checkbox" name="ci" value="P&D: Drogas/medicamentos"> Drogas / medicamentos</label>
+      <label class="cbc sub"><input type="checkbox" name="ci" value="P&D: Alimentos"> Alimentos</label>
+      <label class="cbc sub"><input type="checkbox" name="ci" value="P&D: Imunológicos"> Imunológicos</label>
+      <label class="cbc sub"><input type="checkbox" name="ci" value="P&D: Instrumentos"> Instrumentos</label>
+
+      <label class="cbc"><input type="checkbox" name="ci" value="Produção e controle — medicina humana e odontologia"> Produção e controle — medicina humana e odontologia</label>
+      <label class="cbc sub"><input type="checkbox" name="ci" value="Prod.Hum: Drogas/medicamentos"> Drogas / medicamentos</label>
+      <label class="cbc sub"><input type="checkbox" name="ci" value="Prod.Hum: Alimentos"> Alimentos</label>
+      <label class="cbc sub"><input type="checkbox" name="ci" value="Prod.Hum: Imunológicos"> Imunológicos</label>
+      <label class="cbc sub"><input type="checkbox" name="ci" value="Prod.Hum: Instrumentos"> Instrumentos</label>
+
+      <label class="cbc"><input type="checkbox" name="ci" value="Produção e controle — produtos veterinários"> Produção e controle — produtos veterinários</label>
+      <label class="cbc sub"><input type="checkbox" name="ci" value="Prod.Vet: Drogas/medicamentos"> Drogas / medicamentos</label>
+      <label class="cbc sub"><input type="checkbox" name="ci" value="Prod.Vet: Alimentos"> Alimentos</label>
+      <label class="cbc sub"><input type="checkbox" name="ci" value="Prod.Vet: Imunológicos"> Imunológicos</label>
+      <label class="cbc sub"><input type="checkbox" name="ci" value="Prod.Vet: Instrumentos"> Instrumentos</label>
+
+      <label class="cbc"><input type="checkbox" name="ci" value="Toxicologia e outras análises de segurança"> Toxicologia e outras análises de segurança</label>
+      <label class="cbc sub"><input type="checkbox" name="ci" value="Tox: Uso humano/odontológico/veterinário"> Uso humano, odontológico e veterinário</label>
+      <label class="cbc sub"><input type="checkbox" name="ci" value="Tox: Agricultura"> Destinados à agricultura</label>
+      <label class="cbc sub"><input type="checkbox" name="ci" value="Tox: Indústria"> Destinados à indústria</label>
+      <label class="cbc sub"><input type="checkbox" name="ci" value="Tox: Cuidados dos domésticos"> Cuidados dos domésticos</label>
+      <label class="cbc sub"><input type="checkbox" name="ci" value="Tox: Cosméticos/higiene pessoal"> Cosméticos ou higiene pessoal</label>
+      <label class="cbc sub"><input type="checkbox" name="ci" value="Tox: Aditivos alimentares consumo humano"> Aditivos alimentares — consumo humano</label>
+      <label class="cbc sub"><input type="checkbox" name="ci" value="Tox: Aditivos alimentares consumo animal"> Aditivos alimentares — consumo animal</label>
+      <label class="cbc sub"><input type="checkbox" name="ci" value="Tox: Contaminante ambiental"> Contaminante potencial ou real do meio ambiente</label>
+      <label class="cbc sub"><input type="checkbox" name="ci" value="Tox: Outras análises"> Outras análises toxicológicas e de segurança</label>
+
+      <label class="cbc"><input type="checkbox" name="ci" value="Diagnóstico de doenças"> Diagnóstico de doenças</label>
+      <label class="cbc"><input type="checkbox" name="ci" value="Educação"> Educação</label>
+      <label class="cbc"><input type="checkbox" name="ci" value="Treinamento"> Treinamento</label>
+      <label class="cbc"><input type="checkbox" name="ci" value="Outros"> Outros</label>
+    </div>
+    <div class="mt-2"><label class="lbl">Se 'Outros', especificar:</label><input type="text" id="ci_outros" class="fi"></div>
+  </div>
+
+  <!-- Resumo, Objetivos, Justificativa -->
+  <div class="space-y-4">
+    <div><label class="lbl">5. Resumo da Atividade</label><textarea id="resumo" class="fi" rows="4" placeholder="Relatar todos os procedimentos com animais nesta atividade..."></textarea></div>
+    <div><label class="lbl">6. Objetivos (na íntegra)</label><textarea id="objetivos" class="fi" rows="3" placeholder="Objetivos gerais e específicos..."></textarea></div>
+    <div><label class="lbl">7. Justificativa</label><textarea id="justificativa" class="fi" rows="3" placeholder="Justificativa da utilização de animais..."></textarea></div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!--  STEP 4 — MODELO ANIMAL  (Seção 8)                -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="step-content" id="s4">
+<div class="card p-6 md:p-8">
+  <div class="flex items-center gap-3 mb-5 border-b border-tl-100 pb-3">
+    <span class="stag">Seção 8</span>
+    <h2 class="text-xl font-bold text-tl-800">Modelo Animal e Cálculo Estatístico</h2>
+  </div>
+
+  <!-- Tabela de espécies -->
+  <div class="mb-5">
+    <div class="flex justify-between items-center mb-2">
+      <h3 class="font-bold text-sm text-tl-700">8. Espécies Utilizadas</h3>
+      <button type="button" onclick="addSp()" class="nb text-xs bg-tl-500 text-white hover:bg-tl-600" style="padding:.35rem .9rem">+ Espécie</button>
+    </div>
+    <div class="overflow-x-auto">
+    <table class="w-full text-sm border-collapse">
+      <thead><tr class="text-left text-[.6rem] font-bold uppercase text-tl-700 bg-tl-50">
+        <th class="p-2 border border-tl-100 w-[30%]">Espécie / Linhagem</th>
+        <th class="p-2 border border-tl-100 w-[15%]">Idade</th>
+        <th class="p-2 border border-tl-100 w-[15%]">Peso</th>
+        <th class="p-2 border border-tl-100 w-[12%]">Sexo</th>
+        <th class="p-2 border border-tl-100 w-[12%]">Quantidade</th>
+        <th class="p-2 border border-tl-100 w-[6%]"></th>
+      </tr></thead>
+      <tbody id="spB"></tbody>
+    </table>
+    </div>
+    <div class="mt-3"><label class="lbl">Justificativa dos procedimentos e da espécie animal:</label><textarea id="just_esp" class="fi" rows="3"></textarea></div>
+  </div>
+
+  <!-- Cálculo Estatístico -->
+  <div class="mb-5 p-4 bg-blue-50/60 rounded-xl border border-blue-100">
+    <h3 class="font-bold text-sm text-blue-800 mb-3">8.A Cálculo Estatístico da Quantidade de Animais</h3>
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
+      <div><label class="lbl">Tipo de teste</label><input type="text" id="ca_teste" class="fi"></div>
+      <div><label class="lbl">Nível de significância (α)</label><input type="text" id="ca_alfa" class="fi"></div>
+      <div><label class="lbl">Poder do teste (1-β)</label><input type="text" id="ca_poder" class="fi"></div>
+      <div><label class="lbl">Tamanho do efeito</label><input type="text" id="ca_efeito" class="fi"></div>
+      <div><label class="lbl">N amostral calculado</label><input type="text" id="ca_n" class="fi"></div>
+      <div><label class="lbl">Software/método</label><input type="text" id="ca_soft" class="fi"></div>
+    </div>
+    <div class="mt-2"><label class="lbl">Justificativa do cálculo amostral</label><textarea id="ca_just" class="fi" rows="2"></textarea></div>
+  </div>
+
+  <!-- Procedência + GI + Alojamento -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div class="p-4 bg-slate-50 rounded-xl border">
+      <h4 class="font-bold text-sm mb-2">8.1 Procedência</h4>
+      <input type="text" id="proc" class="fi mb-2" placeholder="Biotério, fazenda, aviário...">
+      <label class="cbc text-xs"><input type="checkbox" id="proc_prop"> Animais de propriedade de terceiros</label>
+      <label class="cbc text-xs"><input type="checkbox" id="proc_silv"> Animal silvestre (SISBIo)</label>
+      <input type="text" id="sisbio_n" class="fi mt-1" placeholder="Licença SISBIo Nº" style="font-size:.78rem;padding:.35rem .5rem">
+      <label class="cbc text-xs mt-1"><input type="checkbox" id="proc_gm"> Geneticamente modificado (CTNBio)</label>
+      <input type="text" id="ctnbio_n" class="fi mt-1" placeholder="Protocolo CTNBio Nº" style="font-size:.78rem;padding:.35rem .5rem">
+    </div>
+    <div class="p-4 bg-slate-50 rounded-xl border">
+      <h4 class="font-bold text-sm mb-2">8.2 Grau de Invasividade</h4>
+      <div class="flex gap-3 mb-3">
+        <label class="cbc"><input type="radio" name="gi" value="1"> GI 1</label>
+        <label class="cbc"><input type="radio" name="gi" value="2"> GI 2</label>
+        <label class="cbc"><input type="radio" name="gi" value="3"> GI 3</label>
+        <label class="cbc"><input type="radio" name="gi" value="4"> GI 4</label>
+      </div>
+      <h4 class="font-bold text-sm mb-2 mt-3">8.3 Condições de Alojamento</h4>
+      <div class="grid grid-cols-1 gap-1.5">
+        <div><label class="lbl">Local</label><input type="text" id="al_loc" class="fi" style="padding:.35rem .5rem;font-size:.8rem"></div>
+        <div><label class="lbl">Ambiente</label><input type="text" id="al_amb" class="fi" style="padding:.35rem .5rem;font-size:.8rem"></div>
+        <div><label class="lbl">Alimentação</label><input type="text" id="al_alim" class="fi" style="padding:.35rem .5rem;font-size:.8rem"></div>
+        <div><label class="lbl">Fonte de água</label><input type="text" id="al_agua" class="fi" style="padding:.35rem .5rem;font-size:.8rem"></div>
+        <div><label class="lbl">Lotação</label><input type="text" id="al_lot" class="fi" style="padding:.35rem .5rem;font-size:.8rem"></div>
+        <div><label class="lbl">Exaustão de ar</label><input type="text" id="al_exau" class="fi" style="padding:.35rem .5rem;font-size:.8rem"></div>
+        <div><label class="lbl">Climatização</label><input type="text" id="al_clim" class="fi" style="padding:.35rem .5rem;font-size:.8rem"></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!--  STEP 5 — PROCEDIMENTOS  (Seções 9–10)            -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="step-content" id="s5">
+<div class="card p-6 md:p-8">
+  <div class="flex items-center gap-3 mb-5 border-b border-tl-100 pb-3">
+    <span class="stag">Seções 9 – 10</span>
+    <h2 class="text-xl font-bold text-tl-800">Procedimentos Experimentais</h2>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-5">
+    <div class="p-3 rounded-xl border bg-slate-50">
+      <div class="flex justify-between items-center mb-1"><label class="font-bold text-sm">9.1 Estresse Intencional</label><div class="yn"><select id="p91"><option value="Não">Não</option><option value="Sim">Sim</option></select></div></div>
+      <textarea id="p91d" class="fi" rows="2" placeholder="Duração, modelo, justificativa..." style="font-size:.8rem"></textarea>
+    </div>
+    <div class="p-3 rounded-xl border bg-slate-50">
+      <div class="flex justify-between items-center mb-1"><label class="font-bold text-sm">9.2 Dor Intencional</label><div class="yn"><select id="p92"><option value="Não">Não</option><option value="Sim">Sim</option></select></div></div>
+      <textarea id="p92d" class="fi" rows="2" placeholder="Duração, modelo, justificativa..." style="font-size:.8rem"></textarea>
+    </div>
+  </div>
+
+  <!-- Fármacos -->
+  <div class="mb-5">
+    <div class="flex justify-between items-center mb-2 p-2 bg-tl-50 rounded-lg border border-tl-100">
+      <h3 class="font-bold text-sm text-tl-700">9.3–9.5 Fármacos (Anestésicos, Relaxantes, Analgésicos)</h3>
+      <button type="button" onclick="addDr()" class="nb text-xs bg-tl-500 text-white hover:bg-tl-600" style="padding:.3rem .8rem">+ Fármaco</button>
+    </div>
+    <div id="drBox" class="space-y-2"></div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-5">
+    <div class="p-3 rounded-xl border bg-slate-50">
+      <div class="flex justify-between items-center mb-1"><label class="font-bold text-sm">9.6 Imobilização</label><div class="yn"><select id="p96"><option value="Não">Não</option><option value="Sim">Sim</option></select></div></div>
+      <input type="text" id="p96d" class="fi" placeholder="Citar/descrever procedimento" style="font-size:.8rem">
+    </div>
+    <div class="p-3 rounded-xl border bg-slate-50">
+      <label class="font-bold text-sm block mb-1">9.7 Condições Alimentares</label>
+      <div class="grid grid-cols-2 gap-2 text-xs">
+        <div><label class="lbl">Jejum</label><div class="yn"><select id="p97j"><option value="Não">Não</option><option value="Sim">Sim</option></select></div><input type="text" id="p97jt" class="fi mt-1" placeholder="Tempo" style="font-size:.75rem;padding:.3rem .4rem"></div>
+        <div><label class="lbl">Restrição Hídrica</label><div class="yn"><select id="p97h"><option value="Não">Não</option><option value="Sim">Sim</option></select></div><input type="text" id="p97ht" class="fi mt-1" placeholder="Tempo" style="font-size:.75rem;padding:.3rem .4rem"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-5">
+    <div class="p-3 rounded-xl border bg-slate-50">
+      <div class="flex justify-between items-center mb-1"><label class="font-bold text-sm">9.8 Cirurgia e Pós-operatório</label><div class="yn"><select id="p98"><option value="Não">Não</option><option value="Sim">Sim</option></select></div></div>
+      <textarea id="p98d" class="fi" rows="3" placeholder="Tipo, técnica, recuperação, analgesia pós-op..." style="font-size:.8rem"></textarea>
+    </div>
+    <div class="p-3 rounded-xl border bg-slate-50">
+      <div class="flex justify-between items-center mb-1"><label class="font-bold text-sm">9.9 Exposição/Inoculação</label><div class="yn"><select id="p99"><option value="Não">Não</option><option value="Sim">Sim</option></select></div></div>
+      <textarea id="p99d" class="fi" rows="3" placeholder="Fármaco, dose, via de administração..." style="font-size:.8rem"></textarea>
+    </div>
+  </div>
+
+  <!-- 10 Extração -->
+  <div class="p-3 rounded-xl border bg-slate-50">
+    <div class="flex justify-between items-center mb-2"><label class="font-bold text-sm">10. Extração de Materiais Biológicos</label><div class="yn"><select id="p10"><option value="Não">Não</option><option value="Sim">Sim</option></select></div></div>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+      <div><label class="lbl">Material</label><input type="text" id="p10m" class="fi" style="font-size:.8rem;padding:.35rem"></div>
+      <div><label class="lbl">Quantidade</label><input type="text" id="p10q" class="fi" style="font-size:.8rem;padding:.35rem"></div>
+      <div><label class="lbl">Frequência</label><input type="text" id="p10f" class="fi" style="font-size:.8rem;padding:.35rem"></div>
+      <div><label class="lbl">Método</label><input type="text" id="p10mt" class="fi" style="font-size:.8rem;padding:.35rem"></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!--  STEP 6 — FINALIZAÇÃO  (Seção 11 + Termo)         -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="step-content" id="s6">
+<div class="card p-6 md:p-8">
+  <div class="flex items-center gap-3 mb-5 border-b border-tl-100 pb-3">
+    <span class="stag">Seção 11</span>
+    <h2 class="text-xl font-bold text-tl-800">Finalização e Termo de Responsabilidade</h2>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
+    <div class="p-4 bg-slate-50 rounded-xl border">
+      <h4 class="font-bold text-sm mb-2">11.1 Método de Indução de Morte</h4>
+      <div class="grid grid-cols-2 gap-2 mb-2">
+        <div><label class="lbl">Abate</label><div class="yn"><select id="f_ab"><option value="Não">Não</option><option value="Sim">Sim</option></select></div></div>
+        <div><label class="lbl">Eutanásia</label><div class="yn"><select id="f_eu"><option value="Não">Não</option><option value="Sim">Sim</option></select></div></div>
+      </div>
+      <input type="text" id="f_met" class="fi" placeholder="Método utilizado">
+    </div>
+    <div class="space-y-3">
+      <div><label class="lbl">11.2 Destino dos Animais após a Atividade</label><textarea id="f_dest" class="fi" rows="2"></textarea></div>
+      <div><label class="lbl">11.3 Descarte da Carcaça</label><textarea id="f_desc" class="fi" rows="2"></textarea></div>
+    </div>
+  </div>
+
+  <!-- Termo -->
+  <div class="p-5 bg-tl-50 border-2 border-tl-200 rounded-xl mb-8">
+    <h3 class="font-bold text-tl-800 mb-3 text-sm uppercase">Termo de Responsabilidade</h3>
+    <div class="text-[.82rem] text-slate-700 leading-relaxed space-y-2">
+      <p><strong>O responsável pelo projeto, </strong><span class="inline-block border-b border-tl-400 min-w-[200px]" id="termoNome">&nbsp;</span><strong>, declara que:</strong></p>
+      <p class="ml-3"><strong>a)</strong> leu o disposto na Lei nº 11.794, de 8 de outubro de 2008, e nas demais normas aplicáveis à utilização de animais em ensino e/ou pesquisa, especialmente as Resoluções Normativas do Conselho Nacional de Controle de Experimentação Animal – CONCEA;</p>
+      <p class="ml-3"><strong>b)</strong> este estudo não é desnecessariamente duplicativo, possuindo mérito científico e a equipe participante deste projeto/aula foi treinada e é competente para executar os procedimentos descritos neste protocolo;</p>
+      <p class="ml-3"><strong>c)</strong> Não existe método substitutivo que possa ser utilizado como uma alternativa ao projeto.</p>
+      <p class="ml-3" id="termoItemD" style="display:none"><strong>d)</strong> esta atividade de ensino foi avaliada conforme os critérios da Resolução Normativa CONCEA nº 53, de 19 de maio de 2021, e atende aos requisitos para utilização de animais em atividades didáticas, conforme árvore de decisão do Anexo da referida Resolução.</p>
+    </div>
+  </div>
+
+  <!-- ── Painel de Envio ── -->
+  <div class="p-5 bg-white rounded-xl border-2 border-tl-200 shadow-sm">
+
+    <!-- Status do envio -->
+    <div id="statusBox" class="hidden mb-4 p-3 rounded-lg text-sm font-semibold flex items-center gap-2"></div>
+
+    <!-- Botões principais -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+      <!-- 1. Enviar ao CEUA + PDF -->
+      <button type="button" onclick="enviarEGerarPDF()" id="btnEnviar" class="nb flex items-center justify-center gap-2 py-4 text-white shadow-lg hover:shadow-xl active:scale-[.97] text-base" style="background:linear-gradient(135deg,#2A7B88,#1D5B64);border-radius:.65rem">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+        Enviar ao CEUA + Gerar PDF
+      </button>
+
+      <!-- 2. Apenas PDF local -->
+      <button type="button" onclick="gerarPDF()" class="nb flex items-center justify-center gap-2 py-4 border-2 border-tl-200 text-tl-700 hover:bg-tl-50 text-base" style="border-radius:.65rem">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+        Apenas gerar PDF (sem enviar)
+      </button>
+    </div>
+
+    <!-- Spinner de envio -->
+    <div id="sendingSpinner" class="hidden flex items-center justify-center gap-3 py-3">
+      <div class="w-5 h-5 border-2 border-tl-400 border-t-transparent rounded-full animate-spin"></div>
+      <span class="text-sm text-tl-600 font-semibold">Enviando dados ao Google Sheets do CEUA...</span>
+    </div>
+
+    <div class="border-t border-tl-100 pt-3 mt-3">
+      <p class="text-[.65rem] text-slate-400 italic text-center">Ao clicar "Enviar ao CEUA", os dados do formulário são gravados automaticamente na planilha da coordenação. O PDF é gerado no seu dispositivo.</p>
+    </div>
+  </div>
+</div>
+</div>
+
+</form>
+
+<!-- Navigation -->
+<div class="flex justify-between mt-5 mb-10">
+  <button type="button" id="bP" class="nb bg-white border border-tl-200 text-tl-700 hover:bg-tl-50 invisible">← Anterior</button>
+  <button type="button" id="bN" class="nb text-white" style="background:linear-gradient(135deg,#2A7B88,#1D5B64)">Próxima Etapa →</button>
+</div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!--  JAVASCRIPT                                            -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<script>
+const $=s=>document.querySelector(s), $$=s=>document.querySelectorAll(s), V=id=>(document.getElementById(id)||{}).value||'';
+const Cs=n=>[...$$(`[name="${n}"]:checked`)].map(c=>c.value);
+const Ns=n=>[...$$(`[name="${n}"]`)].map(i=>i.value).filter(Boolean);
+
+// ── Navigation ─────────────────────
+let cur=1; const tot=6;
+function go(n){
+  cur=n;
+  $$('.step-content').forEach((p,i)=>p.classList.toggle('active',i+1===cur));
+  $$('.sd').forEach(d=>{const s=+d.dataset.s; d.className='sd'+(s===cur?' on':s<cur?' ok':'');});
+  $('#bP').classList.toggle('invisible',cur===1);
+  $('#bN').textContent=cur===tot?'':'Próxima Etapa →';
+  $('#bN').classList.toggle('hidden',cur===tot);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+$('#bN').onclick=()=>{if(cur<tot)go(cur+1)};
+$('#bP').onclick=()=>{if(cur>1)go(cur-1)};
+
+// Update termo name
+document.getElementById('r_nome')?.addEventListener('input', function(){ document.getElementById('termoNome').textContent=this.value||'\u00a0'; });
+
+// ── Dynamic: Collaborators ─────────
+function addC(){
+  $('#cNone').classList.add('hidden');
+  const d=document.createElement('div'); d.className='p-2.5 border rounded-lg bg-white dyn relative';
+  d.innerHTML=`<button type="button" onclick="this.parentElement.remove()" class="absolute top-1 right-2 text-red-400 hover:text-red-600 text-base font-bold">×</button>
+<div class="grid grid-cols-1 md:grid-cols-4 gap-2">
+  <div><label class="lbl">Nome</label><input type="text" name="cn[]" class="fi" style="font-size:.8rem;padding:.4rem .5rem"></div>
+  <div><label class="lbl">CPF</label><input type="text" name="cc[]" class="fi" style="font-size:.8rem;padding:.4rem .5rem"></div>
+  <div><label class="lbl">E-mail</label><input type="text" name="ce[]" class="fi" style="font-size:.8rem;padding:.4rem .5rem"></div>
+  <div><label class="lbl">SIAPE/Matrícula</label><input type="text" name="cs[]" class="fi" style="font-size:.8rem;padding:.4rem .5rem"></div>
+</div>`;
+  $('#cBox').appendChild(d);
+}
+
+// ── Dynamic: Species (with dropdowns) ───────────────
+const ESPECIES_LISTA = [
+  '—— ROEDORES / LAGOMORFOS ——',
+  'Mus musculus (Camundongo)',
+  'Rattus norvegicus (Rato)',
+  'Cavia porcellus (Cobaia)',
+  'Mesocricetus auratus (Hamster)',
+  'Meriones unguiculatus (Gerbil)',
+  'Oryctolagus cuniculus (Coelho)',
+  '—— CARNÍVOROS ——',
+  'Canis lupus familiaris (Cão)',
+  'Felis catus (Gato)',
+  '—— RUMINANTES ——',
+  'Bos taurus (Bovino)',
+  'Bubalus bubalis (Búfalo)',
+  'Ovis aries (Ovino)',
+  'Capra hircus (Caprino)',
+  '—— SUÍNOS / EQUINOS ——',
+  'Sus scrofa domesticus (Suíno)',
+  'Equus caballus (Equino)',
+  'Equus asinus (Asinino)',
+  '—— AVES ——',
+  'Gallus gallus domesticus (Galinha/Frango)',
+  'Coturnix coturnix (Codorna)',
+  'Meleagris gallopavo (Peru)',
+  'Anas platyrhynchos (Pato)',
+  'Columba livia (Pombo)',
+  '—— PEIXES ——',
+  'Danio rerio (Zebrafish/Paulistinha)',
+  'Oreochromis niloticus (Tilápia)',
+  'Rhamdia quelen (Jundiá)',
+  'Piaractus mesopotamicus (Pacu)',
+  '—— ANFÍBIOS / RÉPTEIS ——',
+  'Xenopus laevis (Rã africana)',
+  'Lithobates catesbeianus (Rã-touro)',
+  'Anfíbio — outra espécie',
+  'Réptil — outra espécie',
+  '—— PRIMATAS NÃO HUMANOS ——',
+  'Primata não humano',
+  '—— OUTROS ——',
+  'Outra espécie (especificar em Linhagem)'
+];
+
+function buildSpeciesSelect(){
+  let opts='<option value="">Selecione a espécie...</option>';
+  ESPECIES_LISTA.forEach(e=>{
+    if(e.startsWith('——')){
+      opts+=`<option disabled style="font-weight:700;color:#1D5B64;background:#E8F4F6">${e}</option>`;
+    } else {
+      opts+=`<option value="${e}">${e}</option>`;
+    }
+  });
+  return opts;
+}
+
+function addSp(){
+  const r=document.createElement('tr'); r.className='dyn';
+  r.innerHTML=`<td class="p-1 border border-tl-100"><select name="sn[]" class="fi border-0 bg-transparent" style="padding:.3rem;font-size:.78rem">${buildSpeciesSelect()}</select><input type="text" name="sn_linh[]" class="fi border-0 bg-transparent mt-1" style="padding:.2rem;font-size:.72rem" placeholder="Linhagem (opcional)"></td>
+<td class="p-1 border border-tl-100"><input type="text" name="sa[]" class="fi border-0 bg-transparent" style="padding:.3rem" placeholder="Ex: 8-12 sem"></td>
+<td class="p-1 border border-tl-100"><input type="text" name="sw[]" class="fi border-0 bg-transparent" style="padding:.3rem" placeholder="Ex: 25-30g"></td>
+<td class="p-1 border border-tl-100"><select name="ss[]" class="fi border-0 bg-transparent" style="padding:.3rem;font-size:.82rem"><option value="">Selecione...</option><option value="Macho">Macho</option><option value="Fêmea">Fêmea</option><option value="Ambos">Ambos</option></select></td>
+<td class="p-1 border border-tl-100"><input type="number" name="sq[]" class="fi border-0 bg-transparent" style="padding:.3rem" min="0"></td>
+<td class="p-1 border border-tl-100 text-center"><button type="button" onclick="this.closest('tr').remove()" class="text-red-400 font-bold">×</button></td>`;
+  $('#spB').appendChild(r);
+}
+addSp();
+
+// ── Ensino toggle ─────────────────
+function toggleEnsino(){
+  const fins=Cs('fin');
+  const isEnsino = fins.includes('Ensino') || fins.includes('Treinamento');
+  document.getElementById('blocoEnsino').classList.toggle('hidden',!isEnsino);
+  // Show/hide termo item d
+  const td=document.getElementById('termoItemD');
+  if(td) td.style.display=isEnsino?'block':'none';
+  // Reset RN53 if hidden
+  if(!isEnsino){
+    document.querySelectorAll('[name="rn53_p1"],[name="rn53_p2"],[name="rn53_p3"]').forEach(r=>r.checked=false);
+    ['rn53_p2_box','rn53_p3_box','rn53_resultado','rn53_habilidades_box','rn53_excecao_box'].forEach(id=>document.getElementById(id).classList.add('hidden'));
+  }
+}
+document.querySelectorAll('[name="fin"]').forEach(cb=>cb.addEventListener('change',toggleEnsino));
+
+// ── RN53 Decision Tree ───────────
+function avaliarRN53(){
+  const p1=document.querySelector('[name="rn53_p1"]:checked');
+  const p2Box=document.getElementById('rn53_p2_box');
+  const p3Box=document.getElementById('rn53_p3_box');
+  const resBox=document.getElementById('rn53_resultado');
+  const habBox=document.getElementById('rn53_habilidades_box');
+  const excBox=document.getElementById('rn53_excecao_box');
+
+  // Reset downstream
+  if(!p1){ p2Box.classList.add('hidden'); p3Box.classList.add('hidden'); resBox.classList.add('hidden'); habBox.classList.add('hidden'); excBox.classList.add('hidden'); return; }
+
+  if(p1.value==='Sim'){
+    // eutanásia → go to P3
+    p2Box.classList.add('hidden');
+    p3Box.classList.remove('hidden');
+    excBox.classList.remove('hidden');
+  } else {
+    // no eutanásia → go to P2
+    p2Box.classList.remove('hidden');
+    const p2=document.querySelector('[name="rn53_p2"]:checked');
+    if(!p2){ p3Box.classList.add('hidden'); resBox.classList.add('hidden'); habBox.classList.add('hidden'); excBox.classList.add('hidden'); return; }
+    if(p2.value==='Não'){
+      // No distress → not subject to RN53
+      p3Box.classList.add('hidden');
+      habBox.classList.add('hidden');
+      excBox.classList.add('hidden');
+      resBox.classList.remove('hidden');
+      resBox.className='mt-3 p-3 rounded-lg font-semibold text-sm bg-green-100 text-green-800 border border-green-300';
+      resBox.innerHTML='✅ <strong>A atividade NÃO é objeto da RN 53/2021.</strong> Não há eutanásia nem distresse — a prática pode ser realizada normalmente, sujeita à avaliação geral da CEUA.';
+      return;
+    }
+    // distress → go to P3
+    p3Box.classList.remove('hidden');
+    excBox.classList.remove('hidden');
+  }
+
+  const p3=document.querySelector('[name="rn53_p3"]:checked');
+  if(!p3){ resBox.classList.add('hidden'); habBox.classList.add('hidden'); return; }
+
+  if(p3.value==='Sim'){
+    // Develops both → not subject
+    resBox.classList.remove('hidden');
+    habBox.classList.remove('hidden');
+    resBox.className='mt-3 p-3 rounded-lg font-semibold text-sm bg-green-100 text-green-800 border border-green-300';
+    resBox.innerHTML='✅ <strong>A atividade NÃO é objeto da RN 53/2021.</strong> A prática desenvolve habilidades psicomotoras e competências previstas nas DCN. Descreva-as abaixo.';
+  } else {
+    // Does NOT develop both → PROHIBITED
+    habBox.classList.add('hidden');
+    resBox.classList.remove('hidden');
+    // Check if exception applies
+    const excCheck=document.getElementById('rn53_excecao');
+    if(excCheck && excCheck.checked){
+      resBox.className='mt-3 p-3 rounded-lg font-semibold text-sm bg-blue-100 text-blue-800 border border-blue-300';
+      resBox.innerHTML='ℹ️ <strong>Exceção do §2º alegada.</strong> A CEUA avaliará se a atividade se enquadra nas exceções previstas (pós-graduação; biodiversidade, ecologia, zoologia, conservação, produção, sanidade e inspeção animal). Justifique abaixo.';
+    } else {
+      resBox.className='mt-3 p-3 rounded-lg font-semibold text-sm bg-red-100 text-red-800 border border-red-300';
+      resBox.innerHTML='🚫 <strong>ATIVIDADE PROIBIDA pela RN 53/2021.</strong> A prática não desenvolve ambas as habilidades exigidas. Conforme Art. 2º, deve ser integralmente substituída por vídeos, modelos computacionais ou outros recursos. Caso se aplique alguma exceção do §2º, marque abaixo.';
+    }
+  }
+}
+
+// ── Dynamic: Drugs ─────────────────
+function addDr(){
+  const d=document.createElement('div'); d.className='p-2.5 border border-tl-100 rounded-lg bg-white dyn relative';
+  d.innerHTML=`<button type="button" onclick="this.parentElement.remove()" class="absolute top-1 right-2 text-red-400 text-base font-bold">×</button>
+<div class="grid grid-cols-1 md:grid-cols-4 gap-2">
+  <div><label class="lbl">Tipo</label><select name="dt[]" class="fi" style="font-size:.8rem;padding:.35rem"><option>Anestésico</option><option>Relaxante Muscular</option><option>Analgésico</option></select></div>
+  <div><label class="lbl">Fármaco (DCB/DCI)</label><input type="text" name="dn[]" class="fi" style="font-size:.8rem;padding:.35rem"></div>
+  <div><label class="lbl">Dose (unidade)</label><input type="text" name="dd[]" class="fi" style="font-size:.8rem;padding:.35rem"></div>
+  <div><label class="lbl">Via de administração</label><input type="text" name="dv[]" class="fi" style="font-size:.8rem;padding:.35rem"></div>
+</div>`;
+  $('#drBox').appendChild(d);
+}
+
+// ═══════════════════════════════════════════════════════
+//  PDF — Design teal profissional (idêntico ao nosso)
+// ═══════════════════════════════════════════════════════
+function gerarPDF(){
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF('p','mm','a4');
+  const W=210,H=297,ML=18,MR=192,CW=174;
+  let pg=1,y=0;
+
+  // Palette
+  const T=[42,123,136], TD=[29,91,100], TL=[232,244,246], WH=[255,255,255], BK=[0,0,0], GR=[120,120,120];
+
+  // ── PDF Helpers ──────────────────
+  function hdr(){
+    doc.setFillColor(...TD); doc.roundedRect(ML,7,13,13,2,2,'F');
+    doc.setTextColor(...WH); doc.setFontSize(6.5); doc.setFont('helvetica','bold'); doc.text('UFPR',ML+6.5,15,{align:'center'});
+    doc.setTextColor(...BK); doc.setFontSize(7.5); doc.setFont('helvetica','normal');
+    doc.text('MINISTÉRIO DA EDUCAÇÃO',ML+17,11);
+    doc.text('UNIVERSIDADE FEDERAL DO PARANÁ · SETOR PALOTINA',ML+17,15);
+    doc.setFont('helvetica','bold'); doc.setFontSize(8);
+    doc.text('Comissão de Ética no Uso de Animais - CEUA',ML+17,19.5);
+    doc.setFont('helvetica','normal'); doc.setFontSize(6); doc.setTextColor(...GR);
+    doc.text('Rua Pioneiro, 2153, Jardim Dallas – 85950-000 – Palotina – PR',ML+17,23);
+    doc.setDrawColor(...T); doc.setLineWidth(.5); doc.line(ML,26,MR,26);
+    doc.setFontSize(7.5); doc.setTextColor(...T); doc.text(String(pg),W/2,H-8,{align:'center'});
+  }
+  function np(){ doc.addPage(); pg++; y=32; hdr(); }
+  function ck(n){ if(y+n>H-16) np(); }
+
+  function sec(t){ ck(11); doc.setFillColor(...T); doc.roundedRect(ML,y-1,CW,7.5,1.2,1.2,'F'); doc.setTextColor(...WH); doc.setFontSize(8.5); doc.setFont('helvetica','bold'); doc.text(t,ML+2.5,y+4.5); y+=11; }
+  function sub(t){ ck(9); doc.setTextColor(...T); doc.setFontSize(8); doc.setFont('helvetica','bold'); doc.text(t,ML,y); doc.setDrawColor(...TL); doc.setLineWidth(.25); doc.line(ML,y+1.5,MR,y+1.5); y+=6.5; }
+
+  function lv(l,v,lw=42){
+    ck(6.5);
+    doc.setFillColor(...TL); doc.rect(ML,y-3.2,lw,6,'F');
+    doc.setTextColor(...TD); doc.setFontSize(7); doc.setFont('helvetica','bold'); doc.text(l,ML+1.5,y);
+    doc.setTextColor(...BK); doc.setFont('helvetica','normal'); doc.setFontSize(7.5);
+    const ls=doc.splitTextToSize(v||'',CW-lw-3); doc.text(ls,ML+lw+2,y);
+    y+=Math.max(6.5,ls.length*4);
+  }
+
+  function tb(t,rows){
+    ck(rows*4.5+3);
+    const h=rows*4.5;
+    doc.setDrawColor(180,200,210); doc.setLineWidth(.2); doc.setFillColor(250,252,252);
+    doc.roundedRect(ML,y-1.5,CW,h,.8,.8,'FD');
+    if(t){ doc.setTextColor(...BK); doc.setFontSize(7.5); doc.setFont('helvetica','normal');
+      const ls=doc.splitTextToSize(t,CW-5); doc.text(ls,ML+2.5,y+2); }
+    y+=h+2.5;
+  }
+
+  function cbx(l,on){
+    ck(5);
+    doc.setDrawColor(...T); doc.setLineWidth(.25); doc.rect(ML+1.5,y-2.8,2.8,2.8);
+    if(on){ doc.setFillColor(...T); doc.rect(ML+2,y-2.3,1.8,1.8,'F'); }
+    doc.setTextColor(...BK); doc.setFontSize(7); doc.setFont('helvetica','normal'); doc.text(l,ML+6.5,y); y+=4.5;
+  }
+
+  // ══════════════════════════════════
+  //  BUILD PDF
+  // ══════════════════════════════════
+  hdr(); y=32;
+
+  // Title block
+  doc.setTextColor(...TD); doc.setFontSize(10.5); doc.setFont('helvetica','bold');
+  doc.text('FORMULÁRIO UNIFICADO PARA SOLICITAÇÃO DE AUTORIZAÇÃO PARA',W/2,y,{align:'center'}); y+=4.5;
+  doc.text('USO DE ANIMAIS EM ENSINO, PESQUISA E TREINAMENTO',W/2,y,{align:'center'}); y+=4;
+  doc.setFontSize(7.5); doc.setFont('helvetica','italic'); doc.setTextColor(...GR);
+  doc.text('(Versão 2.0 — 19.02.2026 — Conforme RN 53/2021)',W/2,y,{align:'center'}); y+=7;
+
+  // 1. Finalidade
+  sec('1.  FINALIDADE');
+  const fins=Cs('fin');
+  ['Ensino','Pesquisa','Treinamento'].forEach(f=>cbx(f,fins.includes(f)));
+  lv('Início da atividade:',V('dt_ini')); lv('Final da atividade:',V('dt_fim')); y+=2;
+
+  // RN53 — Ensino (condicional)
+  if(fins.includes('Ensino')||fins.includes('Treinamento')){
+    sec('1.A  DADOS DA ATIVIDADE DIDÁTICA');
+    lv('Nível:',V('nivel_ensino'),28); lv('Curso:',V('curso_nome'),28);
+    lv('Disciplina:',V('disciplina_nome'),28); lv('Semestre:',V('disciplina_sem'),28);
+    y+=2;
+    sec('1.B  ÁRVORE DE DECISÃO — RN 53/2021 (CONCEA)');
+    const p1v=(document.querySelector('[name="rn53_p1"]:checked')||{}).value||'';
+    const p2v=(document.querySelector('[name="rn53_p2"]:checked')||{}).value||'';
+    const p3v=(document.querySelector('[name="rn53_p3"]:checked')||{}).value||'';
+    lv('P1) Eutanásia de vertebrados?',p1v||'Não respondido',52);
+    if(p1v==='Não') lv('P2) Distresse que comprometa bem-estar?',p2v||'Não respondido',52);
+    if(p1v==='Sim'||(p1v==='Não'&&p2v==='Sim')) lv('P3) Desenvolve habilidades psicomotoras + competências DCN?',p3v||'Não respondido',72);
+    // resultado
+    const resEl=document.getElementById('rn53_resultado');
+    if(resEl && !resEl.classList.contains('hidden')){
+      let resTxt='';
+      if(p1v==='Não'&&p2v==='Não') resTxt='Não é objeto da RN 53/2021';
+      else if(p3v==='Sim') resTxt='Não é objeto da RN 53/2021 (desenvolve habilidades)';
+      else if(p3v==='Não'&&document.getElementById('rn53_excecao')?.checked) resTxt='Exceção do §2º alegada — sujeito à avaliação da CEUA';
+      else if(p3v==='Não') resTxt='ATIVIDADE PROIBIDA — RN 53/2021';
+      ck(7); doc.setTextColor(p3v==='Não'&&!document.getElementById('rn53_excecao')?.checked?180:0,p3v==='Não'&&!document.getElementById('rn53_excecao')?.checked?30:100,p3v==='Não'&&!document.getElementById('rn53_excecao')?.checked?30:80);
+      doc.setFontSize(8); doc.setFont('helvetica','bold');
+      doc.text('RESULTADO: '+resTxt,ML,y); y+=5;
+      doc.setTextColor(...BK);
+    }
+    if(V('rn53_habilidades')){ sub('Habilidades psicomotoras e competências DCN:'); tb(V('rn53_habilidades'),3); }
+    if(document.getElementById('rn53_excecao')?.checked && V('rn53_excecao_just')){ sub('Justificativa enquadramento §2º:'); tb(V('rn53_excecao_just'),3); }
+    y+=2;
+    sec('1.C  MÉTODOS SUBSTITUTIVOS (Art. 2º, RN 53/2021)');
+    const sb=(document.querySelector('[name="subst_busca"]:checked')||{}).value||'';
+    lv('Busca realizada?',sb||'Não informado',28);
+    if(V('subst_metodos')){ sub('Métodos avaliados:'); tb(V('subst_metodos'),3); }
+    if(V('subst_justificativa')){ sub('Justificativa:'); tb(V('subst_justificativa'),3); }
+    y+=2;
+  }
+
+  // 2. Título
+  sec('2.  TÍTULO DA ATIVIDADE');
+  tb(V('titulo_pt'),2);
+  sub('2.1  TÍTULO DA ATIVIDADE EM INGLÊS');
+  tb(V('titulo_en'),2);
+  lv('Área do conhecimento CAPES:',V('area_capes'),52); y+=2;
+
+  // 3. Responsável
+  sec('3.  RESPONSÁVEL');
+  [['Nome completo:',V('r_nome')],['CPF:',V('r_cpf')],['Instituição:',V('r_inst')],
+   ['Unidade:',V('r_unid')],['Telefone com DDD:',V('r_tel')],['E-mail institucional:',V('r_email')],
+   ['Vínculo com a UFPR:',V('r_vinc')],['SIAPE ou Matrícula:',V('r_siape')]
+  ].forEach(([l,v])=>lv(l,v,42));
+
+  // Capacitação
+  y+=2; sub('Treinamento Específico');
+  Cs('cap').forEach(c=>cbx(c,true));
+  if(V('cap_anos')) lv('Anos de experiência:',V('cap_anos'),40);
+  sub('Capacitação em Ética e Prática');
+  Cs('etica').forEach(c=>cbx(c,true));
+
+  // 4. Colaboradores
+  np(); sec('4.  COLABORADORES');
+  const cns=Ns('cn[]'),ccs=Ns('cc[]'),ces=Ns('ce[]'),css=Ns('cs[]');
+  for(let i=0;i<cns.length;i++){
+    sub(`Colaborador ${i+1}`);
+    lv('Nome:',cns[i]||''); lv('CPF:',ccs[i]||''); lv('E-mail:',ces[i]||''); lv('SIAPE/Matrícula:',css[i]||''); y+=1.5;
+  }
+  if(!cns.length){ doc.setTextColor(...GR); doc.setFontSize(7.5); doc.text('Nenhum colaborador cadastrado.',ML,y); y+=5; }
+
+  // CIUCA
+  np(); sec('FINALIDADE DO PROJETO — Dados CIUCA');
+  Cs('ci').forEach(c=>cbx(c,true));
+  if(V('ci_outros')) lv("Se 'Outros', especificar:",V('ci_outros'),48);
+
+  // 5. Resumo
+  np(); sec('5.  RESUMO DA ATIVIDADE');
+  tb(V('resumo'),10);
+
+  // 6. Objetivos
+  sec('6.  OBJETIVOS (na íntegra)');
+  tb(V('objetivos'),8);
+
+  // 8.A Cálculo Estatístico
+  np(); sec('8.A  CÁLCULO ESTATÍSTICO DA QUANTIDADE DE ANIMAIS');
+  lv('Tipo de teste estatístico:',V('ca_teste'),48);
+  lv('Nível de significância (α):',V('ca_alfa'),48);
+  lv('Poder do teste (1-β):',V('ca_poder'),48);
+  lv('Tamanho do efeito esperado:',V('ca_efeito'),48);
+  lv('N amostral calculado:',V('ca_n'),48);
+  lv('Software/método utilizado:',V('ca_soft'),48);
+  sub('Justificativa do cálculo amostral:');
+  tb(V('ca_just'),4);
+
+  // 7. Justificativa
+  sec('7.  JUSTIFICATIVA');
+  tb(V('justificativa'),12);
+
+  // 8. Modelo Animal - table
+  np(); sec('8.  MODELO ANIMAL');
+  const cx=[ML,ML+48,ML+78,ML+108,ML+132];
+  const cH=['Espécie / Linhagem','Idade','Peso','Sexo','Quantidade'];
+  doc.setFillColor(...TL); doc.rect(ML,y-3,CW,5.5,'F');
+  doc.setTextColor(...TD); doc.setFontSize(6.5); doc.setFont('helvetica','bold');
+  cH.forEach((h,i)=>doc.text(h,cx[i]+1.5,y));
+  y+=5.5;
+  const sns=[...$$('[name="sn[]"]')].map(e=>e.value),slinhs=[...$$('[name="sn_linh[]"]')].map(i=>i.value),sas=[...$$('[name="sa[]"]')].map(e=>e.value),sws=[...$$('[name="sw[]"]')].map(e=>e.value),sss=[...$$('[name="ss[]"]')].map(e=>e.value),sqs=[...$$('[name="sq[]"]')].map(e=>e.value);
+  let total=0;
+  for(let i=0;i<sns.length;i++){
+    ck(5.5);
+    const bg=i%2===0?WH:TL;
+    doc.setFillColor(...bg); doc.rect(ML,y-3,CW,5,'F');
+    doc.setDrawColor(200,220,226); doc.setLineWidth(.12); doc.line(ML,y+2,MR,y+2);
+    doc.setTextColor(...BK); doc.setFontSize(7); doc.setFont('helvetica','normal');
+    const espLabel = (sns[i]||'') + (slinhs[i] ? ' — '+slinhs[i] : '');
+    [espLabel,sas[i]||'',sws[i]||'',sss[i]||'',sqs[i]||''].forEach((v,j)=>{
+      const txt=doc.splitTextToSize(v,j===0?46:28);
+      doc.text(txt[0]||'',cx[j]+1.5,y);
+    });
+    total+=parseInt(sqs[i]||0); y+=5;
+  }
+  doc.setFillColor(...TL); doc.rect(ML,y-3,CW,5.5,'F');
+  doc.setTextColor(...TD); doc.setFont('helvetica','bold');
+  doc.text('TOTAL',cx[3]+1.5,y); doc.text(String(total),cx[4]+1.5,y); y+=8;
+  sub('Justificativa dos procedimentos e da espécie animal:');
+  tb(V('just_esp'),5);
+
+  // 8.1 Procedência
+  np(); sec('8.1  PROCEDÊNCIA');
+  lv('Procedência:',V('proc'),28);
+  if($('#proc_silv').checked) lv('Licença SISBIo Nº:',V('sisbio_n'),38);
+  if($('#proc_gm').checked) lv('Protocolo CTNBio Nº:',V('ctnbio_n'),40);
+
+  // 8.2 GI
+  sec('8.2  GRAU DE INVASIVIDADE');
+  const gi=(document.querySelector('[name="gi"]:checked')||{}).value||'';
+  ['1','2','3','4'].forEach(g=>cbx(`GI ${g}`,gi===g));
+
+  // 8.3 Alojamento
+  sec('8.3  CONDIÇÕES DE ALOJAMENTO');
+  [['Local:',V('al_loc')],['Ambiente:',V('al_amb')],['Alimentação:',V('al_alim')],
+   ['Fonte de água:',V('al_agua')],['Lotação:',V('al_lot')],['Exaustão de ar:',V('al_exau')],
+   ['Climatização:',V('al_clim')]].forEach(([l,v])=>lv(l,v,30));
+
+  // 9. Procedimentos
+  np(); sec('9.  PROCEDIMENTOS EXPERIMENTAIS');
+  [[V('p91'),V('p91d'),'9.1 Estresse Intencional'],[V('p92'),V('p92d'),'9.2 Dor Intencional']].forEach(([yn,desc,title])=>{
+    sub(title); cbx('Não',yn==='Não'); cbx('Sim',yn==='Sim');
+    if(desc) tb(desc,2); y+=1;
+  });
+
+  // Fármacos
+  const dts=Ns('dt[]'),dns=Ns('dn[]'),dds=Ns('dd[]'),dvs=Ns('dv[]');
+  if(dns.length){
+    sub('9.3–9.5 Fármacos');
+    for(let i=0;i<dns.length;i++){
+      ck(18); lv('Tipo:',dts[i]||'',18); lv('Fármaco:',dns[i]||'',18); lv('Dose:',dds[i]||'',18); lv('Via:',dvs[i]||'',18); y+=1;
+    }
+  }
+
+  // 9.6-9.9
+  ck(20);
+  [[V('p96'),V('p96d'),'9.6 Imobilização do Animal'],[V('p98'),V('p98d'),'9.8 Cirurgia e Pós-operatório'],[V('p99'),V('p99d'),'9.9 Exposição/Inoculação']].forEach(([yn,desc,title])=>{
+    ck(14); sub(title); cbx('Não',yn==='Não'); cbx('Sim',yn==='Sim');
+    if(desc) tb(desc,2);
+  });
+
+  // 9.7 Condições alimentares
+  ck(14); sub('9.7 Condições Alimentares');
+  lv('Jejum:',V('p97j'),14); if(V('p97jt')) lv('Tempo:',V('p97jt'),14);
+  lv('Restrição Hídrica:',V('p97h'),32); if(V('p97ht')) lv('Tempo:',V('p97ht'),14);
+
+  // 10. Extração
+  ck(20); sec('10.  EXTRAÇÃO DE MATERIAIS BIOLÓGICOS');
+  cbx('Não',V('p10')==='Não'); cbx('Sim',V('p10')==='Sim');
+  if(V('p10')==='Sim'){
+    lv('Material:',V('p10m'),22); lv('Quantidade:',V('p10q'),22);
+    lv('Frequência:',V('p10f'),22); lv('Método:',V('p10mt'),22);
+  }
+
+  // 11. Finalização
+  ck(40); sec('11.  FINALIZAÇÃO');
+  sub('11.1 Método de Indução de Morte');
+  lv('ABATE:',V('f_ab'),16); lv('EUTANÁSIA:',V('f_eu'),22); lv('Método:',V('f_met'),16); y+=2;
+  sub('11.2 Destino dos Animais após a Atividade');
+  tb(V('f_dest'),2);
+  sub('11.3 Descarte da Carcaça');
+  tb(V('f_desc'),2);
+
+  // Termo
+  ck(48); sec('TERMO DE RESPONSABILIDADE');
+  doc.setTextColor(...BK); doc.setFontSize(7); doc.setFont('helvetica','normal');
+  const tA='a) leu o disposto na Lei nº 11.794, de 8 de outubro de 2008, e nas demais normas aplicáveis à utilização de animais em ensino e/ou pesquisa, especialmente as Resoluções Normativas do Conselho Nacional de Controle de Experimentação Animal – CONCEA;';
+  const tB='b) este estudo não é desnecessariamente duplicativo, possuindo mérito científico e a equipe participante deste projeto/aula foi treinada e é competente para executar os procedimentos descritos neste protocolo;';
+  const tC='c) Não existe método substitutivo que possa ser utilizado como uma alternativa ao projeto.';
+  const tD='d) esta atividade de ensino foi avaliada conforme os critérios da Resolução Normativa CONCEA nº 53, de 19 de maio de 2021, e atende aos requisitos para utilização de animais em atividades didáticas, conforme árvore de decisão do Anexo da referida Resolução.';
+  const termoItens = [tA,tB,tC];
+  if(fins.includes('Ensino')||fins.includes('Treinamento')) termoItens.push(tD);
+  termoItens.forEach(t=>{ ck(12); const ls=doc.splitTextToSize(t,CW-5); doc.text(ls,ML+3,y); y+=ls.length*3.5+2; });
+
+  // DATA + ASSINATURA
+  y+=8; ck(22);
+  doc.setTextColor(...BK); doc.setFontSize(8); doc.setFont('helvetica','bold');
+  doc.text('DATA: ____/____/________',ML,y); y+=8;
+  doc.text('ASSINATURA:',ML,y);
+  doc.setDrawColor(...T); doc.setLineWidth(.35); doc.line(ML+24,y+1,MR,y+1);
+
+  // Save
+  const nome=V('r_nome')||'CEUA';
+  doc.save(`Formulario_CEUA_2025_${nome.replace(/\s+/g,'_')}.pdf`);
+}
+
+// ═══════════════════════════════════════════════════════
+//  ENVIO AO GOOGLE SHEETS VIA APPS SCRIPT
+// ═══════════════════════════════════════════════════════
+
+// ╔══════════════════════════════════════════════════════╗
+// ║  COLE AQUI A URL DO SEU APPS SCRIPT (passo 3.7)     ║
+// ╚══════════════════════════════════════════════════════╝
+const APPS_SCRIPT_URL = 'COLE_SUA_URL_AQUI';
+
+// Colunas (mesma ordem do Apps Script)
+const COLUNAS = [
+  {key:'timestamp',label:'Data/Hora'},{key:'finalidade',label:'Finalidade'},
+  {key:'dt_ini',label:'Início'},{key:'dt_fim',label:'Término'},
+  {key:'titulo_pt',label:'Título (PT)'},{key:'titulo_en',label:'Título (EN)'},
+  {key:'area_capes',label:'Área CAPES'},
+  // Ensino / RN53
+  {key:'nivel_ensino',label:'Nível Ensino'},{key:'curso_nome',label:'Curso'},
+  {key:'disciplina_nome',label:'Disciplina'},{key:'disciplina_sem',label:'Semestre'},
+  {key:'rn53_p1',label:'RN53 P1 Eutanásia'},{key:'rn53_p2',label:'RN53 P2 Distresse'},
+  {key:'rn53_p3',label:'RN53 P3 Habilidades'},{key:'rn53_resultado',label:'RN53 Resultado'},
+  {key:'rn53_excecao',label:'RN53 Exceção §2º'},{key:'rn53_excecao_just',label:'RN53 Just. Exceção'},
+  {key:'rn53_habilidades',label:'RN53 Habilidades DCN'},
+  {key:'subst_busca',label:'Busca Substitutivos'},{key:'subst_metodos',label:'Métodos Avaliados'},
+  {key:'subst_justificativa',label:'Just. Não Substituição'},
+  // Responsável
+  {key:'resp_nome',label:'Responsável'},{key:'resp_cpf',label:'CPF'},
+  {key:'resp_inst',label:'Instituição'},{key:'resp_unid',label:'Unidade'},
+  {key:'resp_tel',label:'Telefone'},{key:'resp_email',label:'E-mail'},
+  {key:'resp_vinc',label:'Vínculo'},{key:'resp_siape',label:'SIAPE'},
+  {key:'cap_treinamento',label:'Treinamento'},{key:'cap_anos',label:'Anos Exp.'},
+  {key:'cap_etica',label:'Ética'},
+  {key:'colaboradores',label:'Colaboradores'},
+  {key:'ciuca',label:'CIUCA'},{key:'ciuca_outros',label:'CIUCA Outros'},
+  {key:'resumo',label:'Resumo'},{key:'objetivos',label:'Objetivos'},
+  {key:'justificativa',label:'Justificativa'},
+  {key:'especies',label:'Espécies'},{key:'total_animais',label:'Total Animais'},
+  {key:'just_especie',label:'Just. Espécie'},
+  {key:'calc_teste',label:'Teste'},{key:'calc_alfa',label:'α'},
+  {key:'calc_poder',label:'1-β'},{key:'calc_efeito',label:'Efeito'},
+  {key:'calc_n',label:'N'},{key:'calc_soft',label:'Software'},
+  {key:'calc_just',label:'Just. Cálculo'},
+  {key:'procedencia',label:'Procedência'},{key:'sisbio',label:'SISBIo'},
+  {key:'ctnbio',label:'CTNBio'},{key:'gi',label:'GI'},
+  {key:'aloj_local',label:'Aloj. Local'},{key:'aloj_amb',label:'Aloj. Ambiente'},
+  {key:'aloj_alim',label:'Aloj. Alimentação'},{key:'aloj_agua',label:'Aloj. Água'},
+  {key:'aloj_lot',label:'Aloj. Lotação'},{key:'aloj_exau',label:'Aloj. Exaustão'},
+  {key:'aloj_clim',label:'Aloj. Climatização'},
+  {key:'p91_estresse',label:'9.1 Estresse'},{key:'p91_desc',label:'9.1 Desc'},
+  {key:'p92_dor',label:'9.2 Dor'},{key:'p92_desc',label:'9.2 Desc'},
+  {key:'farmacos',label:'Fármacos'},
+  {key:'p96_imob',label:'9.6 Imobilização'},{key:'p96_desc',label:'9.6 Desc'},
+  {key:'p97_jejum',label:'9.7 Jejum'},{key:'p97_jejum_t',label:'9.7 Jejum T'},
+  {key:'p97_hidrica',label:'9.7 Hídrica'},{key:'p97_hidrica_t',label:'9.7 Hídrica T'},
+  {key:'p98_cirurgia',label:'9.8 Cirurgia'},{key:'p98_desc',label:'9.8 Desc'},
+  {key:'p99_exposicao',label:'9.9 Exposição'},{key:'p99_desc',label:'9.9 Desc'},
+  {key:'p10_extracao',label:'10. Extração'},{key:'p10_material',label:'10. Material'},
+  {key:'p10_qtd',label:'10. Qtd'},{key:'p10_freq',label:'10. Freq'},
+  {key:'p10_metodo',label:'10. Método'},
+  {key:'f_abate',label:'11.1 Abate'},{key:'f_eutanasia',label:'11.1 Eutanásia'},
+  {key:'f_metodo',label:'11.1 Método'},{key:'f_destino',label:'11.2 Destino'},
+  {key:'f_descarte',label:'11.3 Descarte'},
+];
+
+// Coleta todos os dados do formulário
+function coletarDados(){
+  const snEls=$$('[name="sn[]"]'), slinhEls=$$('[name="sn_linh[]"]');
+  const saEls=$$('[name="sa[]"]'), swEls=$$('[name="sw[]"]');
+  const ssEls=$$('[name="ss[]"]'), sqEls=$$('[name="sq[]"]');
+  let especiesArr=[], totalAnim=0;
+  for(let i=0;i<snEls.length;i++){
+    const sp=snEls[i].value, linh=(slinhEls[i]||{}).value||'';
+    const age=(saEls[i]||{}).value||'', wt=(swEls[i]||{}).value||'';
+    const sx=(ssEls[i]||{}).value||'', qt=(sqEls[i]||{}).value||'';
+    if(sp){
+      const especie = sp + (linh ? ' — '+linh : '');
+      especiesArr.push(`${especie}|${age}|${wt}|${sx}|${qt}`);
+    }
+    totalAnim += parseInt(qt||0);
+  }
+  const cns=Ns('cn[]'),ccs=Ns('cc[]'),ces=Ns('ce[]'),css_=Ns('cs[]');
+  let colabArr=[];
+  for(let i=0;i<cns.length;i++){
+    if(cns[i]) colabArr.push(`${cns[i]}|${ccs[i]||''}|${ces[i]||''}|${css_[i]||''}`);
+  }
+  const dts=Ns('dt[]'),dns=Ns('dn[]'),dds=Ns('dd[]'),dvs=Ns('dv[]');
+  let farmArr=[];
+  for(let i=0;i<dns.length;i++){
+    if(dns[i]) farmArr.push(`${dts[i]||''}|${dns[i]}|${dds[i]||''}|${dvs[i]||''}`);
+  }
+
+  // RN53 data
+  const rn53_p1=(document.querySelector('[name="rn53_p1"]:checked')||{}).value||'';
+  const rn53_p2=(document.querySelector('[name="rn53_p2"]:checked')||{}).value||'';
+  const rn53_p3=(document.querySelector('[name="rn53_p3"]:checked')||{}).value||'';
+  const rn53_excecao=document.getElementById('rn53_excecao')?.checked?'Sim':'Não';
+  const subst_busca=(document.querySelector('[name="subst_busca"]:checked')||{}).value||'';
+
+  // Determine RN53 result
+  let rn53_resultado='';
+  const fins=Cs('fin');
+  if(fins.includes('Ensino')||fins.includes('Treinamento')){
+    if(rn53_p1==='Não' && rn53_p2==='Não') rn53_resultado='Não objeto da RN 53';
+    else if(rn53_p3==='Sim') rn53_resultado='Não objeto da RN 53 (desenvolve habilidades)';
+    else if(rn53_p3==='Não' && rn53_excecao==='Sim') rn53_resultado='Exceção §2º alegada';
+    else if(rn53_p3==='Não') rn53_resultado='PROIBIDA pela RN 53';
+    else rn53_resultado='Incompleto';
+  }
+
+  return {
+    timestamp:new Date().toLocaleString('pt-BR'),
+    finalidade:fins.join(', '), dt_ini:V('dt_ini'), dt_fim:V('dt_fim'),
+    titulo_pt:V('titulo_pt'), titulo_en:V('titulo_en'), area_capes:V('area_capes'),
+    // Ensino/RN53
+    nivel_ensino:V('nivel_ensino'), curso_nome:V('curso_nome'),
+    disciplina_nome:V('disciplina_nome'), disciplina_sem:V('disciplina_sem'),
+    rn53_p1, rn53_p2, rn53_p3, rn53_resultado, rn53_excecao,
+    rn53_excecao_just:V('rn53_excecao_just'), rn53_habilidades:V('rn53_habilidades'),
+    subst_busca, subst_metodos:V('subst_metodos'), subst_justificativa:V('subst_justificativa'),
+    // Responsável
+    resp_nome:V('r_nome'), resp_cpf:V('r_cpf'), resp_inst:V('r_inst'),
+    resp_unid:V('r_unid'), resp_tel:V('r_tel'), resp_email:V('r_email'),
+    resp_vinc:V('r_vinc'), resp_siape:V('r_siape'),
+    cap_treinamento:Cs('cap').join(', '), cap_anos:V('cap_anos'), cap_etica:Cs('etica').join(', '),
+    colaboradores:colabArr.join(' ; '),
+    ciuca:Cs('ci').join(', '), ciuca_outros:V('ci_outros'),
+    resumo:V('resumo'), objetivos:V('objetivos'), justificativa:V('justificativa'),
+    especies:especiesArr.join(' ; '), total_animais:String(totalAnim), just_especie:V('just_esp'),
+    calc_teste:V('ca_teste'), calc_alfa:V('ca_alfa'), calc_poder:V('ca_poder'),
+    calc_efeito:V('ca_efeito'), calc_n:V('ca_n'), calc_soft:V('ca_soft'), calc_just:V('ca_just'),
+    procedencia:V('proc'), sisbio:V('sisbio_n'), ctnbio:V('ctnbio_n'),
+    gi:(document.querySelector('[name="gi"]:checked')||{}).value||'',
+    aloj_local:V('al_loc'), aloj_amb:V('al_amb'), aloj_alim:V('al_alim'),
+    aloj_agua:V('al_agua'), aloj_lot:V('al_lot'), aloj_exau:V('al_exau'), aloj_clim:V('al_clim'),
+    p91_estresse:V('p91'), p91_desc:V('p91d'), p92_dor:V('p92'), p92_desc:V('p92d'),
+    farmacos:farmArr.join(' ; '),
+    p96_imob:V('p96'), p96_desc:V('p96d'),
+    p97_jejum:V('p97j'), p97_jejum_t:V('p97jt'), p97_hidrica:V('p97h'), p97_hidrica_t:V('p97ht'),
+    p98_cirurgia:V('p98'), p98_desc:V('p98d'), p99_exposicao:V('p99'), p99_desc:V('p99d'),
+    p10_extracao:V('p10'), p10_material:V('p10m'), p10_qtd:V('p10q'),
+    p10_freq:V('p10f'), p10_metodo:V('p10mt'),
+    f_abate:V('f_ab'), f_eutanasia:V('f_eu'), f_metodo:V('f_met'),
+    f_destino:V('f_dest'), f_descarte:V('f_desc'),
+  };
+}
+
+// ── Status visual ──
+function showStatus(type, msg){
+  const box=$('#statusBox');
+  box.classList.remove('hidden');
+  const styles = {
+    sending: 'bg-blue-50 text-blue-700 border border-blue-200',
+    success: 'bg-green-50 text-green-700 border border-green-200',
+    error:   'bg-red-50 text-red-700 border border-red-200',
+    warn:    'bg-amber-50 text-amber-700 border border-amber-200',
+  };
+  box.className = `mb-4 p-3 rounded-lg text-sm font-semibold flex items-center gap-2 ${styles[type]||''}`;
+  const icons = {
+    sending:'⏳', success:'✅', error:'❌', warn:'⚠️'
+  };
+  box.innerHTML = `<span>${icons[type]||''}</span> ${msg}`;
+}
+
+// ── Enviar ao Google Sheets ──
+async function enviarParaSheets(dados){
+  if(APPS_SCRIPT_URL === 'COLE_SUA_URL_AQUI' || !APPS_SCRIPT_URL){
+    showStatus('error', 'URL do Apps Script não configurada. Veja o manual de setup.');
+    return false;
+  }
+
+  showStatus('sending', 'Enviando formulário ao CEUA...');
+  $('#sendingSpinner').classList.remove('hidden');
+  $('#btnEnviar').disabled = true;
+
+  try {
+    const resp = await fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors', // Apps Script requer no-cors
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(dados)
+    });
+
+    // no-cors retorna opaque response (sem acesso ao body)
+    // mas se chegou aqui sem erro, o envio foi feito
+    showStatus('success',
+      `Formulário enviado com sucesso! Responsável: ${dados.resp_nome || '(não informado)'} — ${dados.timestamp}`);
+    $('#sendingSpinner').classList.add('hidden');
+    $('#btnEnviar').disabled = false;
+    return true;
+
+  } catch(err) {
+    showStatus('error', `Erro ao enviar: ${err.message}. Verifique sua conexão e tente novamente.`);
+    $('#sendingSpinner').classList.add('hidden');
+    $('#btnEnviar').disabled = false;
+    return false;
+  }
+}
+
+// ── Enviar + PDF ──
+async function enviarEGerarPDF(){
+  const dados = coletarDados();
+  if(!dados.titulo_pt && !dados.resp_nome){
+    showStatus('warn', 'Preencha ao menos o título ou o nome do responsável.');
+    return;
+  }
+  const ok = await enviarParaSheets(dados);
+  if(ok){
+    gerarPDF();
+    showToast('✓ Dados enviados ao CEUA + PDF gerado!');
+  }
+}
+
+// ── Toast ──
+function showToast(msg){
+  const t=document.createElement('div');
+  t.className='fixed bottom-6 left-1/2 -translate-x-1/2 bg-tl-800 text-white px-5 py-3 rounded-xl shadow-2xl text-sm font-semibold z-50';
+  t.style.animation='slideUp .3s ease'; t.textContent=msg;
+  document.body.appendChild(t);
+  setTimeout(()=>{t.style.opacity='0';t.style.transition='opacity .3s';setTimeout(()=>t.remove(),300);},3000);
+}
+</script>
+</body>
+</html>
