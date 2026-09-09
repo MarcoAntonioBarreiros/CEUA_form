@@ -18,16 +18,52 @@ body{font-family:Arial,sans-serif;background:#E8F4F6;color:#164549;display:flex;
 </div>
 <script>
 (function(){
-  const BASE_URL='https://raw.githubusercontent.com/MarcoAntonioBarreiros/CEUA_form/95cc54e193cb4199b6563ca5be1316900c438f48/solicitacao-ceua-appscript.html';
+  const PAGES='https://marcoantoniobarreiros.github.io/CEUA_form/';
+  const VER='20260909-1';
+  const RAW_BASE='https://raw.githubusercontent.com/MarcoAntonioBarreiros/CEUA_form/95cc54e193cb4199b6563ca5be1316900c438f48/solicitacao-ceua-appscript.html';
+  const RAW_ORIGINAL='https://raw.githubusercontent.com/MarcoAntonioBarreiros/CEUA_form/backup-index-before-appscript-20260623/index.html';
+  // A base e o formulario original passam a ser servidos pelo proprio GitHub
+  // Pages (mesma origem da pagina). O raw.githubusercontent.com fica so como
+  // reserva: era ele que falhava de forma intermitente com HTTP 503.
+  const BASE_URLS=[
+    'formulario-base/solicitacao-ceua-appscript.html?v='+VER,
+    PAGES+'formulario-base/solicitacao-ceua-appscript.html?v='+VER,
+    RAW_BASE
+  ];
+  const ORIGINAL_URL=PAGES+'formulario-base/formulario-original.html?v='+VER;
   const VALIDATION_URL='https://marcoantoniobarreiros.github.io/CEUA_form/ceua-validation-v2.js?v=20260803-1405';
   const INSTALLATION_URL='https://marcoantoniobarreiros.github.io/CEUA_form/ceua-installation-status.js?v=20260803-1458';
   const COMBINED_URL='https://marcoantoniobarreiros.github.io/CEUA_form/ceua-combined-validation.js?v=20260803-1518';
   const PROJECT_REVIEW_URL='https://marcoantoniobarreiros.github.io/CEUA_form/ceua-project-review-link.js?v=20260804-2111';
-  fetch(BASE_URL,{cache:'no-store'})
-    .then(function(response){
-      if(!response.ok) throw new Error('Falha ao carregar a base do formulário: HTTP '+response.status);
-      return response.text();
-    })
+  // Tenta cada endereco em ordem e repete a lista uma segunda vez antes de
+  // desistir, para absorver falhas temporarias de um dos servidores.
+  function baixarTexto(urls,rodadas){
+    let ultimoErro=null;
+    function tentar(i,rodada){
+      if(i>=urls.length){
+        if(rodada+1<rodadas){
+          return new Promise(function(ok){setTimeout(ok,800);}).then(function(){return tentar(0,rodada+1);});
+        }
+        throw ultimoErro||new Error('Falha ao carregar a base do formulário: nenhuma fonte disponível.');
+      }
+      return fetch(urls[i],{cache:'no-store'}).then(function(response){
+        if(!response.ok) throw new Error('HTTP '+response.status);
+        return response.text();
+      }).catch(function(err){
+        ultimoErro=new Error('Falha ao carregar a base do formulário: '+err.message);
+        return tentar(i+1,rodada);
+      });
+    }
+    return Promise.resolve().then(function(){return tentar(0,0);});
+  }
+
+  function trocar(texto,de,para,rotulo){
+    const novo=texto.replace(de,para);
+    if(novo===texto) throw new Error('Não foi possível ajustar a base do formulário ('+rotulo+').');
+    return novo;
+  }
+
+  baixarTexto(BASE_URLS,2)
     .then(function(loader){
       let modified=loader.replace(
         'Instalação indicada declarada como cadastrada e regular no CIUCA',
@@ -37,6 +73,25 @@ body{font-family:Arial,sans-serif;background:#E8F4F6;color:#164549;display:flex;
       const pdfNeedle="lv('Nome da instalação:',V('inst_ciuca_nome'),42);\\n  cbx(";
       const pdfReplacement="lv('Nome da instalação:',V('inst_ciuca_nome'),42);\\n  lv('Cadastro no CIUCA:',V('inst_ciuca_cadastro'),42);\\n  lv('Situação / enquadramento:',(V('inst_ciuca_lic_status')||V('inst_ciuca_nao_motivo')),42);\\n  if(V('inst_ciuca_protocolo')) lv('Licença/protocolo:',V('inst_ciuca_protocolo'),42);\\n  if(V('inst_ciuca_justificativa')){ sub('Justificativa do enquadramento:'); tb(V('inst_ciuca_justificativa'),3); }\\n  cbx(";
       modified=modified.replace(pdfNeedle,pdfReplacement);
+      // Segunda camada: o formulario original tambem vem do GitHub Pages.
+      modified=trocar(modified,
+        "  const SOURCE_URL = '"+RAW_ORIGINAL+"';",
+        `  const SOURCE_URL = '${ORIGINAL_URL}';
+  const SOURCE_FALLBACK = '${RAW_ORIGINAL}';`,
+        'fonte do formulário original');
+      modified=trocar(modified,
+        "  fetch(SOURCE_URL, {cache:'no-store'})",
+        `  function carregarOriginal(lista){
+    return fetch(lista[0], {cache:'no-store'}).then(function(r){
+      if(!r.ok) throw new Error('HTTP ' + r.status);
+      return r;
+    }).catch(function(err){
+      if(lista.length > 1) return carregarOriginal(lista.slice(1));
+      throw err;
+    });
+  }
+  carregarOriginal([SOURCE_URL, SOURCE_FALLBACK])`,
+        'carregamento do formulário original');
       const replacement="html = html.replace('</body>', '<script src=\""+VALIDATION_URL+"\"><\\/script><script src=\""+INSTALLATION_URL+"\"><\\/script><script src=\""+COMBINED_URL+"\"><\\/script><script src=\""+PROJECT_REVIEW_URL+"\"><\\/script></body>');\n      document.write(html);";
       modified=modified.replace(/document\.write\(html\);/,replacement);
       if(modified===loader) throw new Error('Não foi possível inserir os módulos institucionais na base restaurada.');
@@ -47,7 +102,7 @@ body{font-family:Arial,sans-serif;background:#E8F4F6;color:#164549;display:flex;
     .catch(function(error){
       const box=document.getElementById('erro');
       box.style.display='block';
-      box.textContent='Erro ao carregar o formulário: '+error.message;
+      box.textContent='Erro ao carregar o formulário: '+error.message+' Recarregue a página (F5); se persistir, avise a CEUA.';
     });
 })();
 </script>
