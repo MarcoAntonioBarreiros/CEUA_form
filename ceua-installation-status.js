@@ -1,6 +1,7 @@
 (function(){
   'use strict';
   var baseSubmit=null, baseCollect=null, baseNormalize=null;
+  var VIDA_LIVRE='Pesquisa de campo com animais silvestres de vida livre (in situ, sem manutenção em instalação)';
   function id(x){return document.getElementById(x)}
   function val(x){return String((id(x)||{}).value||'').trim()}
   function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
@@ -15,9 +16,9 @@
     p.innerHTML='<div class="grid grid-cols-1 md:grid-cols-2 gap-3">'+
       '<div><label class="lbl">A instalação está cadastrada no CIUCA? <span class="text-red-500">*</span></label><select id="inst_ciuca_cadastro" class="fi"><option value="">Selecione...</option><option value="Sim">Sim</option><option value="Não">Não</option></select></div>'+
       '<div id="inst_ciuca_lic_status_box"><label class="lbl">Situação do licenciamento <span class="text-red-500">*</span></label><select id="inst_ciuca_lic_status" class="fi"><option value="">Selecione...</option><option value="Com licenciamento">Com licenciamento</option><option value="Com licenciamento solicitado">Com licenciamento solicitado</option><option value="Sem licenciamento">Sem licenciamento</option></select></div>'+
-      '<div id="inst_ciuca_nao_motivo_box" class="hidden"><label class="lbl">Enquadramento (instalação não cadastrada) <span class="text-red-500">*</span></label><select id="inst_ciuca_nao_motivo" class="fi"><option value="">Selecione...</option><option value="Propriedade particular">Propriedade particular (não é biotério sujeito ao CIUCA)</option><option value="Centro de triagem de animais silvestres">Centro de triagem/manejo de animais silvestres</option><option value="Cadastro solicitado e em andamento">Cadastro solicitado e em andamento (aceito temporariamente)</option></select></div></div>'+
+      '<div id="inst_ciuca_nao_motivo_box" class="hidden"><label class="lbl">Enquadramento (instalação não cadastrada) <span class="text-red-500">*</span></label><select id="inst_ciuca_nao_motivo" class="fi"><option value="">Selecione...</option><option value="Propriedade particular">Propriedade particular (não é biotério sujeito ao CIUCA)</option><option value="Centro de triagem de animais silvestres">Centro de triagem/manejo de animais silvestres</option><option value="'+VIDA_LIVRE+'">'+VIDA_LIVRE+'</option><option value="Cadastro solicitado e em andamento">Cadastro solicitado e em andamento (aceito temporariamente)</option></select></div></div>'+
       '<div id="inst_ciuca_protocolo_box" class="hidden"><label class="lbl">Número do processo SEI do cadastro solicitado <span class="text-red-500">*</span></label><input id="inst_ciuca_protocolo" class="fi" placeholder="Ex.: 23075.000000/2026-00"></div>'+
-      '<div id="inst_ciuca_justificativa_box" class="hidden"><label class="lbl">Justificativa <span class="text-red-500">*</span></label><textarea id="inst_ciuca_justificativa" class="fi" rows="3" placeholder="Descreva o local e a situação (ex.: propriedade particular; centro de triagem de silvestres) para a análise da CEUA."></textarea></div>'+
+      '<div id="inst_ciuca_justificativa_box" class="hidden"><label class="lbl">Justificativa <span class="text-red-500">*</span></label><textarea id="inst_ciuca_justificativa" class="fi" rows="3" placeholder="Descreva o local e a situação (ex.: propriedade particular; centro de triagem de silvestres; pesquisa de campo com animais de vida livre) para a análise da CEUA."></textarea></div>'+
       '<div id="inst_ciuca_status_help" class="text-[.72rem] leading-relaxed rounded-lg p-3 bg-slate-50 border text-slate-600">Informe a situação real da instalação. A CEUA avaliará o enquadramento.</div>';
     (label&&label.parentNode?label.parentNode:old.parentNode).insertBefore(p,label?label.nextSibling:null);
     id('inst_ciuca_cadastro').addEventListener('change',update);
@@ -28,7 +29,7 @@
     update();wrapData();wrapSubmit();
   }
   function needSEI(cad,mo){return cad==='Não'&&mo==='Cadastro solicitado e em andamento'}
-  function needJust(cad,mo){return cad==='Não'&&(mo==='Propriedade particular'||mo==='Centro de triagem de animais silvestres')}
+  function needJust(cad,mo){return cad==='Não'&&(mo==='Propriedade particular'||mo==='Centro de triagem de animais silvestres'||mo===VIDA_LIVRE)}
   function update(){
     var cad=val('inst_ciuca_cadastro'),st=val('inst_ciuca_lic_status'),mo=val('inst_ciuca_nao_motivo'),old=id('inst_ciuca_confirm'),h=id('inst_ciuca_status_help');
     id('inst_ciuca_lic_status_box').classList.toggle('hidden',cad!=='Sim');

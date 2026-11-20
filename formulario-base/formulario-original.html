@@ -207,6 +207,7 @@ textarea.fi{resize:vertical;min-height:72px}
       <div><label class="lbl">CPF</label><input type="text" id="r_cpf" class="fi"></div>
       <div><label class="lbl">Instituição</label><input type="text" id="r_inst" class="fi" value="UFPR"></div>
       <div><label class="lbl">Unidade</label><input type="text" id="r_unid" class="fi" value="Setor Palotina"></div>
+      <div><label class="lbl">Departamento / Disciplina</label><input type="text" id="r_depto" class="fi"></div>
       <div><label class="lbl">Telefone com DDD</label><input type="text" id="r_tel" class="fi"></div>
       <div><label class="lbl">E-mail institucional</label><input type="text" id="r_email" class="fi"></div>
       <div><label class="lbl">Vínculo com a UFPR</label><input type="text" id="r_vinc" class="fi"></div>
@@ -238,6 +239,7 @@ textarea.fi{resize:vertical;min-height:72px}
       <h3 class="font-bold text-tl-700 text-sm uppercase tracking-wide">4. Colaboradores</h3>
       <button type="button" onclick="addC()" class="nb text-xs bg-tl-500 text-white hover:bg-tl-600" style="padding:.35rem .9rem">+ Adicionar</button>
     </div>
+    <p class="mb-3 p-3 bg-amber-50 border border-amber-200 rounded-lg text-[.76rem] text-amber-900 leading-relaxed">Todos os membros que manipularem animais devem ter capacitação comprovada (RN CONCEA 49/2021); o responsável deve anexar os comprovantes.</p>
     <div id="cBox" class="space-y-2"></div>
     <p id="cNone" class="text-xs text-slate-400 italic mt-1">Nenhum colaborador adicionado.</p>
   </div>
@@ -303,6 +305,7 @@ textarea.fi{resize:vertical;min-height:72px}
     <div><label class="lbl">5. Resumo da Atividade</label><textarea id="resumo" class="fi" rows="4" placeholder="Relatar todos os procedimentos com animais nesta atividade..."></textarea></div>
     <div><label class="lbl">6. Objetivos (na íntegra)</label><textarea id="objetivos" class="fi" rows="3" placeholder="Objetivos gerais e específicos..."></textarea></div>
     <div><label class="lbl">7. Justificativa</label><textarea id="justificativa" class="fi" rows="3" placeholder="Justificativa da utilização de animais..."></textarea></div>
+    <div><label class="lbl">Relevância</label><textarea id="relevancia" class="fi" rows="3" placeholder="Impacto potencial para o conhecimento científico e para a saúde humana e/ou animal..."></textarea></div>
   </div>
 </div>
 </div>
@@ -359,8 +362,15 @@ textarea.fi{resize:vertical;min-height:72px}
       <h4 class="font-bold text-sm mb-2">8.1 Procedência</h4>
       <input type="text" id="proc" class="fi mb-2" placeholder="Biotério, fazenda, aviário...">
       <label class="cbc text-xs"><input type="checkbox" id="proc_prop"> Animais de propriedade de terceiros</label>
-      <label class="cbc text-xs"><input type="checkbox" id="proc_silv"> Animal silvestre (SISBIo)</label>
-      <input type="text" id="sisbio_n" class="fi mt-1" placeholder="Licença SISBIo Nº" style="font-size:.78rem;padding:.35rem .5rem">
+      <p id="proc_prop_aviso" class="hidden mb-2 p-2 bg-amber-50 border border-amber-200 rounded-lg text-[.72rem] text-amber-900 leading-relaxed">Anexe o termo de consentimento livre e esclarecido do proprietário dos animais (formulário unificado do CONCEA, RN 52/2021, item 14).</p>
+      <label class="cbc text-xs"><input type="checkbox" id="proc_silv"> Animal silvestre (SISBIO)</label>
+      <input type="text" id="sisbio_n" class="fi mt-1" placeholder="Nº da solicitação ou autorização SISBIO (obrigatório para silvestres)" style="font-size:.78rem;padding:.35rem .5rem">
+      <div id="capturaBox" class="hidden mt-2 p-3 bg-white rounded-lg border border-tl-100 space-y-2">
+        <h5 class="font-bold text-xs text-tl-700 uppercase tracking-wide">Métodos de captura (somente animais silvestres)</h5>
+        <div><label class="lbl">Equipamentos utilizados</label><textarea id="capt_equip" class="fi" rows="2" style="font-size:.8rem"></textarea></div>
+        <div><label class="lbl">Estratégias para reduzir o estresse (transporte, manipulação e marcação)</label><textarea id="capt_estresse" class="fi" rows="2" style="font-size:.8rem"></textarea></div>
+        <div><label class="lbl">Soltura no mesmo local e nas mesmas condições da captura</label><textarea id="capt_soltura" class="fi" rows="2" style="font-size:.8rem"></textarea></div>
+      </div>
       <label class="cbc text-xs mt-1"><input type="checkbox" id="proc_gm"> Geneticamente modificado (CTNBio)</label>
       <input type="text" id="ctnbio_n" class="fi mt-1" placeholder="Protocolo CTNBio Nº" style="font-size:.78rem;padding:.35rem .5rem">
     </div>
@@ -372,6 +382,12 @@ textarea.fi{resize:vertical;min-height:72px}
         <label class="cbc"><input type="radio" name="gi" value="3"> GI 3</label>
         <label class="cbc"><input type="radio" name="gi" value="4"> GI 4</label>
       </div>
+      <!-- CEUA: ajuda GI -->
+      <div class="mb-3">
+        <label class="lbl">Os materiais biológicos serão usados em outros projetos?</label>
+        <div class="yn"><select id="gi_mat_outros"><option value="Não">Não</option><option value="Sim">Sim</option></select></div>
+        <div id="gi_mat_outros_box" class="hidden mt-1"><label class="lbl">Quais e nº do protocolo</label><textarea id="gi_mat_outros_desc" class="fi" rows="2" style="font-size:.8rem"></textarea></div>
+      </div>
       <h4 class="font-bold text-sm mb-2 mt-3">8.3 Condições de Alojamento</h4>
       <div class="grid grid-cols-1 gap-1.5">
         <div><label class="lbl">Local</label><input type="text" id="al_loc" class="fi" style="padding:.35rem .5rem;font-size:.8rem"></div>
@@ -381,6 +397,8 @@ textarea.fi{resize:vertical;min-height:72px}
         <div><label class="lbl">Lotação</label><input type="text" id="al_lot" class="fi" style="padding:.35rem .5rem;font-size:.8rem"></div>
         <div><label class="lbl">Exaustão de ar</label><input type="text" id="al_exau" class="fi" style="padding:.35rem .5rem;font-size:.8rem"></div>
         <div><label class="lbl">Climatização</label><input type="text" id="al_clim" class="fi" style="padding:.35rem .5rem;font-size:.8rem"></div>
+        <div><label class="lbl">Tipo de cama</label><input type="text" id="al_cama" class="fi" style="padding:.35rem .5rem;font-size:.8rem"></div>
+        <div><label class="lbl">Condições particulares da espécie</label><textarea id="al_cond" class="fi" rows="2" style="padding:.35rem .5rem;font-size:.8rem"></textarea></div>
       </div>
     </div>
   </div>
@@ -415,6 +433,11 @@ textarea.fi{resize:vertical;min-height:72px}
       <button type="button" onclick="addDr()" class="nb text-xs bg-tl-500 text-white hover:bg-tl-600" style="padding:.3rem .8rem">+ Fármaco</button>
     </div>
     <div id="drBox" class="space-y-2"></div>
+    <div id="dr_just_box" class="hidden mt-2 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+      <label class="lbl" style="color:#92400e">Justificativa para o não uso de anestésico e/ou analgésico <span class="text-red-500">*</span></label>
+      <p class="text-[.72rem] text-amber-900 mb-1">Obrigatória quando há procedimento que cause dor (9.2 Dor intencional ou 9.8 Cirurgia) e não foi informado fármaco anestésico ou analgésico.</p>
+      <textarea id="dr_just_nao_uso" class="fi" rows="2" style="font-size:.8rem"></textarea>
+    </div>
   </div>
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-5">
@@ -435,6 +458,20 @@ textarea.fi{resize:vertical;min-height:72px}
     <div class="p-3 rounded-xl border bg-slate-50">
       <div class="flex justify-between items-center mb-1"><label class="font-bold text-sm">9.8 Cirurgia e Pós-operatório</label><div class="yn"><select id="p98"><option value="Não">Não</option><option value="Sim">Sim</option></select></div></div>
       <textarea id="p98d" class="fi" rows="3" placeholder="Tipo, técnica, recuperação, analgesia pós-op..." style="font-size:.8rem"></textarea>
+      <div id="posopBox" class="hidden mt-2 p-2 bg-white rounded-lg border border-tl-100 space-y-1.5">
+        <h5 class="font-bold text-xs text-tl-700 uppercase tracking-wide">Pós-operatório</h5>
+        <div><label class="lbl">Observação da recuperação — período (horas)</label><input type="text" id="posop_obs_horas" class="fi" style="font-size:.8rem;padding:.35rem"></div>
+        <label class="lbl mt-1">Analgesia pós-operatória</label>
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-1.5">
+          <div><label class="lbl">Fármaco</label><input type="text" id="posop_analg_farmaco" class="fi" style="font-size:.8rem;padding:.35rem"></div>
+          <div><label class="lbl">Dose</label><input type="text" id="posop_analg_dose" class="fi" style="font-size:.8rem;padding:.35rem"></div>
+          <div><label class="lbl">Via</label><input type="text" id="posop_analg_via" class="fi" style="font-size:.8rem;padding:.35rem"></div>
+          <div><label class="lbl">Frequência</label><input type="text" id="posop_analg_freq" class="fi" style="font-size:.8rem;padding:.35rem"></div>
+          <div><label class="lbl">Duração</label><input type="text" id="posop_analg_duracao" class="fi" style="font-size:.8rem;padding:.35rem"></div>
+        </div>
+        <div><label class="lbl">Justificativa do não uso de analgesia pós-operatória</label><textarea id="posop_analg_just" class="fi" rows="2" style="font-size:.8rem"></textarea></div>
+        <div><label class="lbl">Outros cuidados pós-operatórios</label><textarea id="posop_outros" class="fi" rows="2" style="font-size:.8rem"></textarea></div>
+      </div>
     </div>
     <div class="p-3 rounded-xl border bg-slate-50">
       <div class="flex justify-between items-center mb-1"><label class="font-bold text-sm">9.9 Exposição/Inoculação</label><div class="yn"><select id="p99"><option value="Não">Não</option><option value="Sim">Sim</option></select></div></div>
@@ -473,6 +510,18 @@ textarea.fi{resize:vertical;min-height:72px}
         <div><label class="lbl">Eutanásia</label><div class="yn"><select id="f_eu"><option value="Não">Não</option><option value="Sim">Sim</option></select></div></div>
       </div>
       <input type="text" id="f_met" class="fi" placeholder="Método utilizado">
+      <div id="eutanasiaBox" class="hidden mt-3 p-3 bg-white rounded-lg border border-tl-100 space-y-1.5">
+        <h5 class="font-bold text-xs text-tl-700 uppercase tracking-wide">Eutanásia</h5>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-1.5">
+          <div><label class="lbl">Substância</label><input type="text" id="eu_substancia" class="fi" style="font-size:.8rem;padding:.35rem"></div>
+          <div><label class="lbl">Dose</label><input type="text" id="eu_dose" class="fi" style="font-size:.8rem;padding:.35rem"></div>
+          <div><label class="lbl">Via</label><input type="text" id="eu_via" class="fi" style="font-size:.8rem;padding:.35rem"></div>
+        </div>
+        <div><label class="lbl">Método restrito (decapitação, deslocamento cervical ou CO2)?</label><div class="yn"><select id="eu_restrito"><option value="Não">Não</option><option value="Sim">Sim</option></select></div></div>
+        <div id="eu_restrito_box" class="hidden"><label class="lbl">Justificativa e referência do método restrito</label><textarea id="eu_restrito_just" class="fi" rows="2" style="font-size:.8rem"></textarea></div>
+        <div><label class="lbl">Local e infraestrutura</label><textarea id="eu_local" class="fi" rows="2" style="font-size:.8rem"></textarea></div>
+        <div><label class="lbl">Método de confirmação da morte</label><input type="text" id="eu_confirmacao" class="fi" style="font-size:.8rem;padding:.35rem"></div>
+      </div>
     </div>
     <div class="space-y-3">
       <div><label class="lbl">11.2 Destino dos Animais após a Atividade</label><textarea id="f_dest" class="fi" rows="2"></textarea></div>
@@ -565,15 +614,84 @@ document.getElementById('r_nome')?.addEventListener('input', function(){ documen
 function addC(){
   $('#cNone').classList.add('hidden');
   const d=document.createElement('div'); d.className='p-2.5 border rounded-lg bg-white dyn relative';
+  d.setAttribute('data-colab','');
+  const st='font-size:.8rem;padding:.4rem .5rem';
   d.innerHTML=`<button type="button" onclick="this.parentElement.remove()" class="absolute top-1 right-2 text-red-400 hover:text-red-600 text-base font-bold">×</button>
 <div class="grid grid-cols-1 md:grid-cols-4 gap-2">
-  <div><label class="lbl">Nome</label><input type="text" name="cn[]" class="fi" style="font-size:.8rem;padding:.4rem .5rem"></div>
-  <div><label class="lbl">CPF</label><input type="text" name="cc[]" class="fi" style="font-size:.8rem;padding:.4rem .5rem"></div>
-  <div><label class="lbl">E-mail</label><input type="text" name="ce[]" class="fi" style="font-size:.8rem;padding:.4rem .5rem"></div>
-  <div><label class="lbl">SIAPE/Matrícula</label><input type="text" name="cs[]" class="fi" style="font-size:.8rem;padding:.4rem .5rem"></div>
+  <div><label class="lbl">Nome</label><input type="text" name="cn[]" class="fi" style="${st}"></div>
+  <div><label class="lbl">CPF</label><input type="text" name="cc[]" class="fi" style="${st}"></div>
+  <div><label class="lbl">E-mail</label><input type="text" name="ce[]" class="fi" style="${st}"></div>
+  <div><label class="lbl">SIAPE/Matrícula</label><input type="text" name="cs[]" class="fi" style="${st}"></div>
+  <div><label class="lbl">Instituição</label><input type="text" name="cinst[]" class="fi" style="${st}"></div>
+  <div><label class="lbl">Nível acadêmico</label><input type="text" name="cniv[]" class="fi" style="${st}"></div>
+  <div><label class="lbl">Experiência prévia (anos)</label><input type="text" name="cexp[]" class="fi" style="${st}"></div>
+  <div><label class="lbl">Telefone</label><input type="text" name="ctel[]" class="fi" style="${st}"></div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-2 mt-2">
+  <div class="p-2 bg-slate-50 rounded-lg border">
+    <p class="font-bold text-xs mb-1 text-slate-700">Treinamento Específico</p>
+    <label class="cbc text-xs"><input type="checkbox" name="ccap_vet[]" value="Diploma Medicina Veterinária"> Diploma Medicina Veterinária</label>
+    <label class="cbc text-xs"><input type="checkbox" name="ccap_doc[]" value="Treinamento documentado"> Treinamento documentado</label>
+    <label class="cbc text-xs"><input type="checkbox" name="ccap_exp[]" value="Experiência profissional"> Experiência profissional</label>
+    <div class="mt-1 ml-6"><label class="text-[.65rem] text-slate-500">Anos:</label><input type="text" name="ccap_anos[]" class="fi" style="max-width:80px;padding:.3rem .45rem;font-size:.78rem"></div>
+  </div>
+  <div class="p-2 bg-slate-50 rounded-lg border">
+    <p class="font-bold text-xs mb-1 text-slate-700">Capacitação em Ética</p>
+    <label class="cbc text-xs"><input type="checkbox" name="cet_lab[]" value="Ciência de Animais de Laboratório"> Ciência de Animais de Laboratório</label>
+    <label class="cbc text-xs"><input type="checkbox" name="cet_equiv[]" value="Treinamento equivalente"> Treinamento equivalente</label>
+    <label class="cbc text-xs"><input type="checkbox" name="cet_disc[]" value="Disciplina acadêmica"> Disciplina acadêmica</label>
+    <label class="cbc text-xs"><input type="checkbox" name="cet_exp[]" value="Experiência profissional"> Experiência profissional</label>
+  </div>
 </div>`;
   $('#cBox').appendChild(d);
 }
+
+// Lê os colaboradores bloco a bloco (os campos de cada um ficam alinhados
+// mesmo quando algum deles está em branco).
+function lerColaboradores(){
+  return [...$$('#cBox [data-colab]')].map(b=>{
+    const t=n=>String((b.querySelector(`[name="${n}"]`)||{}).value||'').trim();
+    const c=n=>{const e=b.querySelector(`[name="${n}"]`); return e&&e.checked?e.value:'';};
+    return {
+      nome:t('cn[]'), cpf:t('cc[]'), email:t('ce[]'), siape:t('cs[]'),
+      instituicao:t('cinst[]'), nivel:t('cniv[]'), experiencia:t('cexp[]'), telefone:t('ctel[]'),
+      treinamento:[c('ccap_vet[]'),c('ccap_doc[]'),c('ccap_exp[]')].filter(Boolean),
+      treinamento_anos:t('ccap_anos[]'),
+      etica:[c('cet_lab[]'),c('cet_equiv[]'),c('cet_disc[]'),c('cet_exp[]')].filter(Boolean)
+    };
+  }).filter(x=>Object.keys(x).some(k=>Array.isArray(x[k])?x[k].length:x[k]));
+}
+
+// Lê os fármacos linha a linha (mesmo motivo).
+function lerFarmacos(){
+  return [...$$('#drBox [data-farmaco]')].map(b=>{
+    const t=n=>String((b.querySelector(`[name="${n}"]`)||{}).value||'').trim();
+    return {tipo:t('dt[]'), nome:t('dn[]'), dose:t('dd[]'), via:t('dv[]'), frequencia:t('df[]')};
+  }).filter(x=>x.nome||x.dose||x.via||x.frequencia);
+}
+
+// Procedimento que cause dor sem anestésico ou sem analgésico informado.
+function precisaJustificarFarmacos(){
+  const dor=V('p92')==='Sim'||V('p98')==='Sim';
+  if(!dor) return false;
+  const f=lerFarmacos().filter(x=>x.nome);
+  const tem=tipo=>f.some(x=>x.tipo===tipo);
+  return !tem('Anestésico')||!tem('Analgésico');
+}
+
+// Mostra/oculta os blocos condicionais.
+function atualizarCondicionaisCEUA(){
+  const mostra=(id,on)=>{const e=document.getElementById(id); if(e) e.classList.toggle('hidden',!on);};
+  mostra('proc_prop_aviso',!!document.getElementById('proc_prop')?.checked);
+  mostra('capturaBox',!!document.getElementById('proc_silv')?.checked);
+  mostra('gi_mat_outros_box',V('gi_mat_outros')==='Sim');
+  mostra('posopBox',V('p98')==='Sim');
+  mostra('eutanasiaBox',V('f_eu')==='Sim');
+  mostra('eu_restrito_box',V('eu_restrito')==='Sim');
+  mostra('dr_just_box',precisaJustificarFarmacos()||!!V('dr_just_nao_uso').trim());
+}
+document.getElementById('F').addEventListener('change',atualizarCondicionaisCEUA);
+document.getElementById('F').addEventListener('input',atualizarCondicionaisCEUA);
 
 // ── Dynamic: Species (with dropdowns) ───────────────
 const ESPECIES_LISTA = [
@@ -723,12 +841,14 @@ function avaliarRN53(){
 // ── Dynamic: Drugs ─────────────────
 function addDr(){
   const d=document.createElement('div'); d.className='p-2.5 border border-tl-100 rounded-lg bg-white dyn relative';
-  d.innerHTML=`<button type="button" onclick="this.parentElement.remove()" class="absolute top-1 right-2 text-red-400 text-base font-bold">×</button>
-<div class="grid grid-cols-1 md:grid-cols-4 gap-2">
+  d.setAttribute('data-farmaco','');
+  d.innerHTML=`<button type="button" onclick="this.parentElement.remove();atualizarCondicionaisCEUA()" class="absolute top-1 right-2 text-red-400 text-base font-bold">×</button>
+<div class="grid grid-cols-1 md:grid-cols-5 gap-2">
   <div><label class="lbl">Tipo</label><select name="dt[]" class="fi" style="font-size:.8rem;padding:.35rem"><option>Anestésico</option><option>Relaxante Muscular</option><option>Analgésico</option></select></div>
   <div><label class="lbl">Fármaco (DCB/DCI)</label><input type="text" name="dn[]" class="fi" style="font-size:.8rem;padding:.35rem"></div>
   <div><label class="lbl">Dose (unidade)</label><input type="text" name="dd[]" class="fi" style="font-size:.8rem;padding:.35rem"></div>
   <div><label class="lbl">Via de administração</label><input type="text" name="dv[]" class="fi" style="font-size:.8rem;padding:.35rem"></div>
+  <div><label class="lbl">Frequência</label><input type="text" name="df[]" class="fi" style="font-size:.8rem;padding:.35rem"></div>
 </div>`;
   $('#drBox').appendChild(d);
 }
@@ -765,23 +885,63 @@ function gerarPDF(){
   function sec(t){ ck(11); doc.setFillColor(...T); doc.roundedRect(ML,y-1,CW,7.5,1.2,1.2,'F'); doc.setTextColor(...WH); doc.setFontSize(8.5); doc.setFont('helvetica','bold'); doc.text(t,ML+2.5,y+4.5); y+=11; }
   function sub(t){ ck(9); doc.setTextColor(...T); doc.setFontSize(8); doc.setFont('helvetica','bold'); doc.text(t,ML,y); doc.setDrawColor(...TL); doc.setLineWidth(.25); doc.line(ML,y+1.5,MR,y+1.5); y+=6.5; }
 
+  // Limite inferior útil da página (acima do número da página).
+  const LIM=H-16;
+  // Espaçamento entre linhas do texto de corpo (7.5 pt).
+  const LH=3.4;
+
   function lv(l,v,lw=42){
-    ck(6.5);
+    doc.setFont('helvetica','normal'); doc.setFontSize(7.5);
+    const ls=doc.splitTextToSize(String(v||''),CW-lw-3);
+    const alt=Math.max(6.5,(ls.length-1)*LH+6.5);
+    ck(Math.min(alt,LIM-32));
     doc.setFillColor(...TL); doc.rect(ML,y-3.2,lw,6,'F');
     doc.setTextColor(...TD); doc.setFontSize(7); doc.setFont('helvetica','bold'); doc.text(l,ML+1.5,y);
-    doc.setTextColor(...BK); doc.setFont('helvetica','normal'); doc.setFontSize(7.5);
-    const ls=doc.splitTextToSize(v||'',CW-lw-3); doc.text(ls,ML+lw+2,y);
-    y+=Math.max(6.5,ls.length*4);
+    let yy=y;
+    ls.forEach((linha,k)=>{
+      if(k>0 && yy>LIM){ np(); yy=y; }
+      doc.setTextColor(...BK); doc.setFont('helvetica','normal'); doc.setFontSize(7.5);
+      doc.text(linha,ML+lw+2,yy); yy+=LH;
+    });
+    y=Math.max(y+6.5,yy-LH+6.5);
   }
 
+  // Caixa de texto: a altura acompanha o texto (rows é só o mínimo) e,
+  // se o texto não couber na página, continua na página seguinte.
   function tb(t,rows){
-    ck(rows*4.5+3);
-    const h=rows*4.5;
-    doc.setDrawColor(180,200,210); doc.setLineWidth(.2); doc.setFillColor(250,252,252);
-    doc.roundedRect(ML,y-1.5,CW,h,.8,.8,'FD');
-    if(t){ doc.setTextColor(...BK); doc.setFontSize(7.5); doc.setFont('helvetica','normal');
-      const ls=doc.splitTextToSize(t,CW-5); doc.text(ls,ML+2.5,y+2); }
-    y+=h+2.5;
+    doc.setFont('helvetica','normal'); doc.setFontSize(7.5);
+    const ls=t?doc.splitTextToSize(String(t),CW-5):[];
+    const minH=rows*4.5;
+    const total=Math.max(minH,ls.length*LH+3);
+    // Cabe inteira numa página nova? Então não parte a caixa à toa.
+    if(y-1.5+total>LIM && (total<=LIM-30.5 || LIM-(y-1.5)<20)) np();
+    let i=0, primeira=true;
+    do{
+      const disp=LIM-(y-1.5);
+      const cabem=Math.max(1,Math.floor((disp-3)/LH));
+      const parte=ls.slice(i,i+cabem); i+=parte.length;
+      const fim=i>=ls.length;
+      const h=Math.max(primeira&&fim?minH:0,parte.length*LH+3);
+      doc.setDrawColor(180,200,210); doc.setLineWidth(.2); doc.setFillColor(250,252,252);
+      doc.roundedRect(ML,y-1.5,CW,h,.8,.8,'FD');
+      doc.setTextColor(...BK); doc.setFontSize(7.5); doc.setFont('helvetica','normal');
+      parte.forEach((linha,k)=>doc.text(linha,ML+2.5,y+2+k*LH));
+      y+=h+2.5;
+      primeira=false;
+      if(!fim) np();
+    }while(i<ls.length);
+  }
+
+  // Observação em texto corrido (itálico, cinza), com quebra de página.
+  function nota(t){
+    doc.setFont('helvetica','italic'); doc.setFontSize(7);
+    const ls=doc.splitTextToSize(String(t||''),CW-2);
+    ls.forEach(linha=>{
+      ck(4);
+      doc.setTextColor(...GR); doc.setFont('helvetica','italic'); doc.setFontSize(7);
+      doc.text(linha,ML+1,y); y+=3.3;
+    });
+    y+=1.5; doc.setTextColor(...BK);
   }
 
   function cbx(l,on){
@@ -821,7 +981,7 @@ function gerarPDF(){
     const p3v=(document.querySelector('[name="rn53_p3"]:checked')||{}).value||'';
     lv('P1) Eutanásia de vertebrados?',p1v||'Não respondido',52);
     if(p1v==='Não') lv('P2) Distresse que comprometa bem-estar?',p2v||'Não respondido',52);
-    if(p1v==='Sim'||(p1v==='Não'&&p2v==='Sim')) lv('P3) Desenvolve habilidades psicomotoras + competências DCN?',p3v||'Não respondido',72);
+    if(p1v==='Sim'||(p1v==='Não'&&p2v==='Sim')) lv('P3) Desenvolve habilidades psicomotoras + competências DCN?',p3v||'Não respondido',84);
     // resultado
     const resEl=document.getElementById('rn53_resultado');
     if(resEl && !resEl.classList.contains('hidden')){
@@ -856,7 +1016,7 @@ function gerarPDF(){
   // 3. Responsável
   sec('3.  RESPONSÁVEL');
   [['Nome completo:',V('r_nome')],['CPF:',V('r_cpf')],['Instituição:',V('r_inst')],
-   ['Unidade:',V('r_unid')],['Telefone com DDD:',V('r_tel')],['E-mail institucional:',V('r_email')],
+   ['Unidade:',V('r_unid')],['Departamento/Disciplina:',V('r_depto')],['Telefone com DDD:',V('r_tel')],['E-mail institucional:',V('r_email')],
    ['Vínculo com a UFPR:',V('r_vinc')],['SIAPE ou Matrícula:',V('r_siape')]
   ].forEach(([l,v])=>lv(l,v,42));
 
@@ -869,12 +1029,18 @@ function gerarPDF(){
 
   // 4. Colaboradores
   np(); sec('4.  COLABORADORES');
-  const cns=Ns('cn[]'),ccs=Ns('cc[]'),ces=Ns('ce[]'),css=Ns('cs[]');
-  for(let i=0;i<cns.length;i++){
-    sub(`Colaborador ${i+1}`);
-    lv('Nome:',cns[i]||''); lv('CPF:',ccs[i]||''); lv('E-mail:',ces[i]||''); lv('SIAPE/Matrícula:',css[i]||''); y+=1.5;
-  }
-  if(!cns.length){ doc.setTextColor(...GR); doc.setFontSize(7.5); doc.text('Nenhum colaborador cadastrado.',ML,y); y+=5; }
+  const colabs=lerColaboradores();
+  colabs.forEach((c,i)=>{
+    ck(40); sub(`Colaborador ${i+1}`);
+    lv('Nome:',c.nome); lv('CPF:',c.cpf); lv('E-mail:',c.email); lv('SIAPE/Matrícula:',c.siape);
+    lv('Instituição:',c.instituicao); lv('Nível acadêmico:',c.nivel);
+    lv('Experiência prévia (anos):',c.experiencia); lv('Telefone:',c.telefone);
+    lv('Treinamento específico:',c.treinamento.join('; ')+(c.treinamento_anos?` (anos: ${c.treinamento_anos})`:''));
+    lv('Capacitação em ética:',c.etica.join('; '));
+    y+=1.5;
+  });
+  if(!colabs.length){ doc.setTextColor(...GR); doc.setFontSize(7.5); doc.text('Nenhum colaborador cadastrado.',ML,y); y+=5; }
+  nota('Todos os membros que manipularem animais devem ter capacitação comprovada (RN CONCEA 49/2021); o responsável deve anexar os comprovantes.');
 
   // CIUCA
   np(); sec('FINALIDADE DO PROJETO — Dados CIUCA');
@@ -889,20 +1055,13 @@ function gerarPDF(){
   sec('6.  OBJETIVOS (na íntegra)');
   tb(V('objetivos'),8);
 
-  // 8.A Cálculo Estatístico
-  np(); sec('8.A  CÁLCULO ESTATÍSTICO DA QUANTIDADE DE ANIMAIS');
-  lv('Tipo de teste estatístico:',V('ca_teste'),48);
-  lv('Nível de significância (α):',V('ca_alfa'),48);
-  lv('Poder do teste (1-β):',V('ca_poder'),48);
-  lv('Tamanho do efeito esperado:',V('ca_efeito'),48);
-  lv('N amostral calculado:',V('ca_n'),48);
-  lv('Software/método utilizado:',V('ca_soft'),48);
-  sub('Justificativa do cálculo amostral:');
-  tb(V('ca_just'),4);
-
   // 7. Justificativa
   sec('7.  JUSTIFICATIVA');
   tb(V('justificativa'),12);
+
+  // Relevância
+  sec('RELEVÂNCIA');
+  tb(V('relevancia'),6);
 
   // 8. Modelo Animal - table
   np(); sec('8.  MODELO ANIMAL');
@@ -915,17 +1074,18 @@ function gerarPDF(){
   const sns=[...$$('[name="sn[]"]')].map(e=>e.value),slinhs=[...$$('[name="sn_linh[]"]')].map(i=>i.value),sas=[...$$('[name="sa[]"]')].map(e=>e.value),sws=[...$$('[name="sw[]"]')].map(e=>e.value),sss=[...$$('[name="ss[]"]')].map(e=>e.value),sqs=[...$$('[name="sq[]"]')].map(e=>e.value);
   let total=0;
   for(let i=0;i<sns.length;i++){
-    ck(5.5);
-    const bg=i%2===0?WH:TL;
-    doc.setFillColor(...bg); doc.rect(ML,y-3,CW,5,'F');
-    doc.setDrawColor(200,220,226); doc.setLineWidth(.12); doc.line(ML,y+2,MR,y+2);
-    doc.setTextColor(...BK); doc.setFontSize(7); doc.setFont('helvetica','normal');
+    doc.setFontSize(7); doc.setFont('helvetica','normal');
     const espLabel = (sns[i]||'') + (slinhs[i] ? ' — '+slinhs[i] : '');
-    [espLabel,sas[i]||'',sws[i]||'',sss[i]||'',sqs[i]||''].forEach((v,j)=>{
-      const txt=doc.splitTextToSize(v,j===0?46:28);
-      doc.text(txt[0]||'',cx[j]+1.5,y);
-    });
-    total+=parseInt(sqs[i]||0); y+=5;
+    const cols=[espLabel,sas[i]||'',sws[i]||'',sss[i]||'',sqs[i]||''].map((v,j)=>doc.splitTextToSize(v,j===0?44:j===4?38:26));
+    const nl=Math.max(1,...cols.map(c=>c.length));
+    const rh=5+(nl-1)*3.2;
+    ck(rh+0.5);
+    const bg=i%2===0?WH:TL;
+    doc.setFillColor(...bg); doc.rect(ML,y-3,CW,rh,'F');
+    doc.setDrawColor(200,220,226); doc.setLineWidth(.12); doc.line(ML,y-3+rh,MR,y-3+rh);
+    doc.setTextColor(...BK); doc.setFontSize(7); doc.setFont('helvetica','normal');
+    cols.forEach((linhas,j)=>linhas.forEach((l,k)=>doc.text(l,cx[j]+1.5,y+k*3.2)));
+    total+=parseInt(sqs[i]||0); y+=rh;
   }
   doc.setFillColor(...TL); doc.rect(ML,y-3,CW,5.5,'F');
   doc.setTextColor(...TD); doc.setFont('helvetica','bold');
@@ -936,19 +1096,45 @@ function gerarPDF(){
   // 8.1 Procedência
   np(); sec('8.1  PROCEDÊNCIA');
   lv('Procedência:',V('proc'),28);
-  if($('#proc_silv').checked) lv('Licença SISBIo Nº:',V('sisbio_n'),38);
+  const terceiros=$('#proc_prop').checked;
+  lv('Animais de propriedade de terceiros:',terceiros?'Sim':'Não',56);
+  if(terceiros) nota('Anexar o termo de consentimento livre e esclarecido do proprietário dos animais (formulário unificado do CONCEA, RN 52/2021, item 14).');
+  const silvestre=$('#proc_silv').checked;
+  lv('Animal silvestre:',silvestre?'Sim':'Não',56);
+  if(silvestre) lv('SISBIO (solicitação/autorização) nº:',V('sisbio_n'),56);
   if($('#proc_gm').checked) lv('Protocolo CTNBio Nº:',V('ctnbio_n'),40);
+  if(silvestre){
+    y+=1;
+    sub('Métodos de captura — equipamentos:'); tb(V('capt_equip'),2);
+    sub('Métodos de captura — redução do estresse (transporte, manipulação e marcação):'); tb(V('capt_estresse'),2);
+    sub('Soltura no mesmo local e nas mesmas condições da captura:'); tb(V('capt_soltura'),2);
+  }
 
   // 8.2 GI
   sec('8.2  GRAU DE INVASIVIDADE');
   const gi=(document.querySelector('[name="gi"]:checked')||{}).value||'';
   ['1','2','3','4'].forEach(g=>cbx(`GI ${g}`,gi===g));
+  lv('Materiais biológicos em outros projetos?',V('gi_mat_outros'),62);
+  if(V('gi_mat_outros')==='Sim'){ sub('Quais e nº do protocolo:'); tb(V('gi_mat_outros_desc'),2); }
 
   // 8.3 Alojamento
   sec('8.3  CONDIÇÕES DE ALOJAMENTO');
   [['Local:',V('al_loc')],['Ambiente:',V('al_amb')],['Alimentação:',V('al_alim')],
    ['Fonte de água:',V('al_agua')],['Lotação:',V('al_lot')],['Exaustão de ar:',V('al_exau')],
-   ['Climatização:',V('al_clim')]].forEach(([l,v])=>lv(l,v,30));
+   ['Climatização:',V('al_clim')],['Tipo de cama:',V('al_cama')]].forEach(([l,v])=>lv(l,v,30));
+  sub('Condições particulares da espécie:');
+  tb(V('al_cond'),2);
+
+  // 8.A Cálculo Estatístico
+  np(); sec('8.A  CÁLCULO ESTATÍSTICO DA QUANTIDADE DE ANIMAIS');
+  lv('Tipo de teste estatístico:',V('ca_teste'),48);
+  lv('Nível de significância (α):',V('ca_alfa'),48);
+  lv('Poder do teste (1-β):',V('ca_poder'),48);
+  lv('Tamanho do efeito esperado:',V('ca_efeito'),48);
+  lv('N amostral calculado:',V('ca_n'),48);
+  lv('Software/método utilizado:',V('ca_soft'),48);
+  sub('Justificativa do cálculo amostral:');
+  tb(V('ca_just'),4);
 
   // 9. Procedimentos
   np(); sec('9.  PROCEDIMENTOS EXPERIMENTAIS');
@@ -958,12 +1144,16 @@ function gerarPDF(){
   });
 
   // Fármacos
-  const dts=Ns('dt[]'),dns=Ns('dn[]'),dds=Ns('dd[]'),dvs=Ns('dv[]');
-  if(dns.length){
+  const farms=lerFarmacos();
+  if(farms.length){
     sub('9.3–9.5 Fármacos');
-    for(let i=0;i<dns.length;i++){
-      ck(18); lv('Tipo:',dts[i]||'',18); lv('Fármaco:',dns[i]||'',18); lv('Dose:',dds[i]||'',18); lv('Via:',dvs[i]||'',18); y+=1;
-    }
+    farms.forEach(f=>{
+      ck(32); lv('Tipo:',f.tipo,22); lv('Fármaco:',f.nome,22); lv('Dose:',f.dose,22); lv('Via:',f.via,22); lv('Frequência:',f.frequencia,22); y+=1;
+    });
+  }
+  if(precisaJustificarFarmacos()||V('dr_just_nao_uso')){
+    sub('Justificativa para o não uso de anestésico e/ou analgésico:');
+    tb(V('dr_just_nao_uso'),2);
   }
 
   // 9.6-9.9
@@ -971,6 +1161,17 @@ function gerarPDF(){
   [[V('p96'),V('p96d'),'9.6 Imobilização do Animal'],[V('p98'),V('p98d'),'9.8 Cirurgia e Pós-operatório'],[V('p99'),V('p99d'),'9.9 Exposição/Inoculação']].forEach(([yn,desc,title])=>{
     ck(14); sub(title); cbx('Não',yn==='Não'); cbx('Sim',yn==='Sim');
     if(desc) tb(desc,2);
+    if(title.startsWith('9.8') && yn==='Sim'){
+      sub('Pós-operatório');
+      lv('Observação da recuperação (horas):',V('posop_obs_horas'),56);
+      lv('Analgesia — fármaco:',V('posop_analg_farmaco'),56);
+      lv('Analgesia — dose:',V('posop_analg_dose'),56);
+      lv('Analgesia — via:',V('posop_analg_via'),56);
+      lv('Analgesia — frequência:',V('posop_analg_freq'),56);
+      lv('Analgesia — duração:',V('posop_analg_duracao'),56);
+      if(V('posop_analg_just')){ sub('Justificativa do não uso de analgesia pós-operatória:'); tb(V('posop_analg_just'),2); }
+      sub('Outros cuidados pós-operatórios:'); tb(V('posop_outros'),2);
+    }
   });
 
   // 9.7 Condições alimentares
@@ -990,6 +1191,14 @@ function gerarPDF(){
   ck(40); sec('11.  FINALIZAÇÃO');
   sub('11.1 Método de Indução de Morte');
   lv('ABATE:',V('f_ab'),16); lv('EUTANÁSIA:',V('f_eu'),22); lv('Método:',V('f_met'),16); y+=2;
+  if(V('f_eu')==='Sim'){
+    sub('Eutanásia');
+    lv('Substância:',V('eu_substancia'),42); lv('Dose:',V('eu_dose'),42); lv('Via:',V('eu_via'),42);
+    lv('Método restrito?',V('eu_restrito'),42);
+    if(V('eu_restrito')==='Sim'){ sub('Justificativa e referência do método restrito:'); tb(V('eu_restrito_just'),2); }
+    sub('Local e infraestrutura:'); tb(V('eu_local'),2);
+    lv('Confirmação da morte:',V('eu_confirmacao'),42); y+=2;
+  }
   sub('11.2 Destino dos Animais após a Atividade');
   tb(V('f_dest'),2);
   sub('11.3 Descarte da Carcaça');
@@ -1097,16 +1306,20 @@ function coletarDados(){
     }
     totalAnim += parseInt(qt||0);
   }
-  const cns=Ns('cn[]'),ccs=Ns('cc[]'),ces=Ns('ce[]'),css_=Ns('cs[]');
-  let colabArr=[];
-  for(let i=0;i<cns.length;i++){
-    if(cns[i]) colabArr.push(`${cns[i]}|${ccs[i]||''}|${ces[i]||''}|${css_[i]||''}`);
-  }
-  const dts=Ns('dt[]'),dns=Ns('dn[]'),dds=Ns('dd[]'),dvs=Ns('dv[]');
-  let farmArr=[];
-  for(let i=0;i<dns.length;i++){
-    if(dns[i]) farmArr.push(`${dts[i]||''}|${dns[i]}|${dds[i]||''}|${dvs[i]||''}`);
-  }
+  const colabs=lerColaboradores().filter(c=>c.nome);
+  // Mesmo formato de antes (nome|cpf|e-mail|siape); o detalhe completo vai em colaboradores_detalhe.
+  const colabArr=colabs.map(c=>`${c.nome}|${c.cpf}|${c.email}|${c.siape}`);
+  const colabDet=colabs.map(c=>[
+    'Nome: '+c.nome,'CPF: '+c.cpf,'E-mail: '+c.email,'SIAPE/Matrícula: '+c.siape,
+    'Instituição: '+c.instituicao,'Nível acadêmico: '+c.nivel,'Experiência prévia (anos): '+c.experiencia,
+    'Telefone: '+c.telefone,
+    'Treinamento específico: '+c.treinamento.join(', ')+(c.treinamento_anos?' (anos: '+c.treinamento_anos+')':''),
+    'Capacitação em ética: '+c.etica.join(', ')
+  ].join(' | '));
+  const farms=lerFarmacos().filter(f=>f.nome);
+  // Mesmo formato de antes (tipo|nome|dose|via); com frequência em farmacos_detalhe.
+  const farmArr=farms.map(f=>`${f.tipo}|${f.nome}|${f.dose}|${f.via}`);
+  const farmDet=farms.map(f=>`${f.tipo}|${f.nome}|${f.dose}|${f.via}|${f.frequencia}`);
 
   // RN53 data
   const rn53_p1=(document.querySelector('[name="rn53_p1"]:checked')||{}).value||'';
@@ -1139,26 +1352,39 @@ function coletarDados(){
     // Responsável
     resp_nome:V('r_nome'), resp_cpf:V('r_cpf'), resp_inst:V('r_inst'),
     resp_unid:V('r_unid'), resp_tel:V('r_tel'), resp_email:V('r_email'),
-    resp_vinc:V('r_vinc'), resp_siape:V('r_siape'),
+    resp_vinc:V('r_vinc'), resp_siape:V('r_siape'), resp_depto:V('r_depto'),
     cap_treinamento:Cs('cap').join(', '), cap_anos:V('cap_anos'), cap_etica:Cs('etica').join(', '),
-    colaboradores:colabArr.join(' ; '),
+    colaboradores:colabArr.join(' ; '), colaboradores_detalhe:colabDet.join(' ; '),
     ciuca:Cs('ci').join(', '), ciuca_outros:V('ci_outros'),
-    resumo:V('resumo'), objetivos:V('objetivos'), justificativa:V('justificativa'),
+    resumo:V('resumo'), objetivos:V('objetivos'), justificativa:V('justificativa'), relevancia:V('relevancia'),
     especies:especiesArr.join(' ; '), total_animais:String(totalAnim), just_especie:V('just_esp'),
     calc_teste:V('ca_teste'), calc_alfa:V('ca_alfa'), calc_poder:V('ca_poder'),
     calc_efeito:V('ca_efeito'), calc_n:V('ca_n'), calc_soft:V('ca_soft'), calc_just:V('ca_just'),
     procedencia:V('proc'), sisbio:V('sisbio_n'), ctnbio:V('ctnbio_n'),
+    proc_terceiros:document.getElementById('proc_prop')?.checked?'Sim':'Não',
+    animal_silvestre:document.getElementById('proc_silv')?.checked?'Sim':'Não',
+    captura_equipamentos:V('capt_equip'), captura_reducao_estresse:V('capt_estresse'), captura_soltura:V('capt_soltura'),
     gi:(document.querySelector('[name="gi"]:checked')||{}).value||'',
+    gi_materiais_outros_projetos:V('gi_mat_outros'), gi_materiais_outros_desc:V('gi_mat_outros_desc'),
     aloj_local:V('al_loc'), aloj_amb:V('al_amb'), aloj_alim:V('al_alim'),
     aloj_agua:V('al_agua'), aloj_lot:V('al_lot'), aloj_exau:V('al_exau'), aloj_clim:V('al_clim'),
+    aloj_cama:V('al_cama'), aloj_cond_especie:V('al_cond'),
     p91_estresse:V('p91'), p91_desc:V('p91d'), p92_dor:V('p92'), p92_desc:V('p92d'),
-    farmacos:farmArr.join(' ; '),
+    farmacos:farmArr.join(' ; '), farmacos_detalhe:farmDet.join(' ; '),
+    farmacos_just_nao_uso:V('dr_just_nao_uso'),
     p96_imob:V('p96'), p96_desc:V('p96d'),
     p97_jejum:V('p97j'), p97_jejum_t:V('p97jt'), p97_hidrica:V('p97h'), p97_hidrica_t:V('p97ht'),
     p98_cirurgia:V('p98'), p98_desc:V('p98d'), p99_exposicao:V('p99'), p99_desc:V('p99d'),
+    posop_obs_horas:V('posop_obs_horas'), posop_analg_farmaco:V('posop_analg_farmaco'),
+    posop_analg_dose:V('posop_analg_dose'), posop_analg_via:V('posop_analg_via'),
+    posop_analg_freq:V('posop_analg_freq'), posop_analg_duracao:V('posop_analg_duracao'),
+    posop_analg_just:V('posop_analg_just'), posop_outros:V('posop_outros'),
     p10_extracao:V('p10'), p10_material:V('p10m'), p10_qtd:V('p10q'),
     p10_freq:V('p10f'), p10_metodo:V('p10mt'),
     f_abate:V('f_ab'), f_eutanasia:V('f_eu'), f_metodo:V('f_met'),
+    eu_substancia:V('eu_substancia'), eu_dose:V('eu_dose'), eu_via:V('eu_via'),
+    eu_metodo_restrito:V('eu_restrito'), eu_restrito_just:V('eu_restrito_just'),
+    eu_local:V('eu_local'), eu_confirmacao_morte:V('eu_confirmacao'),
     f_destino:V('f_dest'), f_descarte:V('f_desc'),
   };
 }

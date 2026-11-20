@@ -117,6 +117,7 @@ function validarCamposEssenciaisPDF(){
   }
   campo('just_esp','Justificativa dos procedimentos e da espécie',4);
   campo('proc','Procedência',4);
+  campo('sisbio_n','Nº da solicitação ou autorização SISBIO (animal silvestre)',4,!!document.getElementById('proc_silv')?.checked);
   radio('gi','Grau de invasividade',4);
   campo('al_loc','Local de alojamento',4);
   campo('al_amb','Ambiente de alojamento',4);
@@ -147,6 +148,7 @@ function validarCamposEssenciaisPDF(){
       if(!String((dvs[i]||{}).value||'').trim()) pendentes.push({name:'dv[]',label:'Via de administração do fármaco',step:5});
     }
   }
+  campo('dr_just_nao_uso','Justificativa para o não uso de anestésico e/ou analgésico',5,typeof precisaJustificarFarmacos==='function' && precisaJustificarFarmacos());
 
   campo('f_met','Método utilizado',6,V('f_ab')==='Sim' || V('f_eu')==='Sim');
   campo('f_dest','Destino dos animais após a atividade',6);
@@ -235,11 +237,11 @@ function normalizarPayloadCEUA(dados){
       <details data-ceua-help="gi" class="mt-2 mb-3 p-3 bg-tl-50/40 border border-tl-100 rounded-lg text-[.72rem] text-slate-600 leading-relaxed">
         <summary class="cursor-pointer font-bold text-tl-700">Como classificar o Grau de Invasividade (GI)?</summary>
         <div class="mt-2 space-y-2">
-          <p><strong>GI1</strong> — Experimentos que causam pouco ou nenhum desconforto ou estresse. Exemplos: observação e exame físico; administração oral, intravenosa, intraperitoneal, subcutânea ou intramuscular de substâncias que não causem reações adversas perceptíveis; eutanásia por métodos aprovados após anestesia ou sedação; privação alimentar ou hídrica por períodos equivalentes aos que ocorrem na natureza.</p>
-          <p><strong>GI2</strong> — Experimentos que causam estresse, desconforto ou dor de leve intensidade. Exemplos: procedimentos cirúrgicos menores, como biópsias, sob anestesia; períodos breves de contenção ou imobilidade em animais conscientes; exposição a níveis não letais de compostos químicos que não causem reações adversas graves.</p>
-          <p><strong>GI3</strong> — Experimentos que causam estresse, desconforto ou dor de intensidade intermediária. Exemplos: procedimentos cirúrgicos invasivos conduzidos em animais anestesiados; imobilidade física por várias horas; indução de estresse por separação materna ou exposição a agressor; estímulos aversivos inescapáveis; choques localizados de intensidade leve; exposição a radiação ou compostos químicos que provoquem prejuízo duradouro da função sensorial ou motora; administração por vias como intracardíaca ou intracerebral.</p>
-          <p><strong>GI4</strong> — Experimentos que causam dor de alta intensidade. Exemplo: indução de trauma em animais não sedados.</p>
-          <p class="text-[.65rem] text-slate-500">Fonte: Resolução Normativa CONCEA/MCTI nº 52, de 19 de maio de 2021.</p>
+          <p><strong>GI 1 — Leve:</strong> procedimentos que causem dor, sofrimento ou estresse a curto prazo. Exemplo: coleta de sangue totalizando menos de 10% do volume circulante.</p>
+          <p><strong>GI 2 — Moderado:</strong> procedimentos que causem dor, sofrimento ou estresse moderado a curto prazo, ou leve a longo prazo. Exemplos: cirurgia sob anestesia geral com analgesia e monitoramento pós-operatório, como laparotomia; coleta de sangue acima de 10% do volume circulante em animal consciente.</p>
+          <p><strong>GI 3 e GI 4 — Grave:</strong> procedimentos que causem dor, sofrimento ou estresse severos.</p>
+          <p><strong>Procedimentos terminais:</strong> realizados inteiramente sob anestesia geral, sem recuperação da consciência, seguidos de eutanásia.</p>
+          <p class="text-[.65rem] text-slate-500">Fonte: Resolução Normativa CONCEA nº 55/2022.</p>
         </div>
       </details>`;
 
@@ -276,7 +278,7 @@ function normalizarPayloadCEUA(dados){
       html = html.replace('\n\n  <!-- CIUCA -->', '\n\n' + instalacaoHtml + '\n\n  <!-- CIUCA -->');
       html = html.replace('<p class="ml-3" id="termoItemD" style="display:none"><strong>d)</strong> esta atividade de ensino foi avaliada conforme os critérios da Resolução Normativa CONCEA nº 53, de 19 de maio de 2021, e atende aos requisitos para utilização de animais em atividades didáticas, conforme árvore de decisão do Anexo da referida Resolução.</p>\n    </div>', '<p class="ml-3" id="termoItemD" style="display:none"><strong>d)</strong> esta atividade de ensino foi avaliada conforme os critérios da Resolução Normativa CONCEA nº 53, de 19 de maio de 2021, e atende aos requisitos para utilização de animais em atividades didáticas, conforme árvore de decisão do Anexo da referida Resolução.</p>' + relatorioHtml + '\n    </div>');
       html = html.replace('<!-- ── Painel de Envio ── -->', avisoSubmissaoHtml + '\n\n    <!-- ── Painel de Envio ── -->');
-      html = replaceHelp(html, '      </div>\n      <h4 class="font-bold text-sm mb-2 mt-3">8.3 Condições de Alojamento</h4>', '      </div>\n' + giAjudaHtml + '\n      <h4 class="font-bold text-sm mb-2 mt-3">8.3 Condições de Alojamento</h4>', 'data-ceua-help="gi"', 'ajuda de grau de invasividade');
+      html = replaceHelp(html, '      <!-- CEUA: ajuda GI -->', giAjudaHtml, 'data-ceua-help="gi"', 'ajuda de grau de invasividade');
       html = replaceHelp(html, '    <div id="drBox" class="space-y-2"></div>', farmacosAjudaHtml + '\n    <div id="drBox" class="space-y-2"></div>', 'data-ceua-help="farmacos"', 'ajuda de nomenclatura dos fármacos');
       html = replaceHelp(html, '      <input type="text" id="f_met" class="fi" placeholder="Método utilizado">', '      <input type="text" id="f_met" class="fi" placeholder="Método utilizado">\n' + eutanasiaAjudaHtml, 'data-ceua-help="eutanasia"', 'ajuda da diretriz de eutanásia');
 
@@ -298,9 +300,12 @@ function normalizarPayloadCEUA(dados){
       html = html.replace("termoItens.forEach(t=>{ ck(12); const ls=doc.splitTextToSize(t,CW-5); doc.text(ls,ML+3,y); y+=ls.length*3.5+2; });", "termoItens.forEach(t=>{ ck(12); const ls=doc.splitTextToSize(t,CW-5); doc.text(ls,ML+3,y); y+=ls.length*3.5+2; });\n  y+=2; sub('Relatório final de uso dos animais');\n  const relFinal=(document.getElementById('relatorio_final_ciente')?.checked?'[X] ':'[ ] ')+'Declaro estar ciente de que, ao encerramento da atividade/projeto, o coordenador da proposta deverá encaminhar à CEUA o relatório final de uso dos animais, informando espécies utilizadas, número efetivamente utilizado, eventuais alterações em relação ao aprovado e justificativas. Estou ciente de que relatório final pendente poderá impedir nova solicitação até a regularização.';\n  tb(relFinal,5);\n  y+=2; sub('Submissão formal à CEUA');\n  tb('Após assinatura pelo coordenador, encaminhar este PDF assinado para: " + EMAIL_CEUA + ".',2);");
       html = html.replace('  function tb(t,rows){', `  function lv2(l1,v1,l2,v2){
     const gap=4, col=(CW-gap)/2;
-    const a=doc.splitTextToSize(v1||'',col-3);
-    const b=doc.splitTextToSize(v2||'',col-3);
+    doc.setFont('helvetica','normal'); doc.setFontSize(7.3);
+    const a=doc.splitTextToSize(String(v1||''),col-3);
+    const b=doc.splitTextToSize(String(v2||''),col-3);
     const h=Math.max(7,a.length*3.5+3,b.length*3.5+3);
+    // Texto longo demais para duas colunas numa página: usa linhas inteiras.
+    if(h+6>H-16-32){ sub(l1); tb(v1,1); sub(l2); tb(v2,1); return; }
     ck(h+6);
     [[l1,a,ML],[l2,b,ML+col+gap]].forEach(([label,txt,x])=>{
       doc.setTextColor(...TD); doc.setFontSize(6.8); doc.setFont('helvetica','bold');
@@ -308,7 +313,7 @@ function normalizarPayloadCEUA(dados){
       doc.setDrawColor(180,200,210); doc.setLineWidth(.2); doc.setFillColor(250,252,252);
       doc.roundedRect(x,y+1.5,col,h,.8,.8,'FD');
       doc.setTextColor(...BK); doc.setFont('helvetica','normal'); doc.setFontSize(7.3);
-      doc.text(txt,x+1.5,y+5.2);
+      txt.forEach((linha,k)=>doc.text(linha,x+1.5,y+5.2+k*3.5));
     });
     y+=h+6;
   }
