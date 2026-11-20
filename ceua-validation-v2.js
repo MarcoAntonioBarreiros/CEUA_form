@@ -163,6 +163,13 @@
 
     addField(list, 'just_esp', 'Justificativa dos procedimentos e da espécie', 4, true);
     addField(list, 'proc', 'Procedência', 4, true);
+    addField(
+      list,
+      'sisbio_n',
+      'Nº da solicitação ou autorização SISBIO (animal silvestre)',
+      4,
+      Boolean(byId('proc_silv') && byId('proc_silv').checked)
+    );
     addRadio(list, 'gi', 'Grau de invasividade', 4, true);
     addField(list, 'al_loc', 'Local de alojamento', 4, true);
     addField(list, 'al_amb', 'Ambiente de alojamento', 4, true);
@@ -209,6 +216,14 @@
         list.push({ name: 'dv[]', index: index, label: 'Via de administração — linha ' + (index + 1), step: 5 });
       }
     });
+
+    addField(
+      list,
+      'dr_just_nao_uso',
+      'Justificativa para o não uso de anestésico e/ou analgésico',
+      5,
+      typeof window.precisaJustificarFarmacos === 'function' && window.precisaJustificarFarmacos()
+    );
 
     addField(list, 'f_met', 'Método utilizado', 6, value('f_ab') === 'Sim' || value('f_eu') === 'Sim');
     addField(list, 'f_dest', 'Destino dos animais após a atividade', 6, true);
@@ -365,6 +380,7 @@
       while (byName('cn[]').length < Number(data.counts && data.counts.collaborators || 0)) addC();
       while (byName('dn[]').length < Number(data.counts && data.counts.drugs || 0)) addDr();
 
+      var restoredSelects = [];
       data.fields.forEach(function (item) {
         var element = item.id ? byId(item.id) : byName(item.name)[item.index || 0];
         if (!element) return;
@@ -372,11 +388,21 @@
           element.checked = Boolean(item.checked);
         } else {
           element.value = item.value == null ? '' : item.value;
+          if (element.tagName === 'SELECT') restoredSelects.push(element);
         }
+      });
+
+      // Avisa os módulos que reagem à troca de opção (ex.: situação da
+      // instalação no CIUCA) para que mostrem os campos condicionais.
+      restoredSelects.forEach(function (element) {
+        try {
+          element.dispatchEvent(new Event('change'));
+        } catch (error) {}
       });
 
       if (typeof toggleEnsino === 'function') toggleEnsino();
       if (typeof avaliarRN53 === 'function') avaliarRN53();
+      if (typeof window.atualizarCondicionaisCEUA === 'function') window.atualizarCondicionaisCEUA();
       if (byId('r_nome') && byId('termoNome')) {
         byId('termoNome').textContent = byId('r_nome').value || '\u00a0';
       }
@@ -415,7 +441,10 @@
       });
     }
 
-    restoreDraft();
+    // Restaura depois que os demais módulos montarem seus campos (o painel da
+    // instalação no CIUCA é criado por ceua-installation-status.js, que roda
+    // depois deste módulo); antes, esses campos não eram restaurados.
+    setTimeout(restoreDraft, 0);
 
     window.enviarEGerarPDF = async function () {
       var list;

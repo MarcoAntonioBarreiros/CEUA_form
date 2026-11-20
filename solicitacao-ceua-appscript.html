@@ -19,8 +19,13 @@ body{font-family:Arial,sans-serif;background:#E8F4F6;color:#164549;display:flex;
 <script>
 (function(){
   const PAGES='https://marcoantoniobarreiros.github.io/CEUA_form/';
-  const VER='20260909-1';
-  const RAW_BASE='https://raw.githubusercontent.com/MarcoAntonioBarreiros/CEUA_form/95cc54e193cb4199b6563ca5be1316900c438f48/solicitacao-ceua-appscript.html';
+  const VER='20261119-1';
+  // Reservas no raw.githubusercontent.com: as cópias ATUAIS da pasta
+  // formulario-base na main (as antigas, fixadas em commit, não têm os campos
+  // novos e deixariam os módulos sem os campos que validam).
+  const RAW_BASE='https://raw.githubusercontent.com/MarcoAntonioBarreiros/CEUA_form/main/formulario-base/solicitacao-ceua-appscript.html';
+  const RAW_ORIGINAL_ATUAL='https://raw.githubusercontent.com/MarcoAntonioBarreiros/CEUA_form/main/formulario-base/formulario-original.html';
+  // Endereço que aparece escrito na base (é o trecho que o replace procura).
   const RAW_ORIGINAL='https://raw.githubusercontent.com/MarcoAntonioBarreiros/CEUA_form/backup-index-before-appscript-20260623/index.html';
   // A base e o formulario original passam a ser servidos pelo proprio GitHub
   // Pages (mesma origem da pagina). O raw.githubusercontent.com fica so como
@@ -31,10 +36,10 @@ body{font-family:Arial,sans-serif;background:#E8F4F6;color:#164549;display:flex;
     RAW_BASE
   ];
   const ORIGINAL_URL=PAGES+'formulario-base/formulario-original.html?v='+VER;
-  const VALIDATION_URL='https://marcoantoniobarreiros.github.io/CEUA_form/ceua-validation-v2.js?v=20260803-1405';
-  const INSTALLATION_URL='https://marcoantoniobarreiros.github.io/CEUA_form/ceua-installation-status.js?v=20260803-1458';
-  const COMBINED_URL='https://marcoantoniobarreiros.github.io/CEUA_form/ceua-combined-validation.js?v=20260803-1518';
-  const PROJECT_REVIEW_URL='https://marcoantoniobarreiros.github.io/CEUA_form/ceua-project-review-link.js?v=20260804-2111';
+  const VALIDATION_URL='https://marcoantoniobarreiros.github.io/CEUA_form/ceua-validation-v2.js?v='+VER;
+  const INSTALLATION_URL='https://marcoantoniobarreiros.github.io/CEUA_form/ceua-installation-status.js?v='+VER;
+  const COMBINED_URL='https://marcoantoniobarreiros.github.io/CEUA_form/ceua-combined-validation.js?v='+VER;
+  const PROJECT_REVIEW_URL='https://marcoantoniobarreiros.github.io/CEUA_form/ceua-project-review-link.js?v='+VER;
   // Tenta cada endereco em ordem e repete a lista uma segunda vez antes de
   // desistir, para absorver falhas temporarias de um dos servidores.
   function baixarTexto(urls,rodadas){
@@ -77,7 +82,7 @@ body{font-family:Arial,sans-serif;background:#E8F4F6;color:#164549;display:flex;
       modified=trocar(modified,
         "  const SOURCE_URL = '"+RAW_ORIGINAL+"';",
         `  const SOURCE_URL = '${ORIGINAL_URL}';
-  const SOURCE_FALLBACK = '${RAW_ORIGINAL}';`,
+  const SOURCE_FALLBACK = '${RAW_ORIGINAL_ATUAL}';`,
         'fonte do formulário original');
       modified=trocar(modified,
         "  fetch(SOURCE_URL, {cache:'no-store'})",
